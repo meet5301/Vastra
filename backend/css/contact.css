@@ -1,0 +1,99 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: #f8f8f8;
+}
+
+.contact-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 24px 60px;
+  color: #111;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+}
+
+.contact-form-card,
+.contact-info-card {
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 22px;
+  padding: 36px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+}
+
+.contact-form-card h1,
+.contact-info-card h2 {
+  margin-bottom: 24px;
+  font-size: 2rem;
+}
+
+.contact-form-card label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.contact-form-card input,
+.contact-form-card textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.contact-form-card button {
+  width: 100%;
+  padding: 16px 0;
+  border: none;
+  border-radius: 14px;
+  background: #111;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.contact-form-card button:hover {
+  background: #333;
+}
+
+.contact-info-card p {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 26px;
+  opacity: 0.9;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 1rem;
+  margin-bottom: 18px;
+}
+
+.contact-item i {
+  color: #111;
+  min-width: 24px;
+}
+
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-page {
+    padding: 40px 16px 40px;
+  }
+}

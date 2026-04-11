@@ -1,0 +1,114 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: #f8f8f8;
+}
+
+.container {
+  width: 65%;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 900;
+}
+
+/* LAYOUT */
+.checkout-wrapper {
+  display: flex;
+  gap: 40px;
+}
+
+/* LEFT FORM */
+.form-section {
+  flex: 2;
+}
+
+.form-section h2 {
+  margin-bottom: 20px;
+}
+
+.form-section label {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.form-section input,
+.form-section select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+}
+
+/* ROW */
+.row {
+  display: flex;
+  gap: 50px;
+}
+
+.row div {
+  flex: 1;
+}
+
+/* OPTIONS */
+.options {
+  margin-top: 10px;
+}
+
+.options label {
+  display: block;
+  margin-top: 5px;
+}
+
+/* BUTTON */
+.checkout-btn {
+  margin-top: 20px;
+  padding: 12px;
+  width: 200px;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* RIGHT SIDE */
+.summary-section {
+  flex: 1;
+  background: #fafafa;
+  padding: 20px;
+}
+
+.summary-section h2 {
+  margin-bottom: 15px;
+}
+
+.summary-section p,
+.summary-section h3 {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+}
+
+.summary-section h3 {
+  margin-top: 15px;
+}
+
+/* PAYMENT */
+.payments {
+  margin-top: 10px;
+}
+
+.payments i {
+  font-size: 30px;
+  margin-right: 10px;
+  background: black;
+  color: white;
+  padding: 8px;
+}

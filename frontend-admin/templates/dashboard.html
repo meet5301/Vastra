@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - VASTRA Admin</title>
+  <link rel="stylesheet" href="/admin/css/admin.css" />
+</head>
+<body>
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h1>VASTRA.</h1>
+      <span>ADMIN PANEL</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/admin/dashboard" class="active">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        DASHBOARD
+      </a>
+      <a href="/admin/products">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        PRODUCTS
+      </a>
+      <a href="/admin/orders">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        ORDERS
+      </a>
+      <a href="/admin/users">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        USERS
+      </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <button onclick="adminLogout()">LOGOUT</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="topbar">
+      <h2>DASHBOARD</h2>
+      <div class="topbar-right">
+        <span id="admin-name">Admin</span>
+        <span>·</span>
+        <span id="today-date"></span>
+      </div>
+    </div>
+
+    <div class="page-content">
+
+      <!-- STAT CARDS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>TOTAL ORDERS</h3>
+          <div class="value" id="stat-orders">—</div>
+          <div class="change">All time</div>
+        </div>
+        <div class="stat-card">
+          <h3>TOTAL REVENUE</h3>
+          <div class="value" id="stat-revenue">—</div>
+          <div class="change">Excl. cancelled</div>
+        </div>
+        <div class="stat-card">
+          <h3>PENDING</h3>
+          <div class="value" id="stat-pending">—</div>
+          <div class="change">Processing orders</div>
+        </div>
+        <div class="stat-card">
+          <h3>DELIVERED</h3>
+          <div class="value" id="stat-delivered">—</div>
+          <div class="change">Completed orders</div>
+        </div>
+      </div>
+
+      <!-- RECENT ORDERS TABLE -->
+      <div class="table-section">
+        <div class="table-header">
+          <h3>RECENT ORDERS</h3>
+          <a href="/admin/orders" class="btn btn-outline btn-sm">VIEW ALL</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ORDER ID</th>
+              <th>CUSTOMER</th>
+              <th>AMOUNT</th>
+              <th>STATUS</th>
+              <th>DATE</th>
+            </tr>
+          </thead>
+          <tbody id="recent-orders-body">
+            <tr><td colspan="5" style="text-align:center;padding:2rem;color:#888;">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="admin-toast"></div>
+
+<script>
+  const token = localStorage.getItem("vastra_admin_token");
+  if (!token) window.location.href = "/admin";
+
+  const user = JSON.parse(localStorage.getItem("vastra_admin_user") || "{}");
+  document.getElementById("admin-name").textContent = user.username || "Admin";
+  document.getElementById("today-date").textContent = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+
+  function adminLogout() {
+    localStorage.removeItem("vastra_admin_token");
+    localStorage.removeItem("vastra_admin_user");
+    window.location.href = "/admin";
+  }
+
+  function authHeaders() {
+    return { "Content-Type": "application/json", Authorization: `Bearer ${token}` };
+  }
+
+  function statusBadge(status) {
+    return `<span class="badge badge-${status.toLowerCase()}">${status.toUpperCase()}</span>`;
+  }
+
+  async function loadStats() {
+    try {
+      const res = await fetch("/api/orders/admin/stats", { headers: authHeaders() });
+      const data = await res.json();
+      if (!data.success) return;
+      const s = data.stats;
+      document.getElementById("stat-orders").textContent = s.totalOrders;
+      document.getElementById("stat-revenue").textContent = "$" + s.totalRevenue.toFixed(2);
+      document.getElementById("stat-pending").textContent = s.pending;
+      document.getElementById("stat-delivered").textContent = s.delivered;
+    } catch (err) { console.error(err); }
+  }
+
+  async function loadRecentOrders() {
+    try {
+      const res = await fetch("/api/orders/admin/all?limit=5", { headers: authHeaders() });
+      const data = await res.json();
+      const tbody = document.getElementById("recent-orders-body");
+      if (!data.success || !data.orders.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#888;">No orders yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.orders.map(o => `
+        <tr>
+          <td style="font-family:monospace;">#${o._id.slice(-8).toUpperCase()}</td>
+          <td>${o.user?.username || o.guestInfo?.firstName || "Guest"}</td>
+          <td>$${o.totalAmount.toFixed(2)}</td>
+          <td>${statusBadge(o.orderStatus)}</td>
+          <td>${new Date(o.createdAt).toLocaleDateString("en-IN")}</td>
+        </tr>`).join("");
+    } catch (err) { console.error(err); }
+  }
+
+  loadStats();
+  loadRecentOrders();
+</script>
+</body>
+</html>

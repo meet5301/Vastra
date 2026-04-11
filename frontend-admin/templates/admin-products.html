@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products - VASTRA Admin</title>
+  <link rel="stylesheet" href="/admin/css/admin.css" />
+</head>
+<body>
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo"><h1>VASTRA.</h1><span>ADMIN PANEL</span></div>
+    <nav class="sidebar-nav">
+      <a href="/admin/dashboard">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        DASHBOARD
+      </a>
+      <a href="/admin/products" class="active">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        PRODUCTS
+      </a>
+      <a href="/admin/orders">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        ORDERS
+      </a>
+      <a href="/admin/users">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        USERS
+      </a>
+    </nav>
+    <div class="sidebar-bottom"><button onclick="adminLogout()">LOGOUT</button></div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="topbar">
+      <h2>PRODUCTS</h2>
+      <div class="topbar-right">
+        <button class="btn btn-black btn-sm" onclick="openAddModal()">+ ADD PRODUCT</button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <input type="text" id="search-input" placeholder="Search products..." oninput="filterProducts()" />
+        <select id="category-filter" onchange="filterProducts()">
+          <option value="">All Categories</option>
+          <option>Men</option>
+          <option>Women</option>
+          <option>Accessories</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-section">
+        <div class="table-header">
+          <h3>ALL PRODUCTS <span id="product-count" style="color:#888;font-size:12px;"></span></h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>IMAGE</th>
+              <th>NAME</th>
+              <th>PRICE</th>
+              <th>CATEGORY</th>
+              <th>STOCK</th>
+              <th>STATUS</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="products-tbody">
+            <tr><td colspan="7" style="text-align:center;padding:2rem;color:#888;">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 id="modal-title">ADD PRODUCT</h2>
+    <form id="product-form" enctype="multipart/form-data">
+      <div class="form-row">
+        <div class="form-group">
+          <label>PRODUCT NAME *</label>
+          <input type="text" name="name" required />
+        </div>
+        <div class="form-group">
+          <label>PRICE ($) *</label>
+          <input type="number" name="price" min="0" step="0.01" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>DESCRIPTION</label>
+        <textarea name="description"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>CATEGORY</label>
+          <select name="category">
+            <option>Men</option>
+            <option>Women</option>
+            <option>Accessories</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>SUB CATEGORY</label>
+          <input type="text" name="subCategory" placeholder="e.g. Shirts, Dresses" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>SIZES (comma separated)</label>
+          <input type="text" name="sizes" value="S, M, L, XL" />
+        </div>
+        <div class="form-group">
+          <label>COLORS (comma separated)</label>
+          <input type="text" name="colors" placeholder="Black, White, Blue" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>STOCK</label>
+          <input type="number" name="stock" value="100" min="0" />
+        </div>
+        <div class="form-group">
+          <label>IMAGE URL (or upload below)</label>
+          <input type="text" name="image" placeholder="images/1.png" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>UPLOAD IMAGE</label>
+        <input type="file" name="imageFile" accept="image/*" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>FEATURED?</label>
+          <select name="isFeatured">
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>STATUS</label>
+          <select name="isActive">
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+        </div>
+      </div>
+      <input type="hidden" name="_id" id="edit-product-id" />
+      <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+        <button type="submit" class="btn btn-black" style="flex:1;">SAVE PRODUCT</button>
+        <button type="button" class="btn btn-outline" onclick="closeModal()">CANCEL</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="admin-toast"></div>
+
+<script>
+  const token = localStorage.getItem("vastra_admin_token");
+  if (!token) window.location.href = "/admin";
+
+  let allProducts = [];
+
+  function adminLogout() {
+    localStorage.removeItem("vastra_admin_token");
+    localStorage.removeItem("vastra_admin_user");
+    window.location.href = "/admin";
+  }
+  function authHeaders() {
+    return { Authorization: `Bearer ${token}` };
+  }
+  function toast(msg) {
+    const t = document.getElementById("admin-toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 2500);
+  }
+
+  async function loadProducts() {
+    try {
+      const res = await fetch("/api/products/admin/all", { headers: authHeaders() });
+      const data = await res.json();
+      allProducts = data.products || [];
+      renderTable(allProducts);
+    } catch (err) {
+      document.getElementById("products-tbody").innerHTML = '<tr><td colspan="7" style="text-align:center;color:red;">Failed to load products.</td></tr>';
+    }
+  }
+
+  function renderTable(products) {
+    document.getElementById("product-count").textContent = `(${products.length})`;
+    const tbody = document.getElementById("products-tbody");
+    if (!products.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:#888;">No products found.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = products.map(p => `
+      <tr>
+        <td><img src="${p.image}" class="product-img-sm" onerror="this.src='https://via.placeholder.com/50x60'"></td>
+        <td><strong>${p.name}</strong>${p.isFeatured ? ' <span style="font-size:10px;background:#000;color:#fff;padding:2px 6px;">FEATURED</span>' : ''}</td>
+        <td>$${p.price}</td>
+        <td>${p.category}</td>
+        <td>${p.stock}</td>
+        <td><span class="badge badge-${p.isActive ? 'active' : 'inactive'}">${p.isActive ? 'ACTIVE' : 'INACTIVE'}</span></td>
+        <td style="display:flex;gap:6px;padding-top:14px;">
+          <button class="btn btn-outline btn-sm" onclick='openEditModal(${JSON.stringify(p)})'>EDIT</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p._id}')">DELETE</button>
+        </td>
+      </tr>`).join("");
+  }
+
+  function filterProducts() {
+    const search = document.getElementById("search-input").value.toLowerCase();
+    const cat = document.getElementById("category-filter").value;
+    const filtered = allProducts.filter(p =>
+      p.name.toLowerCase().includes(search) &&
+      (cat === "" || p.category === cat)
+    );
+    renderTable(filtered);
+  }
+
+  function openAddModal() {
+    document.getElementById("modal-title").textContent = "ADD PRODUCT";
+    document.getElementById("product-form").reset();
+    document.getElementById("edit-product-id").value = "";
+    document.getElementById("product-modal").classList.add("open");
+  }
+
+  function openEditModal(p) {
+    document.getElementById("modal-title").textContent = "EDIT PRODUCT";
+    const form = document.getElementById("product-form");
+    form.name.value = p.name;
+    form.price.value = p.price;
+    form.description.value = p.description || "";
+    form.category.value = p.category;
+    form.subCategory.value = p.subCategory || "";
+    form.sizes.value = p.sizes?.join(", ") || "";
+    form.colors.value = p.colors?.join(", ") || "";
+    form.stock.value = p.stock;
+    form.image.value = p.image;
+    form.isFeatured.value = p.isFeatured ? "true" : "false";
+    form.isActive.value = p.isActive ? "true" : "false";
+    document.getElementById("edit-product-id").value = p._id;
+    document.getElementById("product-modal").classList.add("open");
+  }
+
+  function closeModal() {
+    document.getElementById("product-modal").classList.remove("open");
+  }
+
+  document.getElementById("product-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const id = document.getElementById("edit-product-id").value;
+
+    const formData = new FormData();
+    formData.append("name", form.name.value);
+    formData.append("price", form.price.value);
+    formData.append("description", form.description.value);
+    formData.append("category", form.category.value);
+    formData.append("subCategory", form.subCategory.value);
+    formData.append("sizes", form.sizes.value);
+    formData.append("colors", form.colors.value);
+    formData.append("stock", form.stock.value);
+    formData.append("image", form.image.value);
+    formData.append("isFeatured", form.isFeatured.value);
+    formData.append("isActive", form.isActive.value);
+    if (form.imageFile.files[0]) formData.append("image", form.imageFile.files[0]);
+
+    const url = id ? `/api/products/admin/${id}` : "/api/products/admin/create";
+    const method = id ? "PUT" : "POST";
+
+    try {
+      const res = await fetch(url, { method, headers: authHeaders(), body: formData });
+      const data = await res.json();
+      if (data.success) {
+        toast(id ? "Product updated!" : "Product added!");
+        closeModal();
+        loadProducts();
+      } else {
+        alert(data.message || "Failed");
+      }
+    } catch (err) {
+      alert("Server error");
+    }
+  });
+
+  async function deleteProduct(id) {
+    if (!confirm("Delete this product?")) return;
+    try {
+      const res = await fetch(`/api/products/admin/${id}`, { method: "DELETE", headers: authHeaders() });
+      const data = await res.json();
+      if (data.success) { toast("Product deleted"); loadProducts(); }
+    } catch (err) { alert("Error deleting"); }
+  }
+
+  loadProducts();
+</script>
+</body>
+</html>

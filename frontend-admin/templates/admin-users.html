@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Users - VASTRA Admin</title>
+  <link rel="stylesheet" href="/admin/css/admin.css" />
+</head>
+<body>
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo"><h1>VASTRA.</h1><span>ADMIN PANEL</span></div>
+    <nav class="sidebar-nav">
+      <a href="/admin/dashboard">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        DASHBOARD
+      </a>
+      <a href="/admin/products">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        PRODUCTS
+      </a>
+      <a href="/admin/orders">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        ORDERS
+      </a>
+      <a href="/admin/users" class="active">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        USERS
+      </a>
+    </nav>
+    <div class="sidebar-bottom"><button onclick="adminLogout()">LOGOUT</button></div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="topbar"><h2>USERS</h2></div>
+
+    <div class="page-content">
+      <div class="filter-bar">
+        <input type="text" id="user-search" placeholder="Search by name or email..." oninput="filterUsers()" />
+      </div>
+
+      <div class="table-section">
+        <div class="table-header">
+          <h3>ALL USERS <span id="user-count" style="color:#888;font-size:12px;"></span></h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>USERNAME</th>
+              <th>EMAIL</th>
+              <th>ROLE</th>
+              <th>JOINED</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="5" style="text-align:center;padding:2rem;color:#888;">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="admin-toast"></div>
+
+<script>
+  const token = localStorage.getItem("vastra_admin_token");
+  const currentAdmin = JSON.parse(localStorage.getItem("vastra_admin_user") || "{}");
+  if (!token) window.location.href = "/admin";
+
+  let allUsers = [];
+
+  function adminLogout() {
+    localStorage.removeItem("vastra_admin_token");
+    localStorage.removeItem("vastra_admin_user");
+    window.location.href = "/admin";
+  }
+  function authHeaders() {
+    return { "Content-Type": "application/json", Authorization: `Bearer ${token}` };
+  }
+  function toast(msg) {
+    const t = document.getElementById("admin-toast");
+    t.textContent = msg;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 2500);
+  }
+
+  async function loadUsers() {
+    try {
+      const res = await fetch("/api/admin/users", { headers: authHeaders() });
+      const data = await res.json();
+      allUsers = data.users || [];
+      renderUsers(allUsers);
+    } catch (err) {
+      document.getElementById("users-tbody").innerHTML = '<tr><td colspan="5" style="text-align:center;color:red;">Failed to load.</td></tr>';
+    }
+  }
+
+  function renderUsers(users) {
+    document.getElementById("user-count").textContent = `(${users.length})`;
+    const tbody = document.getElementById("users-tbody");
+    if (!users.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#888;">No users found.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = users.map(u => `
+      <tr>
+        <td><strong>${u.username}</strong></td>
+        <td>${u.email}</td>
+        <td>
+          <select onchange="changeRole('${u._id}', this.value)" style="padding:4px 8px;border:1px solid #ddd;font-size:12px;cursor:pointer;${u.role === 'admin' ? 'font-weight:700;' : ''}">
+            <option value="user" ${u.role === 'user' ? 'selected' : ''}>USER</option>
+            <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>ADMIN</option>
+          </select>
+        </td>
+        <td>${new Date(u.createdAt).toLocaleDateString("en-IN")}</td>
+        <td>
+          ${u._id !== currentAdmin.id
+            ? `<button class="btn btn-danger btn-sm" onclick="deleteUser('${u._id}')">DELETE</button>`
+            : '<span style="font-size:11px;color:#888;">YOU</span>'}
+        </td>
+      </tr>`).join("");
+  }
+
+  function filterUsers() {
+    const q = document.getElementById("user-search").value.toLowerCase();
+    renderUsers(allUsers.filter(u => u.username.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)));
+  }
+
+  async function changeRole(id, role) {
+    try {
+      const res = await fetch(`/api/admin/users/${id}/role`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ role }),
+      });
+      const data = await res.json();
+      if (data.success) toast(`Role updated to ${role}`);
+      else alert(data.message);
+    } catch (err) { alert("Error updating role"); }
+  }
+
+  async function deleteUser(id) {
+    if (!confirm("Delete this user? This cannot be undone.")) return;
+    try {
+      const res = await fetch(`/api/admin/users/${id}`, { method: "DELETE", headers: authHeaders() });
+      const data = await res.json();
+      if (data.success) { toast("User deleted"); loadUsers(); }
+    } catch (err) { alert("Error deleting user"); }
+  }
+
+  loadUsers();
+</script>
+</body>
+</html>

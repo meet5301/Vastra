@@ -1,0 +1,360 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f4f4f4;
+}
+
+.continer {
+  width: 85%;
+  margin: 60px auto;
+}
+
+/* ================= HERO (KEEP IMAGE) ================= */
+.hero {
+  height: 75rem;
+  background-image: url("/images/hero.png"); /* IMPORTANT */
+  background-size: contain;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-color: #e6e6e6;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* HERO TEXT */
+.overlay-content {
+  text-align: center;
+  transform: translateY(-60px);
+}
+
+.overlay-content h1 {
+  font-size: 120px;
+  color: white;
+  font-weight: 900;
+  letter-spacing: 5px;
+}
+
+.overlay-content h2 {
+  font-size: 55px;
+  color: white;
+  font-weight: 300;
+  margin-top: -10px;
+}
+
+.overlay-content button {
+  margin-top: 25px;
+  padding: 14px 45px;
+  background: black;
+  color: white;
+  border: none;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.overlay-content button:hover {
+  background: #333;
+}
+
+/* ================= CATEGORY ================= */
+.category {
+  text-align: center;
+  padding: 70px 0 40px;
+}
+
+.category h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+
+.category-box {
+  display: flex;
+  gap: 25px;
+  
+}
+
+.category-box {
+  display: flex;
+  gap: 20px;
+}
+
+/* COMMON */
+.cat {
+  flex: 1;
+  height: 230px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+/* BACKGROUND IMAGES */
+.cat.female {
+  background-image: url("/images/f.png");
+}
+
+.cat.male {
+  background-image: url("/images/m.png");
+}
+
+/* DARK OVERLAY (optional premium look) */
+.cat::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 40%;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* TEXT */
+.cat h3 {
+  position: relative;
+  color: white;
+  font-size: 26px;
+  font-weight: 800; /* IMPORTANT */
+  letter-spacing: 2px;
+  z-index: 2;
+}
+
+/* HOVER */
+.cat:hover {
+  transform: scale(1.02);
+  transition: 0.3s;
+}
+
+/* DARK OVERLAY */
+.cat::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 40%;
+  background: rgba(0, 0, 0, 0.6);
+  bottom: 0;
+}
+
+/* ================= PRODUCTS ================= */
+.products {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.products h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.product {
+  background: #fff;
+  padding: 15px;
+  transition: 0.3s;
+  position: relative;
+}
+
+.product-img-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: #f2f2f2;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.product img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  transition: 0.3s;
+}
+
+.product-img-wrapper:hover img {
+  transform: scale(1.05);
+}
+
+.product h3 {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.product p {
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.wishlist-ico {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 35px;
+  height: 35px;
+  border: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #d64545;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.wishlist-ico:hover {
+  background: #fff;
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.add-btn {
+  width: 100%;
+  padding: 10px;
+  background: #000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 12px;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.add-btn:hover {
+  background: #333;
+}
+
+.product:hover {
+  transform: translateY(-5px);
+}
+
+/* BUTTON */
+.view {
+  margin-top: 30px;
+  padding: 12px 40px;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* ================= JOURNAL ================= */
+.journal {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.journal h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+
+.journal-grid {
+  display: flex;
+  gap: 20px;
+}
+
+.journal-grid img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* ================= STORY ================= */
+.story {
+  display: flex;
+  gap: 40px;
+  padding: 60px 0;
+  align-items: center;
+}
+
+.story-img {
+  flex: 1;
+  height: 320px;
+  background: url("/images/aa.png") center/cover no-repeat;
+}
+
+.story-text {
+  flex: 1;
+}
+
+.story-text h2 {
+  font-size: 30px;
+  font-weight: 900;
+  margin-bottom: 15px;
+}
+
+.story-text p {
+  color: #555;
+  line-height: 1.6;
+}
+
+.story-text button {
+  margin-top: 20px;
+  padding: 12px 35px;
+  background: black;
+  color: white;
+  border: none;
+}
+
+/* ================= FEATURES ================= */
+.features {
+  display: flex;
+  justify-content: space-between;
+  padding: 70px 0;
+  text-align: center;
+  border-top: 1px solid #ddd;
+}
+
+.features div {
+  flex: 1;
+}
+
+.features i {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.features h3 {
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+/* ================= FOOTER ================= */
+footer {
+  background: linear-gradient(to right, #000, #222);
+  color: white;
+  text-align: center;
+  padding: 70px 20px;
+}
+
+footer h1 {
+  font-size: 42px;
+  font-weight: 900;
+}
+
+footer p {
+  margin-top: 10px;
+  color: #bbb;
+}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wishlist - VASTRA</title>
+    <link rel="stylesheet" href="/css/shop.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      .wishlist-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+        padding: 2rem 0;
+      }
+      .wishlist-item {
+        border: 1px solid #eee;
+        padding: 1rem;
+        text-align: center;
+        position: relative;
+      }
+      .wishlist-item img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        margin-bottom: 1rem;
+      }
+      .remove-wishlist {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #000;
+        color: #fff;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="navbar"></div>
+    <script src="/js/navbar.js"></script>
+
+    <main>
+      <h1>MY WISHLIST</h1>
+
+      <div class="container">
+        <section class="content">
+          <div class="wishlist-grid" id="wishlist-container"></div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      function renderWishlist() {
+        const wishlist = JSON.parse(localStorage.getItem("vastra_wishlist") || "[]");
+        const container = document.getElementById("wishlist-container");
+
+        if (wishlist.length === 0) {
+          container.innerHTML = '<div style="text-align:center;padding:4rem;"><h2>Your wishlist is empty</h2><a href="/shop" style="text-decoration:underline;">Continue Shopping</a></div>';
+          return;
+        }
+
+        container.innerHTML = wishlist
+          .map(
+            (item) => `
+          <div class="wishlist-item">
+            <button class="remove-wishlist" onclick="removeFromWishlist('${item.id}')">✕</button>
+            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/250'" onclick="window.location.href='/detail?id=${item.id}'">
+            <p style="font-weight:600;">${item.name}</p>
+            <p style="color:#999;font-size:14px;">$${item.price}</p>
+            <button onclick="addToCart('${item.id}','${item.name}',${item.price},'${item.image}')" style="width:100%;padding:10px;background:#000;color:#fff;border:none;cursor:pointer;margin-top:8px;">ADD TO BAG</button>
+          </div>`
+          )
+          .join("");
+      }
+
+      function removeFromWishlist(id) {
+        let wishlist = JSON.parse(localStorage.getItem("vastra_wishlist") || "[]");
+        wishlist = wishlist.filter((item) => item.id !== id);
+        localStorage.setItem("vastra_wishlist", JSON.stringify(wishlist));
+        renderWishlist();
+      }
+
+      function addToCart(id, name, price, image) {
+        const cart = JSON.parse(localStorage.getItem("vastra_cart") || "[]");
+        const existing = cart.find((i) => i.id === id && i.size === "M");
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          cart.push({ id, name, price, image, size: "M", quantity: 1 });
+        }
+        localStorage.setItem("vastra_cart", JSON.stringify(cart));
+        alert(`${name} added to bag!`);
+      }
+
+      renderWishlist();
+    </script>
+    <script src="/js/footer.js"></script>
+  </body>
+</html>

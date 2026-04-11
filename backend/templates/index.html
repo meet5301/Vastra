@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VASTRA</title>
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div id="navbar"></div>
+
+    <script src="/js/navbar.js"></script>
+
+    <section class="hero">
+      <div class="overlay-content">
+        <h1>VASTRA.</h1>
+        <h2>ESSENTIALS.</h2>
+        <button>SHOP NOW</button>
+      </div>
+    </section>
+    <div class="continer">
+      <!-- CATEGORY -->
+      <section class="category">
+        <h2>NEW ARRIVALS</h2>
+
+        <div class="category-box">
+          <div class="cat female">
+            <h3>FEMALE</h3>
+          </div>
+
+          <div class="cat male">
+            <h3>MEN</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section class="products">
+        <h2>NEW ARRIVALS</h2>
+
+        <div class="product-grid" id="featured-grid">
+          <!-- Dynamically loaded featured products -->
+        </div>
+
+        <button class="view" onclick="window.location.href='/shop'">VIEW ALL</button>
+      </section>
+
+      <!-- JOURNAL -->
+      <section class="journal">
+        <h2>STYLE JOURNAL</h2>
+
+        <div class="journal-grid">
+          <img src="https://via.placeholder.com/300x200" />
+          <img src="https://via.placeholder.com/300x200" />
+          <img src="https://via.placeholder.com/300x200" />
+        </div>
+      </section>
+
+      <!-- STORY -->
+      <section class="story">
+        <div class="story-img"></div>
+
+        <div class="story-text">
+          <h2>OUR STORY</h2>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Minimal
+            design, premium quality and modern fashion.
+          </p>
+          <button>MORE MORE</button>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section class="features">
+        <div>
+          <i class="fa-solid fa-truck"></i>
+          <h3>FREE SHIPPING</h3>
+        </div>
+
+        <div>
+          <i class="fa-regular fa-heart"></i>
+          <h3>PREMIUM QUALITY</h3>
+        </div>
+
+        <div>
+          <i class="fa-solid fa-shield"></i>
+          <h3>SECURE PAYMENT</h3>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // Load featured products on home page
+      async function loadFeaturedProducts() {
+        try {
+          const res = await fetch('/api/products?limit=4&featured=true');
+          const data = await res.json();
+          const grid = document.getElementById('featured-grid');
+          
+          if (data.products && data.products.length > 0) {
+            grid.innerHTML = data.products.map(p => `
+              <div class="product">
+                <div class="product-img-wrapper">
+                  <img src="${p.image}" onerror="this.src='https://via.placeholder.com/300x400/cccccc/666666?text=No+Image'" />
+                  <button class="wishlist-ico" onclick="event.stopPropagation(); toggleWishHome('${p._id}','${p.name}',${p.price},'${p.image}')">
+                    <i class="far fa-heart"></i>
+                  </button>
+                </div>
+                <h3>${p.name}</h3>
+                <p>$${p.price}</p>
+                <button class="add-btn" onclick="addToCartHome('${p._id}','${p.name}',${p.price},'${p.image}')">ADD TO BAG</button>
+              </div>
+            `).join('');
+          }
+        } catch (err) {
+          console.log('Featured products error:', err);
+        }
+      }
+
+      function toggleWishHome(id, name, price, image) {
+        const wishlist = JSON.parse(localStorage.getItem('vastra_wishlist') || '[]');
+        const exists = wishlist.find(item => item.id === id);
+        if (exists) {
+          localStorage.setItem('vastra_wishlist', JSON.stringify(wishlist.filter(item => item.id !== id)));
+          alert(`${name} removed from wishlist`);
+        } else {
+          wishlist.push({id, name, price, image});
+          localStorage.setItem('vastra_wishlist', JSON.stringify(wishlist));
+          alert(`${name} added to wishlist`);
+        }
+        loadFeaturedProducts();
+      }
+
+      function addToCartHome(id, name, price, image) {
+        const cart = JSON.parse(localStorage.getItem('vastra_cart') || '[]');
+        const existing = cart.find(i => i.id === id);
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          cart.push({id, name, price, image, size: 'M', quantity: 1});
+        }
+        localStorage.setItem('vastra_cart', JSON.stringify(cart));
+        alert(`${name} added to bag!`);
+      }
+
+      window.addEventListener('DOMContentLoaded', loadFeaturedProducts);
+    </script>
+    <script src="/js/footer.js"></script>
+  </body>
+</html>

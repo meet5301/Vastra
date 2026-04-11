@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Detail Page</title>
+    <link rel="stylesheet" href="/css/detail.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div id="navbar"></div>
+
+    <script src="/js/navbar.js"></script>
+    <divc class="maincon"> </div>
+    
+
+    <main class="product-container">
+      <div class="product-image-section">
+        <div class="main-image-card">
+          <i class="fa-regular fa-heart wishlist-icon"></i>
+          <img src="/images/6.png" alt="Blue Blazer" />
+        </div>
+        <div class="thumbnail-row">
+          <span class="swatch blue"></span>
+          <span class="swatch green"></span>
+          <span class="swatch red"></span>
+          <span class="swatch purple"></span>
+        </div>
+      </div>
+
+      <div class="product-info-section">
+        <h1 class="product-title">PRODUCT DETAIL PAGE</h1>
+        <p class="price">$550</p>
+
+        <div class="selection-group">
+          <label>Colors</label>
+          <div class="color-swatches">
+            <span class="swatch blue"></span>
+            <span class="swatch green"></span>
+            <span class="swatch red"></span>
+            <span class="swatch purple"></span>
+          </div>
+        </div>
+
+        <div class="selection-group">
+          <label>Description</label>
+          <p class="description-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat.
+          </p>
+        </div>
+
+        <div class="selection-group">
+          <label>Size</label>
+          <select class="size-dropdown">
+            <option>Sperone</option>
+            <option>Small</option>
+            <option>Medium</option>
+            <option>Large</option>
+          </select>
+        </div>
+
+        <button class="add-to-cart">ADD TO BAG</button>
+        <button class="wishlist-toggle">
+          <i class="far fa-heart"></i> ADD TO WISHLIST
+        </button>
+      </div>
+    </main>
+
+    <hr class="divider" />
+
+    <section class="prizes-section">
+      <div class="prizes-header">
+        <h2 class="section-title">PRZES YOU</h2>
+        <span class="view-all">View All</span>
+      </div>
+
+      <div class="prizes-grid">
+        <div class="prize-card">
+          <i class="fa-solid fa-shirt"></i>
+          <p>MY ORDERS</p>
+        </div>
+        <div class="prize-card">
+          <i class="fa-solid fa-heart"></i>
+          <p>WISHLIST</p>
+        </div>
+        <div class="prize-card">
+          <i class="fa-solid fa-location-dot"></i>
+          <p>ADDRESSES</p>
+        </div>
+      </div>
+    </section>
+    <script src="/js/detail.js"></script>
+    <script src="/js/footer.js"></script>
+  </body>
+</html>

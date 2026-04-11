@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Men - VASTRA</title>
+    <link rel="stylesheet" href="/css/shop.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div id="navbar"></div>
+    <script src="/js/navbar.js"></script>
+
+    <main>
+      <h1>MEN'S COLLECTION</h1>
+
+      <div class="container">
+        <aside class="sidebar">
+          <div class="search-bar">
+            <input type="text" placeholder="Search men's items..." />
+          </div>
+          
+          <div class="filter-section">
+            <h3>FILTER <span>−</span></h3>
+            <ul>
+              <li><input type="checkbox" checked /> All</li>
+            </ul>
+          </div>
+        </aside>
+
+        <section class="content">
+          <div class="grid-controls">
+            <span id="product-count">Loading...</span>
+            <select>
+              <option value="">Sort by: All Items</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+            </select>
+          </div>
+
+          <div class="product-grid"></div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const gridControls = document.querySelector(".grid-controls select");
+      const searchInput = document.querySelector(".search-bar input");
+      const productGrid = document.querySelector(".product-grid");
+
+      async function loadMenProducts() {
+        try {
+          const res = await fetch("/api/products?category=Men&limit=100");
+          const data = await res.json();
+          if (data.success) {
+            renderProducts(data.products);
+            document.getElementById("product-count").textContent = `${data.products.length} Items`;
+          }
+        } catch (err) {
+          productGrid.innerHTML = '<p style="text-align:center;color:red;">Failed to load products.</p>';
+        }
+      }
+
+      function renderProducts(products) {
+        productGrid.innerHTML = products
+          .map(
+            (p) => `
+          <div class="product-card">
+            <div class="product-image-wrapper">
+              <img src="${p.image}" loading="lazy" class="product-img" onerror="this.src='https://via.placeholder.com/300x400/cccccc/666666?text=No+Image'">
+              <button class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist('${p._id}','${p.name}',${p.price},'${p.image}')">
+                <i class="far fa-heart"></i>
+              </button>
+            </div>
+            <div onclick="window.location.href='/detail?id=${p._id}'">
+              <p class="name">${p.name}</p>
+              <p class="price">$${p.price}</p>
+            </div>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">
+              ADD TO BAG
+            </button>
+          </div>`
+          )
+          .join("");
+      }
+
+      function toggleWishlist(id, name, price, image) {
+        const wishlist = JSON.parse(localStorage.getItem('vastra_wishlist') || '[]');
+        const exists = wishlist.find(item => item.id === id);
+        if (exists) {
+          localStorage.setItem('vastra_wishlist', JSON.stringify(wishlist.filter(item => item.id !== id)));
+          alert(`${name} removed from wishlist`);
+        } else {
+          wishlist.push({id, name, price, image});
+          localStorage.setItem('vastra_wishlist', JSON.stringify(wishlist));
+          alert(`${name} added to wishlist`);
+        }
+        loadMenProducts();
+      }
+
+      function addToCart(id, name, price, image, size = "M") {
+        const cart = JSON.parse(localStorage.getItem("vastra_cart") || "[]");
+        const existing = cart.find((i) => i.id === id && i.size === size);
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          cart.push({ id, name, price, image, size, quantity: 1 });
+        }
+        localStorage.setItem("vastra_cart", JSON.stringify(cart));
+        alert(`${name} added to bag!`);
+      }
+
+      loadMenProducts();
+    </script>
+    <script src="/js/footer.js"></script>
+  </body>
+</html>

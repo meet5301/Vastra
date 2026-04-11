@@ -1,0 +1,250 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #fff;
+
+  color: #333;
+}
+.maincon {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px 100px 0 100px;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 12px;
+  margin-bottom: 30px;
+  color: #888;
+  margin-left: 200px;
+}
+.breadcrumb span {
+  color: #000;
+  font-weight: bold;
+}
+
+/* Layout */
+.product-container {
+  display: flex;
+  gap: 50px;
+  margin-bottom: 50px;
+}
+
+/* Image Section */
+.product-image-section {
+  flex: 1;
+  margin-left: 200px;
+  margin-top: 50px;
+}
+.main-image-card {
+  background-color: #f5f5f5;
+  position: relative;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  border-radius: 4px;
+}
+.main-image-card img {
+  max-width: 100%;
+  height: auto;
+}
+.wishlist-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: white;
+  padding: 8px;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.thumbnail-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  margin-left: 200px;
+ 
+}
+.thumb {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ddd;
+}
+.thumb.active {
+  border: 2px solid #3357ff;
+}
+
+/* Swatch Colors */
+.blue {
+  background-color: #1a47b8;
+}
+.green {
+  background-color: #00a651;
+}
+.red {
+  background-color: #ee1c25;
+}
+.purple {
+  background-color: #4a235a;
+}
+.grey {
+  background-color: #ddd;
+}
+
+/* Info Section */
+.product-info-section {
+  flex: 1;
+  margin-left: 100px;
+  margin-top: 50px;
+}
+.product-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+.price {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.selection-group {
+  margin-bottom: 20px;
+}
+.selection-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 17px;
+}
+
+.color-swatches {
+  display: flex;
+  gap: 10px;
+}
+.swatch {
+  width: 30px;
+  height: 25px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.description-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #555;
+  max-width: 400px;
+}
+
+.size-dropdown {
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+.add-to-cart {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 15px 40px;
+  font-weight: bold;
+  width: 250px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: block;
+}
+.add-to-cart:hover {
+  opacity: 0.8;
+}
+
+.wishlist-toggle {
+  background-color: #fff;
+  color: #000;
+  border: 2px solid #000;
+  padding: 13px 40px;
+  font-weight: bold;
+  width: 250px;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: block;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.wishlist-toggle:hover {
+  background-color: #f5f5f5;
+}
+
+.wishlist-toggle.active {
+  background-color: #d64545;
+  color: white;
+  border-color: #d64545;
+}
+
+.wishlist-toggle.active:hover {
+  background-color: #b83a3a;
+}
+
+/* Divider */
+.divider {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin-bottom: 40px;
+}
+
+/* Bottom Grid */
+.prizes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: 25px;
+  letter-spacing: 1px;
+  font-weight: 1500;
+}
+
+.view-all {
+  font-size: 17px;
+  color: #313131;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.prizes-section {
+  margin-left: 193px;
+  margin-right: 193px;
+}
+
+.prizes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.prize-card {
+  background-color: #f9f9f9;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+.prize-card i {
+  font-size: 30px;
+  margin-bottom: 15px;
+  color: #444;
+}
+.prize-card p {
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}

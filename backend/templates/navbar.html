@@ -1,0 +1,103 @@
+<header class="navbar">
+    <div class="logo">VASTRA.</div>
+
+    <ul class="menu">
+        <li><a href="/index">HOME</a></li>
+        <li><a href="/shop">SHOP</a></li>
+        <li><a href="/categories">CATEGORIES</a></li>
+        <li><a href="/about">ABOUT</a></li>
+        <li><a href="/contact">CONTACT</a></li>
+        <!-- Admin panel link - shown only for admin -->
+        <li id="nav-admin-link" style="display:none">
+            <a href="/admin/dashboard" style="color:#e63946;">ADMIN PANEL</a>
+        </li>
+    </ul>
+
+    <div class="icons" style="display:flex;align-items:center;gap:10px;">
+        <a href="/search" style="text-decoration:none;color:#000;cursor:pointer;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
+        <a href="/wishlist" style="text-decoration:none;color:#000;cursor:pointer;">
+            <i class="fa-regular fa-heart"></i>
+        </a>
+        <a href="/shopingbag" style="text-decoration:none;color:#000;cursor:pointer;">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+
+        <!-- User greeting + logout -->
+        <span id="nav-user-name" style="
+            display:none;
+            font-weight:700;
+            font-size:14px;
+            letter-spacing:1px;
+            margin-left:10px;
+            background:#000;
+            color:#fff;
+            padding:5px 14px;
+            border-radius:20px;
+            cursor:default;
+        "></span>
+
+        <a id="nav-login-btn" href="/login" style="
+            display:none;
+            font-weight:700;
+            font-size:13px;
+            letter-spacing:1px;
+            text-decoration:none;
+            color:#000;
+            border:1.5px solid #000;
+            padding:5px 14px;
+            border-radius:20px;
+        ">LOGIN</a>
+
+        <button id="nav-logout-btn" onclick="vastraLogout()" style="
+            display:none;
+            font-weight:700;
+            font-size:13px;
+            letter-spacing:1px;
+            background:transparent;
+            color:#000;
+            border:1.5px solid #000;
+            padding:5px 14px;
+            border-radius:20px;
+            cursor:pointer;
+            width:auto;
+        ">LOGOUT</button>
+    </div>
+</header>
+
+<script>
+(function() {
+    const raw  = localStorage.getItem("vastra_user");
+    const user = raw ? JSON.parse(raw) : null;
+
+    const nameEl    = document.getElementById("nav-user-name");
+    const loginBtn  = document.getElementById("nav-login-btn");
+    const logoutBtn = document.getElementById("nav-logout-btn");
+    const adminLink = document.getElementById("nav-admin-link");
+
+    if (user) {
+        // Show name badge
+        nameEl.textContent = "Hi, " + user.username.toUpperCase();
+        nameEl.style.display = "inline-block";
+        logoutBtn.style.display = "inline-block";
+        loginBtn.style.display  = "none";
+
+        // Show admin link if admin
+        if (user.role === "admin") {
+            adminLink.style.display = "block";
+        }
+    } else {
+        nameEl.style.display    = "none";
+        logoutBtn.style.display = "none";
+        loginBtn.style.display  = "inline-block";
+    }
+})();
+
+function vastraLogout() {
+    localStorage.removeItem("vastra_token");
+    localStorage.removeItem("vastra_user");
+    localStorage.removeItem("vastra_cart");
+    window.location.href = "/login";
+}
+</script>

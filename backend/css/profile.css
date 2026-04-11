@@ -1,0 +1,96 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: #f8f8f8;
+}
+
+/* MAIN CONTAINER */
+.container {
+  width: 65%;
+  margin: 60px auto;
+  text-align: center;
+}
+
+/* TITLE */
+h1 {
+  font-weight: 900;
+  font-size: 42px; /* BIG */
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: gray;
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+/* PROFILE ICON */
+.profile-icon {
+  width: 130px;
+  height: 130px;
+  border: 3px solid black;
+  border-radius: 50%;
+  margin: 30px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-icon i {
+  font-size: 55px; /* BIG */
+}
+
+/* CARDS */
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 50px;
+}
+
+.card {
+  width: 280px;   /* BIG */
+  height: 180px;  /* BIG */
+  background: #eee;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* ICON */
+.card i {
+  font-size: 45px; /* BIG */
+  margin-bottom: 15px;
+}
+
+/* TEXT */
+.card h3 {
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+/* HOVER */
+.card:hover {
+  background: black;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* BOTTOM */
+.bottom-links {
+  margin-top: 60px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+}
+
+.bottom-links a {
+  margin-left: 15px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}

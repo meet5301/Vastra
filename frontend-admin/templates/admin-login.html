@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VASTRA Admin Login</title>
+  <link rel="stylesheet" href="/admin/css/admin.css" />
+</head>
+<body>
+  <div class="admin-login-page">
+    <div class="login-box">
+      <h1>VASTRA.</h1>
+      <p>ADMIN PANEL</p>
+      <div class="error" id="error-msg">Invalid email or password</div>
+      <input type="email" id="email" placeholder="Admin Email" />
+      <input type="password" id="password" placeholder="Password" />
+      <button id="login-btn">LOGIN</button>
+    </div>
+  </div>
+
+  <script>
+    // Redirect if already logged in
+    const token = localStorage.getItem("vastra_admin_token");
+    if (token) window.location.href = "/admin/dashboard";
+
+    document.getElementById("login-btn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errEl = document.getElementById("error-msg");
+      errEl.style.display = "none";
+
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+
+        if (data.success && data.user.role === "admin") {
+          localStorage.setItem("vastra_admin_token", data.token);
+          localStorage.setItem("vastra_admin_user", JSON.stringify(data.user));
+          window.location.href = "/admin/dashboard";
+        } else if (data.success && data.user.role !== "admin") {
+          errEl.textContent = "Access denied. Admin only.";
+          errEl.style.display = "block";
+        } else {
+          errEl.textContent = data.message || "Invalid credentials";
+          errEl.style.display = "block";
+        }
+      } catch (err) {
+        errEl.textContent = "Server error. Try again.";
+        errEl.style.display = "block";
+      }
+    });
+
+    // Press Enter to login
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") document.getElementById("login-btn").click();
+    });
+  </script>
+</body>
+</html>

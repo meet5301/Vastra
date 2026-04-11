@@ -1,0 +1,79 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: #f8f8f8;
+}
+
+.about-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 24px 60px;
+  color: #111;
+}
+
+.about-hero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.about-copy h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.about-copy p {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 18px;
+  max-width: 640px;
+}
+
+.about-image img {
+  width: 100%;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+.about-values {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 60px;
+}
+
+.value-card {
+  background: #111;
+  color: #fff;
+  border-radius: 18px;
+  padding: 32px;
+  min-height: 180px;
+}
+
+.value-card h2 {
+  margin-bottom: 16px;
+  font-size: 1.4rem;
+}
+
+.value-card p {
+  line-height: 1.8;
+  opacity: 0.87;
+}
+
+@media (max-width: 900px) {
+  .about-hero,
+  .about-values {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-page {
+    padding: 40px 16px 40px;
+  }
+
+  .about-copy h1 {
+    font-size: 2.4rem;
+  }
+}
