@@ -68,7 +68,7 @@ npm install
 ### 3. Configure environment
 Edit `backend/.env`:
 ```
-PORT=5000
+PORT=5001
 MONGO_URI=mongodb://localhost:27017/vastra
 JWT_SECRET=your_secret_key_here
 JWT_EXPIRE=7d
@@ -114,18 +114,18 @@ npm run dev
 
 | Page | URL |
 |------|-----|
-| Home | http://localhost:5000 |
-| Shop | http://localhost:5000/shop |
-| Login | http://localhost:5000/login |
-| Signup | http://localhost:5000/signup |
-| Profile | http://localhost:5000/profile |
-| Cart | http://localhost:5000/shopingbag |
-| Checkout | http://localhost:5000/checkout |
-| **Admin Login** | **http://localhost:5000/admin** |
-| **Admin Dashboard** | **http://localhost:5000/admin/dashboard** |
-| **Admin Products** | **http://localhost:5000/admin/products** |
-| **Admin Orders** | **http://localhost:5000/admin/orders** |
-| **Admin Users** | **http://localhost:5000/admin/users** |
+| Home | http://localhost:5001 |
+| Shop | http://localhost:5001/shop |
+| Login | http://localhost:5001/login |
+| Signup | http://localhost:5001/signup |
+| Profile | http://localhost:5001/profile |
+| Cart | http://localhost:5001/shopingbag |
+| Checkout | http://localhost:5001/checkout |
+| **Admin Login** | **http://localhost:5001/admin** |
+| **Admin Dashboard** | **http://localhost:5001/admin/dashboard** |
+| **Admin Products** | **http://localhost:5001/admin/products** |
+| **Admin Orders** | **http://localhost:5001/admin/orders** |
+| **Admin Users** | **http://localhost:5001/admin/users** |
 
 ---
 

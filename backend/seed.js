@@ -212,8 +212,8 @@ if (!adminExists) {
 
   console.log("\n✅ Seed complete!");
   console.log("Start server: npm start");
-  console.log("User site: http://localhost:5000");
-  console.log("Admin panel: http://localhost:5000/admin");
+  console.log("User site: http://localhost:5001");
+  console.log("Admin panel: http://localhost:5001/admin");
   console.log("Admin login: admin@vastra.com / admin123");
 
   process.exit(0);

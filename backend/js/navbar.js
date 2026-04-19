@@ -10,7 +10,11 @@ function initNavbarAuth() {
     if (user) {
         const letter = (user.username || user.email || "U").charAt(0).toUpperCase();
         loginBtn.textContent = letter;
-        loginBtn.setAttribute("href", "/profile");
+        if (user.role === "brand") {
+            loginBtn.setAttribute("href", "/brand/dashboard");
+        } else {
+            loginBtn.setAttribute("href", "/profile");
+        }
         loginBtn.title = user.username || "Profile";
         loginBtn.style.background = "#111";
         loginBtn.style.color = "#fff";

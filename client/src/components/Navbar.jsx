@@ -68,6 +68,13 @@ export default function Navbar() {
           <li><Link to="/kids">KIDS</Link></li>
           <li><Link to="/accessories">ACCESSORIES</Link></li>
           <li><Link to="/about">ABOUT</Link></li>
+          {user?.role === "brand" ? (
+            <li id="nav-brand-link">
+              <a href="/brand/dashboard" style={{ color: "#0f766e" }}>
+                SELLER DASHBOARD
+              </a>
+            </li>
+          ) : null}
           {user?.role === "admin" ? (
             <li id="nav-admin-link">
               <a href="/admin/dashboard" style={{ color: "#e63946" }}>

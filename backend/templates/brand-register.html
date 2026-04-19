@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Seller Registration - VASTRA</title>
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="left-panel">
+            <h1>VASTRA.</h1>
+            <p>
+                Add your brand for selling clothes on Vastra.<br>
+                Create your seller account and manage catalog from one dashboard.
+            </p>
+        </div>
+
+        <div class="right-panel">
+            <div class="form-box">
+                <h2>Brand Seller Registration</h2>
+
+                <form data-form="brand-register" autocomplete="off">
+                    <div class="input-group">
+                        <input type="text" name="brand_name" placeholder="Brand Name" required>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="email" name="brand_email" placeholder="Business Email" required>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="password" name="brand_pass" placeholder="Password" autocomplete="new-password" required>
+                    </div>
+
+                    <button type="submit">Register Brand Seller</button>
+                </form>
+
+                <div class="switch">
+                    Already a seller?
+                    <a href="/brand/login">Brand Login</a>
+                </div>
+
+                <div class="switch" style="margin-top: 8px;">
+                    Just want to buy?
+                    <a href="/signup">User Signup</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/brand-auth.js"></script>
+</body>
+
+</html>

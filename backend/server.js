@@ -43,6 +43,18 @@ app.get("/signup", (req, res) =>
   res.sendFile(path.join(__dirname, "templates", "signup.html"))
 );
 
+app.get("/brand/login", (req, res) =>
+  res.sendFile(path.join(__dirname, "templates", "brand-login.html"))
+);
+
+app.get("/brand/register", (req, res) =>
+  res.sendFile(path.join(__dirname, "templates", "brand-register.html"))
+);
+
+app.get("/brand/dashboard", (req, res) =>
+  res.sendFile(path.join(__dirname, "templates", "brand-dashboard.html"))
+);
+
 app.get("/navbar", (req, res) =>
   res.sendFile(path.join(__dirname, "templates", "navbar.html"))
 );
@@ -148,11 +160,12 @@ app.use("/api/products", require("./routes/products"));
 app.use("/api/orders", require("./routes/orders"));
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/brands", require("./routes/brands"));
+app.use("/api/brand", require("./routes/brand"));
 app.use("/api/coupons", require("./routes/coupons"));
 app.use("/api/placements", require("./routes/placements"));
 
 // ─── SERVER START ───────────────────────────────────────────
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);

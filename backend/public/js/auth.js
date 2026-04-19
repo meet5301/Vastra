@@ -29,6 +29,10 @@ if (loginForm) {
           localStorage.setItem("vastra_admin_token", data.token);
           localStorage.setItem("vastra_admin_user",  JSON.stringify(data.user));
           window.location.href = "/admin/dashboard";
+        } else if (data.user.role === "brand") {
+          localStorage.setItem("vastra_brand_token", data.token);
+          localStorage.setItem("vastra_brand_user", JSON.stringify(data.user));
+          window.location.href = "/brand/dashboard";
         } else {
           window.location.href = "/";
         }

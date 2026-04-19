@@ -31,6 +31,50 @@ router.post("/signup", async (req, res) => {
   }
 });
 
+// POST /api/auth/brand/signup
+router.post("/brand/signup", async (req, res) => {
+  const { username, email, password, brandName, contactPhone, website, companyName, about } = req.body;
+  try {
+    const exists = await User.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ success: false, message: "Email already registered" });
+    }
+
+    const normalizedBrandName = (brandName || "").trim();
+    const fallbackUsername = normalizedBrandName || String(email || "").split("@")[0] || "brand-seller";
+
+    const user = await User.create({
+      username: (username || "").trim() || fallbackUsername,
+      email,
+      password,
+      role: "brand",
+      brandProfile: {
+        brandName: normalizedBrandName,
+        contactPhone: (contactPhone || "").trim(),
+        website: (website || "").trim(),
+        companyName: (companyName || "").trim(),
+        about: (about || "").trim(),
+        approved: false,
+      },
+    });
+
+    const token = generateToken(user._id);
+    res.status(201).json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        brandProfile: user.brandProfile,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // POST /api/auth/login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -46,6 +90,34 @@ router.post("/login", async (req, res) => {
       success: true,
       token,
       user: { id: user._id, username: user.username, email: user.email, role: user.role },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// POST /api/auth/brand/login
+router.post("/brand/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !(await user.matchPassword(password)) || user.role !== "brand") {
+      return res.status(401).json({ success: false, message: "Invalid brand credentials" });
+    }
+
+    user.lastLogin = new Date();
+    await user.save();
+    const token = generateToken(user._id);
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        brandProfile: user.brandProfile,
+      },
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

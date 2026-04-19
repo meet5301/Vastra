@@ -16,6 +16,7 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, required: [true, "Price required"], min: 0 },
     description: { type: String, default: "" },
     image: { type: String, required: [true, "Image required"] },
+    sellerUser: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand" },
     brandName: { type: String, default: "" },
     category: {

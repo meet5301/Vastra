@@ -4,6 +4,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const Product = require("../models/Product");
+const User = require("../models/User");
 const { protect, adminOnly } = require("../middleware/auth");
 
 function parseJSONOrDefault(value, fallback) {
@@ -40,6 +41,31 @@ function normalizeExternalOffers(rawOffers) {
     .filter(Boolean);
 }
 
+async function withApprovedBrandVisibility(baseQuery = {}) {
+  const approvedBrandUsers = await User.find({
+    role: "brand",
+    "brandProfile.approved": true,
+  }).select("_id");
+
+  const approvedIds = approvedBrandUsers.map((u) => u._id);
+  return {
+    ...baseQuery,
+    $or: [
+      { sellerUser: { $exists: false } },
+      { sellerUser: null },
+      { sellerUser: { $in: approvedIds } },
+    ],
+  };
+}
+
+async function isSellerApproved(sellerUserId) {
+  if (!sellerUserId) return true;
+  const seller = await User.findById(sellerUserId).select("role brandProfile.approved");
+  if (!seller) return false;
+  if (seller.role !== "brand") return true;
+  return seller.brandProfile?.approved === true;
+}
+
 // Multer setup for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -58,16 +84,17 @@ const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 router.get("/", async (req, res) => {
   try {
     const { category, search, sort, page = 1, limit = 12 } = req.query;
-    let query = { isActive: true };
+    let baseQuery = { isActive: true };
 
-    if (category && category !== "All") query.category = category;
-    if (search) query.name = { $regex: search, $options: "i" };
+    if (category && category !== "All") baseQuery.category = category;
+    if (search) baseQuery.name = { $regex: search, $options: "i" };
 
     let sortObj = { createdAt: -1 };
     if (sort === "price_asc") sortObj = { price: 1 };
     if (sort === "price_desc") sortObj = { price: -1 };
     if (sort === "rating") sortObj = { avgRating: -1 };
 
+    const query = await withApprovedBrandVisibility(baseQuery);
     const skip = (page - 1) * limit;
     const total = await Product.countDocuments(query);
     const products = await Product.find(query).sort(sortObj).skip(skip).limit(Number(limit));
@@ -81,7 +108,8 @@ router.get("/", async (req, res) => {
 // GET /api/products/featured
 router.get("/featured", async (req, res) => {
   try {
-    const products = await Product.find({ isActive: true, isFeatured: true }).limit(8);
+    const query = await withApprovedBrandVisibility({ isActive: true, isFeatured: true });
+    const products = await Product.find(query).limit(8);
     res.json({ success: true, products });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -91,8 +119,13 @@ router.get("/featured", async (req, res) => {
 // GET /api/products/:id/compare-prices
 router.get("/:id/compare-prices", async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).select("name brandName category price externalOffers");
+    const product = await Product.findById(req.params.id).select("name brandName category price externalOffers sellerUser");
     if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    const visible = await isSellerApproved(product.sellerUser);
+    if (!visible) {
       return res.status(404).json({ success: false, message: "Product not found" });
     }
 
@@ -119,6 +152,10 @@ router.get("/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ success: false, message: "Product not found" });
+
+    const visible = await isSellerApproved(product.sellerUser);
+    if (!visible) return res.status(404).json({ success: false, message: "Product not found" });
+
     res.json({ success: true, product });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

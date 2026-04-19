@@ -32,4 +32,12 @@ const adminOnly = (req, res, next) => {
   }
 };
 
-module.exports = { protect, adminOnly };
+const brandOnly = (req, res, next) => {
+  if (req.user && req.user.role === "brand") {
+    next();
+  } else {
+    res.status(403).json({ success: false, message: "Brand seller access only" });
+  }
+};
+
+module.exports = { protect, adminOnly, brandOnly };

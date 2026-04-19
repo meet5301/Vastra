@@ -11,11 +11,25 @@ const emptyForm = {
   isActive: true,
 };
 
+const emptyBrandUser = {
+  _id: "",
+  username: "",
+  email: "",
+  brandName: "",
+  contactPhone: "",
+  website: "",
+  companyName: "",
+  about: "",
+};
+
 export default function Brands() {
   const navigate = useNavigate();
   const [brands, setBrands] = useState([]);
+  const [brandUsers, setBrandUsers] = useState([]);
   const [formValues, setFormValues] = useState(emptyForm);
   const [modalOpen, setModalOpen] = useState(false);
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const [editingBrandUser, setEditingBrandUser] = useState(emptyBrandUser);
 
   useEffect(() => {
     const token = localStorage.getItem("vastra_admin_token");
@@ -23,19 +37,8 @@ export default function Brands() {
   }, [navigate]);
 
   useEffect(() => {
-    async function loadBrands() {
-      try {
-        const token = localStorage.getItem("vastra_admin_token");
-        const res = await fetch("/api/brands/admin/all", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        setBrands(data.brands || []);
-      } catch (err) {
-        setBrands([]);
-      }
-    }
     loadBrands();
+    loadBrandUsers();
   }, []);
 
   function toast(msg) {
@@ -44,6 +47,32 @@ export default function Brands() {
     t.textContent = msg;
     t.style.display = "block";
     setTimeout(() => (t.style.display = "none"), 2500);
+  }
+
+  async function loadBrands() {
+    try {
+      const token = localStorage.getItem("vastra_admin_token");
+      const res = await fetch("/api/brands/admin/all", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setBrands(data.brands || []);
+    } catch {
+      setBrands([]);
+    }
+  }
+
+  async function loadBrandUsers() {
+    try {
+      const token = localStorage.getItem("vastra_admin_token");
+      const res = await fetch("/api/admin/users", {
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setBrandUsers((data.users || []).filter((u) => u.role === "brand"));
+    } catch {
+      setBrandUsers([]);
+    }
   }
 
   function openAddModal() {
@@ -85,15 +114,11 @@ export default function Brands() {
       if (data.success) {
         toast(id ? "Brand updated" : "Brand created");
         setModalOpen(false);
-        const refresh = await fetch("/api/brands/admin/all", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const refreshData = await refresh.json();
-        setBrands(refreshData.brands || []);
+        loadBrands();
       } else {
         alert(data.message || "Failed");
       }
-    } catch (err) {
+    } catch {
       alert("Server error");
     }
   }
@@ -111,8 +136,83 @@ export default function Brands() {
         toast("Brand deleted");
         setBrands((prev) => prev.filter((b) => b._id !== id));
       }
-    } catch (err) {
+    } catch {
       alert("Error deleting brand");
+    }
+  }
+
+  async function toggleBrandApproval(id, approved) {
+    try {
+      const token = localStorage.getItem("vastra_admin_token");
+      const res = await fetch(`/api/admin/users/${id}/brand-approval`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ approved }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || "Failed to update approval");
+        return;
+      }
+      toast(approved ? "Brand approved" : "Brand set to pending");
+      loadBrandUsers();
+    } catch {
+      alert("Error updating approval");
+    }
+  }
+
+  function openUserEditModal(user) {
+    setEditingBrandUser({
+      _id: user._id,
+      username: user.username || "",
+      email: user.email || "",
+      brandName: user.brandProfile?.brandName || "",
+      contactPhone: user.brandProfile?.contactPhone || "",
+      website: user.brandProfile?.website || "",
+      companyName: user.brandProfile?.companyName || "",
+      about: user.brandProfile?.about || "",
+    });
+    setUserModalOpen(true);
+  }
+
+  async function saveBrandUser(e) {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("vastra_admin_token");
+      const res = await fetch(`/api/admin/users/${editingBrandUser._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(editingBrandUser),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || "Failed to update brand seller");
+        return;
+      }
+      toast("Brand seller updated");
+      setUserModalOpen(false);
+      setEditingBrandUser(emptyBrandUser);
+      loadBrandUsers();
+    } catch {
+      alert("Error updating brand seller");
+    }
+  }
+
+  async function deleteBrandUser(id) {
+    if (!confirm("Delete this brand seller?")) return;
+    try {
+      const token = localStorage.getItem("vastra_admin_token");
+      const res = await fetch(`/api/admin/users/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast("Brand seller deleted");
+        setBrandUsers((prev) => prev.filter((u) => u._id !== id));
+      }
+    } catch {
+      alert("Error deleting brand seller");
     }
   }
 
@@ -163,9 +263,55 @@ export default function Brands() {
         </table>
       </div>
 
+      <div className="table-section" style={{ marginTop: 18 }}>
+        <div className="table-header">
+          <h3>BRAND SELLERS</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>BRAND</th>
+              <th>EMAIL</th>
+              <th>APPROVAL</th>
+              <th>PRODUCTS</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {!brandUsers.length ? (
+              <tr>
+                <td colSpan="5" style={{ textAlign: "center", padding: "1.5rem", color: "#888" }}>
+                  No brand sellers found.
+                </td>
+              </tr>
+            ) : (
+              brandUsers.map((u) => (
+                <tr key={u._id}>
+                  <td><strong>{u.brandProfile?.brandName || u.username}</strong></td>
+                  <td>{u.email}</td>
+                  <td>{u.brandProfile?.approved ? "APPROVED" : "PENDING"}</td>
+                  <td>{u.brandProductCount || 0}</td>
+                  <td style={{ display: "flex", gap: 6, paddingTop: 14, flexWrap: "wrap" }}>
+                    <button
+                      className="btn btn-sm"
+                      style={{ background: u.brandProfile?.approved ? "#f59e0b" : "#10b981", color: "#fff" }}
+                      onClick={() => toggleBrandApproval(u._id, !u.brandProfile?.approved)}
+                    >
+                      {u.brandProfile?.approved ? "UNAPPROVE" : "APPROVE"}
+                    </button>
+                    <button className="btn btn-outline btn-sm" onClick={() => openUserEditModal(u)}>EDIT</button>
+                    <button className="btn btn-danger btn-sm" onClick={() => deleteBrandUser(u._id)}>DELETE</button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
       <div className={`modal-overlay ${modalOpen ? "open" : ""}`}>
         <div className="modal">
-          <button className="modal-close" onClick={() => setModalOpen(false)}>✕</button>
+          <button className="modal-close" onClick={() => setModalOpen(false)}>X</button>
           <h2>{formValues._id ? "EDIT BRAND" : "ADD BRAND"}</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -214,6 +360,76 @@ export default function Brands() {
             <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
               <button type="submit" className="btn btn-black" style={{ flex: 1 }}>SAVE BRAND</button>
               <button type="button" className="btn btn-outline" onClick={() => setModalOpen(false)}>CANCEL</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div className={`modal-overlay ${userModalOpen ? "open" : ""}`}>
+        <div className="modal">
+          <button className="modal-close" onClick={() => setUserModalOpen(false)}>X</button>
+          <h2>EDIT BRAND SELLER</h2>
+          <form onSubmit={saveBrandUser}>
+            <div className="form-group">
+              <label>USERNAME</label>
+              <input
+                type="text"
+                value={editingBrandUser.username}
+                onChange={(e) => setEditingBrandUser((p) => ({ ...p, username: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>EMAIL</label>
+              <input
+                type="email"
+                value={editingBrandUser.email}
+                onChange={(e) => setEditingBrandUser((p) => ({ ...p, email: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>BRAND NAME</label>
+              <input
+                type="text"
+                value={editingBrandUser.brandName}
+                onChange={(e) => setEditingBrandUser((p) => ({ ...p, brandName: e.target.value }))}
+              />
+            </div>
+            <div className="form-group">
+              <label>CONTACT PHONE</label>
+              <input
+                type="text"
+                value={editingBrandUser.contactPhone}
+                onChange={(e) => setEditingBrandUser((p) => ({ ...p, contactPhone: e.target.value }))}
+              />
+            </div>
+            <div className="form-group">
+              <label>WEBSITE</label>
+              <input
+                type="text"
+                value={editingBrandUser.website}
+                onChange={(e) => setEditingBrandUser((p) => ({ ...p, website: e.target.value }))}
+              />
+            </div>
+            <div className="form-group">
+              <label>COMPANY NAME</label>
+              <input
+                type="text"
+                value={editingBrandUser.companyName}
+                onChange={(e) => setEditingBrandUser((p) => ({ ...p, companyName: e.target.value }))}
+              />
+            </div>
+            <div className="form-group">
+              <label>ABOUT</label>
+              <textarea
+                value={editingBrandUser.about}
+                onChange={(e) => setEditingBrandUser((p) => ({ ...p, about: e.target.value }))}
+              />
+            </div>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
+              <button type="submit" className="btn btn-black" style={{ flex: 1 }}>SAVE</button>
+              <button type="button" className="btn btn-outline" onClick={() => setUserModalOpen(false)}>CANCEL</button>
             </div>
           </form>
         </div>

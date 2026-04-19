@@ -74,6 +74,10 @@ export default function Login() {
             Don't have an account?
             <a href="/signup">Sign Up</a>
           </div>
+          <div className="switch" style={{ marginTop: 8 }}>
+            Want to sell your brand on Vastra?
+            <a href="/brand/register"> Add your brand for selling clothes</a>
+          </div>
         </div>
       </div>
     </div>

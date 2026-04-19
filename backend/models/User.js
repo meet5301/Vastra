@@ -21,8 +21,16 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin"],
+      enum: ["user", "admin", "brand"],
       default: "user",
+    },
+    brandProfile: {
+      brandName: { type: String, default: "" },
+      contactPhone: { type: String, default: "" },
+      website: { type: String, default: "" },
+      companyName: { type: String, default: "" },
+      about: { type: String, default: "" },
+      approved: { type: Boolean, default: false },
     },
     addresses: [
       {

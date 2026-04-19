@@ -72,6 +72,10 @@ export default function Signup() {
             Already have an account?
             <a href="/login">Login</a>
           </div>
+          <div className="switch" style={{ marginTop: 8 }}>
+            Brand partner onboarding?
+            <a href="/brand/register"> Add your brand for selling clothes</a>
+          </div>
         </div>
       </div>
     </div>

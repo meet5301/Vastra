@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Seller Dashboard - VASTRA</title>
+    <link rel="stylesheet" href="/css/auth.css">
+    <style>
+        .brand-wrap {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 16px 30px;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .brand-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .brand-btn {
+            border: none;
+            background: #111;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .brand-btn.secondary {
+            background: #fff;
+            color: #111;
+            border: 1px solid #111;
+        }
+
+        .brand-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .brand-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .brand-grid input,
+        .brand-grid textarea,
+        .brand-grid select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .brand-grid .full {
+            grid-column: 1 / span 2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: min(760px, 100%);
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        @media (max-width: 768px) {
+            .brand-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-grid .full {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="brand-wrap">
+        <div class="brand-top">
+            <div>
+                <h2 style="margin: 0 0 6px;">Brand Seller Dashboard</h2>
+                <p style="margin: 0; color: #666;">Manage your brand profile and products</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="brand-btn" id="addProductBtn">+ Add Product</button>
+                <button class="brand-btn secondary" id="brandLogoutBtn">Logout</button>
+            </div>
+        </div>
+
+        <section class="brand-card">
+            <h3 style="margin: 0 0 10px;">Brand Profile</h3>
+            <form id="brandProfileForm" class="brand-grid" autocomplete="off">
+                <input id="bp_brandName" type="text" placeholder="Brand Name" required>
+                <input id="bp_contactPhone" type="text" placeholder="Contact Phone">
+                <input id="bp_website" type="text" placeholder="Website URL">
+                <input id="bp_companyName" type="text" placeholder="Company Name">
+                <textarea id="bp_about" class="full" placeholder="About your brand"></textarea>
+                <button type="submit" class="brand-btn full">Save Brand Profile</button>
+            </form>
+        </section>
+
+        <section class="brand-card">
+            <h3 style="margin: 0 0 10px;">Your Products</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="brandProductsBody">
+                        <tr><td colspan="5" style="color: #666;">No products yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal" id="brandProductModal" aria-hidden="true">
+        <div class="modal-box">
+            <h3 id="productModalTitle" style="margin-top: 0;">Add Product</h3>
+            <form id="brandProductForm" class="brand-grid" autocomplete="off">
+                <input id="pp_name" type="text" placeholder="Product Name" required>
+                <input id="pp_price" type="number" min="0" placeholder="Price (INR)" required>
+                <input id="pp_image" class="full" type="text" placeholder="Image URL or /images/products/file.jpg" required>
+                <select id="pp_category">
+                    <option>Men</option>
+                    <option>Women</option>
+                    <option>Kids</option>
+                    <option>Accessories</option>
+                </select>
+                <input id="pp_subCategory" type="text" placeholder="Sub Category">
+                <input id="pp_sizes" type="text" placeholder="Sizes: S, M, L, XL">
+                <input id="pp_colors" type="text" placeholder="Colors: Black, White">
+                <input id="pp_stock" type="number" min="0" placeholder="Stock" required>
+                <input id="pp_tags" class="full" type="text" placeholder="Tags: summer, cotton">
+                <textarea id="pp_description" class="full" placeholder="Description"></textarea>
+                <label class="full" style="display: flex; align-items: center; gap: 8px;">
+                    <input id="pp_isActive" type="checkbox" checked>
+                    Product is active
+                </label>
+                <div class="full" style="display: flex; gap: 8px; justify-content: flex-end;">
+                    <button class="brand-btn secondary" type="button" id="cancelProductModal">Cancel</button>
+                    <button class="brand-btn" type="submit">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/brand-dashboard.js"></script>
+</body>
+
+</html>

@@ -7,6 +7,9 @@ import Categories from "./pages/Categories";
 import Checkout from "./pages/Checkout";
 import Contact from "./pages/Contact";
 import Detail from "./pages/Detail";
+import BrandDashboard from "./pages/BrandDashboard";
+import BrandLogin from "./pages/BrandLogin";
+import BrandRegister from "./pages/BrandRegister";
 import Home from "./pages/Home";
 import Journal from "./pages/Journal";
 import Kids from "./pages/Kids";
@@ -52,6 +55,9 @@ function App() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/brand/login" element={<BrandLogin />} />
+        <Route path="/brand/register" element={<BrandRegister />} />
+        <Route path="/brand/dashboard" element={<BrandDashboard />} />
       </Routes>
     </BrowserRouter>
   );

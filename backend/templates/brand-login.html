@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Seller Login - VASTRA</title>
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="left-panel">
+            <h1>VASTRA.</h1>
+            <p>
+                Brand Partner Login.<br>
+                Manage your brand profile and product listings.
+            </p>
+        </div>
+
+        <div class="right-panel">
+            <div class="form-box">
+                <h2>Brand Seller Login</h2>
+
+                <form data-form="brand-login" autocomplete="off">
+                    <div class="input-group">
+                        <input type="email" name="brand_email" placeholder="Business Email" autocomplete="username" required>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="password" name="brand_pass" placeholder="Password" autocomplete="new-password" required>
+                    </div>
+
+                    <button type="submit">Login as Brand</button>
+                </form>
+
+                <div class="switch">
+                    New seller?
+                    <a href="/brand/register">Register your brand</a>
+                </div>
+
+                <div class="switch" style="margin-top: 8px;">
+                    Buyer account?
+                    <a href="/login">User Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/brand-auth.js"></script>
+</body>
+
+</html>
