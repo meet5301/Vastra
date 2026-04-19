@@ -6,6 +6,40 @@ const fs = require("fs");
 const Product = require("../models/Product");
 const { protect, adminOnly } = require("../middleware/auth");
 
+function parseJSONOrDefault(value, fallback) {
+  if (!value) return fallback;
+  if (Array.isArray(value)) return value;
+  if (typeof value !== "string") return fallback;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
+function roundINR(value) {
+  return Math.max(0, Math.round(Number(value) || 0));
+}
+
+function normalizeExternalOffers(rawOffers) {
+  const offers = Array.isArray(rawOffers) ? rawOffers : [];
+  return offers
+    .map((offer) => {
+      const site = String(offer?.site || "").trim();
+      const parsedPrice = Number(offer?.price);
+      if (!site || !Number.isFinite(parsedPrice) || parsedPrice <= 0) return null;
+      return {
+        site,
+        price: roundINR(parsedPrice),
+        productName: String(offer?.productName || "").trim(),
+        productUrl: String(offer?.productUrl || "").trim(),
+        notes: String(offer?.notes || "").trim(),
+        updatedAt: offer?.updatedAt || new Date(),
+      };
+    })
+    .filter(Boolean);
+}
+
 // Multer setup for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -49,6 +83,32 @@ router.get("/featured", async (req, res) => {
   try {
     const products = await Product.find({ isActive: true, isFeatured: true }).limit(8);
     res.json({ success: true, products });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// GET /api/products/:id/compare-prices
+router.get("/:id/compare-prices", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id).select("name brandName category price externalOffers");
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    const basePrice = roundINR(product.price);
+    const offers = normalizeExternalOffers(product.externalOffers).map((offer) => ({
+      ...offer,
+      productName: offer.productName || product.name,
+    }));
+
+    res.json({
+      success: true,
+      productPrice: basePrice,
+      productName: product.name,
+      brandName: product.brandName,
+      offers,
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -100,14 +160,42 @@ router.get("/admin/all", protect, adminOnly, async (req, res) => {
 // POST /api/products/admin/create
 router.post("/admin/create", protect, adminOnly, upload.single("image"), async (req, res) => {
   try {
-    const { name, price, description, category, subCategory, sizes, colors, stock, isFeatured } = req.body;
+    const {
+      name,
+      price,
+      description,
+      category,
+      subCategory,
+      sizes,
+      colors,
+      stock,
+      isFeatured,
+      brand,
+      brandName,
+      placementKeys,
+      tags,
+      variants,
+      externalOffers,
+    } = req.body;
     const image = req.file ? `images/products/${req.file.filename}` : req.body.image;
 
     const product = await Product.create({
-      name, price, description, category, subCategory,
+      name,
+      price,
+      description,
+      category,
+      subCategory,
       sizes: sizes ? sizes.split(",").map((s) => s.trim()) : ["S", "M", "L", "XL"],
       colors: colors ? colors.split(",").map((c) => c.trim()) : [],
-      stock, image, isFeatured: isFeatured === "true",
+      stock,
+      image,
+      isFeatured: isFeatured === "true",
+      brand,
+      brandName,
+      placementKeys: placementKeys ? placementKeys.split(",").map((p) => p.trim()) : [],
+      tags: tags ? tags.split(",").map((t) => t.trim()) : [],
+      variants: variants ? JSON.parse(variants) : [],
+      externalOffers: normalizeExternalOffers(parseJSONOrDefault(externalOffers, [])),
     });
     res.status(201).json({ success: true, product });
   } catch (err) {
@@ -122,6 +210,17 @@ router.put("/admin/:id", protect, adminOnly, upload.single("image"), async (req,
     if (req.file) update.image = `images/products/${req.file.filename}`;
     if (update.sizes && typeof update.sizes === "string") update.sizes = update.sizes.split(",").map((s) => s.trim());
     if (update.colors && typeof update.colors === "string") update.colors = update.colors.split(",").map((c) => c.trim());
+    if (update.placementKeys && typeof update.placementKeys === "string") {
+      update.placementKeys = update.placementKeys.split(",").map((p) => p.trim());
+    }
+    if (update.tags && typeof update.tags === "string") update.tags = update.tags.split(",").map((t) => t.trim());
+    if (update.variants && typeof update.variants === "string") update.variants = JSON.parse(update.variants);
+    if (update.externalOffers && typeof update.externalOffers === "string") {
+      update.externalOffers = normalizeExternalOffers(parseJSONOrDefault(update.externalOffers, []));
+    }
+    if (Array.isArray(update.externalOffers)) {
+      update.externalOffers = normalizeExternalOffers(update.externalOffers);
+    }
 
     const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });
     if (!product) return res.status(404).json({ success: false, message: "Not found" });

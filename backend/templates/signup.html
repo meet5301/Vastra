@@ -10,8 +10,7 @@
 
 <body>
 
-    <div id="navbar"></div>
-    <script src="/js/navbar.js"></script>
+
 
     <div class="auth-container">
 
@@ -27,17 +26,17 @@
             <div class="form-box">
                 <h2>Create Account</h2>
 
-                <form data-form="signup">
+                <form data-form="signup" autocomplete="off">
                     <div class="input-group">
-                        <input type="text" name="username" placeholder="Username" required>
+                        <input type="text" name="signup_username" placeholder="Username" autocomplete="off" required>
                     </div>
 
                     <div class="input-group">
-                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="email" name="signup_email" placeholder="Email" autocomplete="off" required>
                     </div>
 
                     <div class="input-group">
-                        <input type="password" name="password" placeholder="Password" required>
+                        <input type="password" name="signup_pass" placeholder="Password" autocomplete="new-password" required>
                     </div>
 
                     <button type="submit">Sign Up</button>
@@ -53,6 +52,5 @@
     </div>
 
     <script src="/js/auth.js"></script>
-    <script src="/js/footer.js"></script>
 </body>
 </html>

@@ -1,17 +1,19 @@
 const express = require("express");
 const router = express.Router();
 const Order = require("../models/Order");
+const Coupon = require("../models/Coupon");
 const { protect, adminOnly } = require("../middleware/auth");
 
 // POST /api/orders - place order (user or guest)
 router.post("/", async (req, res) => {
   try {
-    const { items, shippingAddress, guestInfo, paymentMethod, subtotal, shippingCost, discount, tax, totalAmount } = req.body;
+    const { items, shippingAddress, guestInfo, paymentMethod, subtotal, shippingCost, discount, tax, totalAmount, coupon } = req.body;
 
     const orderData = {
       items, shippingAddress, paymentMethod,
       subtotal, shippingCost: shippingCost || 3.5, discount: discount || 0,
       tax: tax || 0, totalAmount, guestInfo,
+      coupon: coupon || undefined,
     };
 
     // Attach user if logged in
@@ -25,6 +27,10 @@ router.post("/", async (req, res) => {
     }
 
     const order = await Order.create(orderData);
+
+    if (coupon?.couponId) {
+      await Coupon.findByIdAndUpdate(coupon.couponId, { $inc: { usedCount: 1 } });
+    }
     res.status(201).json({ success: true, order });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

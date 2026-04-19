@@ -32,10 +32,11 @@
       </div>
     </main>
 
+    <script src="/js/toast.js"></script>
     <script>
-      const searchInput = document.getElementById("search-input");
+      const searchInput  = document.getElementById("search-input");
       const searchResults = document.getElementById("search-results");
-      const resultCount = document.getElementById("result-count");
+      const resultCount  = document.getElementById("result-count");
 
       async function performSearch(query) {
         if (!query.trim()) {
@@ -43,9 +44,8 @@
           resultCount.textContent = "0 Results";
           return;
         }
-
         try {
-          const res = await fetch(`/api/products?search=${encodeURIComponent(query)}&limit=100`);
+          const res  = await fetch(`/api/products?search=${encodeURIComponent(query)}&limit=100`);
           const data = await res.json();
           if (data.success && data.products.length > 0) {
             renderResults(data.products);
@@ -60,44 +60,22 @@
       }
 
       function renderResults(products) {
-        searchResults.innerHTML = products
-          .map(
-            (p) => `
-          <div class="product-card" onclick="window.location.href='/detail?id=${p._id}'">
+        searchResults.innerHTML = products.map((p) => `
+          <div class="product-card" style="cursor:pointer;" onclick="window.location.href='/detail?id=${p._id}'">
             <img src="${p.image}" loading="lazy" class="product-img" onerror="this.src='https://via.placeholder.com/250'">
             <p class="name">${p.name}</p>
             <p class="price">$${p.price}</p>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCartShared('${p._id}','${p.name}',${p.price},'${p.image}')">
               ADD TO BAG
             </button>
-          </div>`
-          )
-          .join("");
+          </div>`).join("");
       }
 
-      function addToCart(id, name, price, image) {
-        const cart = JSON.parse(localStorage.getItem("vastra_cart") || "[]");
-        const existing = cart.find((i) => i.id === id && i.size === "M");
-        if (existing) {
-          existing.quantity += 1;
-        } else {
-          cart.push({ id, name, price, image, size: "M", quantity: 1 });
-        }
-        localStorage.setItem("vastra_cart", JSON.stringify(cart));
-        alert(`${name} added to bag!`);
-      }
+      searchInput.addEventListener("input", (e) => performSearch(e.target.value));
 
-      searchInput.addEventListener("input", (e) => {
-        performSearch(e.target.value);
-      });
-
-      // Auto-search from URL params
       const urlParams = new URLSearchParams(window.location.search);
       const query = urlParams.get("q");
-      if (query) {
-        searchInput.value = query;
-        performSearch(query);
-      }
+      if (query) { searchInput.value = query; performSearch(query); }
     </script>
     <script src="/js/footer.js"></script>
   </body>

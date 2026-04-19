@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
       },
     ],
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    lastLogin: { type: Date },
     createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }

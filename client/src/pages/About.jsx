@@ -1,0 +1,257 @@
+import { useEffect } from "react";
+
+const markup = `
+<section class="ab2-hero">
+  <div class="ab2-hero-bg"></div>
+  <div class="ab2-hero-overlay"></div>
+  <div class="ab2-hero-content">
+    <p class="ab2-eyebrow"><span></span> INDIA'S FASHION DESTINATION <span></span></p>
+    <h1>WEAR YOUR<br><em>STORY</em></h1>
+    <p class="ab2-hero-sub">50,000+ happy customers · 1,200+ styles · Free returns</p>
+    <div class="ab2-hero-btns">
+      <a href="/shop" class="ab2-btn-gold">SHOP NOW</a>
+      <a href="#ab2-story" class="ab2-btn-outline">OUR STORY</a>
+    </div>
+  </div>
+  <div class="ab2-hero-scroll"><i class="fa-solid fa-chevron-down"></i></div>
+</section>
+
+<div class="ab2-trust-strip">
+  <div class="ab2-trust-item"><i class="fa-solid fa-truck-fast"></i><div><strong>Free Delivery</strong><span>On orders above Rs. 999</span></div></div>
+  <div class="ab2-trust-div"></div>
+  <div class="ab2-trust-item"><i class="fa-solid fa-rotate-left"></i><div><strong>Easy Returns</strong><span>30-day hassle-free returns</span></div></div>
+  <div class="ab2-trust-div"></div>
+  <div class="ab2-trust-item"><i class="fa-solid fa-shield-halved"></i><div><strong>Secure Payments</strong><span>100% safe & encrypted</span></div></div>
+  <div class="ab2-trust-div"></div>
+  <div class="ab2-trust-item"><i class="fa-solid fa-headset"></i><div><strong>24/7 Support</strong><span>Always here to help</span></div></div>
+</div>
+
+<div class="ab2-stats">
+  <div class="ab2-stat"><span class="ab2-stat-num" data-target="50">0</span><span class="ab2-stat-suf">K+</span><p>Happy Customers</p></div>
+  <div class="ab2-stat-div"></div>
+  <div class="ab2-stat"><span class="ab2-stat-num" data-target="1200">0</span><span class="ab2-stat-suf">+</span><p>Styles Available</p></div>
+  <div class="ab2-stat-div"></div>
+  <div class="ab2-stat"><span class="ab2-stat-num" data-target="30">0</span><span class="ab2-stat-suf">+</span><p>Cities Delivered</p></div>
+  <div class="ab2-stat-div"></div>
+  <div class="ab2-stat"><span class="ab2-stat-num" data-target="4">0</span><span class="ab2-stat-suf">.8★</span><p>Average Rating</p></div>
+  <div class="ab2-stat-div"></div>
+  <div class="ab2-stat"><span class="ab2-stat-num" data-target="100">0</span><span class="ab2-stat-suf">%</span><p>Authentic Products</p></div>
+</div>
+
+<section class="ab2-story" id="ab2-story">
+  <div class="ab2-story-img ab2-reveal">
+    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700&h=800&fit=crop&q=85" alt="Vastra Story" />
+    <div class="ab2-story-badge">EST.<br>2024</div>
+    <div class="ab2-story-tag-float">PREMIUM FASHION</div>
+  </div>
+  <div class="ab2-story-copy ab2-reveal">
+    <p class="ab2-eyebrow-dark"><span></span> WHO WE ARE</p>
+    <h2>More Than Just<br>Fashion</h2>
+    <p>Vastra was born from a single belief — that great style should be accessible to everyone. We curate clean, contemporary apparel with a focus on quality, comfort, and timeless elegance.</p>
+    <p>From premium fabrics to thoughtful cuts, every piece in our collection is crafted to make you feel confident, every single day.</p>
+    <div class="ab2-story-checks">
+      <div class="ab2-check"><i class="fa-solid fa-circle-check"></i><span>Premium quality fabrics, ethically sourced</span></div>
+      <div class="ab2-check"><i class="fa-solid fa-circle-check"></i><span>Designed for modern Indian lifestyle</span></div>
+      <div class="ab2-check"><i class="fa-solid fa-circle-check"></i><span>Free returns on all orders, no questions asked</span></div>
+      <div class="ab2-check"><i class="fa-solid fa-circle-check"></i><span>Authentic brands, zero counterfeits</span></div>
+    </div>
+    <a href="/shop" class="ab2-btn-dark">EXPLORE COLLECTION <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</section>
+
+<section class="ab2-timeline-section">
+  <div class="ab2-section-head"><p class="ab2-eyebrow-dark"><span></span> OUR JOURNEY</p><h2>How We Got Here</h2></div>
+  <div class="ab2-timeline">
+    <div class="ab2-tl-item ab2-reveal"><div class="ab2-tl-year">2024</div><div class="ab2-tl-dot"></div><div class="ab2-tl-content"><h3>Vastra Founded</h3><p>Started with a vision to make premium fashion accessible to every Indian household.</p></div></div>
+    <div class="ab2-tl-item ab2-reveal"><div class="ab2-tl-year">Q2 2024</div><div class="ab2-tl-dot"></div><div class="ab2-tl-content"><h3>First 1,000 Orders</h3><p>Reached our first milestone — 1,000 happy customers across 10 cities in India.</p></div></div>
+    <div class="ab2-tl-item ab2-reveal"><div class="ab2-tl-year">Q3 2024</div><div class="ab2-tl-dot"></div><div class="ab2-tl-content"><h3>Accessories & Kids Launch</h3><p>Expanded our catalogue with premium accessories and a dedicated kids' fashion line.</p></div></div>
+    <div class="ab2-tl-item ab2-reveal"><div class="ab2-tl-year">2025</div><div class="ab2-tl-dot"></div><div class="ab2-tl-content"><h3>50K+ Customers</h3><p>Crossed 50,000 happy customers and expanded delivery to 30+ cities pan-India.</p></div></div>
+  </div>
+</section>
+
+<section class="ab2-values">
+  <div class="ab2-section-head"><p class="ab2-eyebrow-dark"><span></span> WHAT DRIVES US</p><h2>Our Core Values</h2></div>
+  <div class="ab2-values-grid">
+    <div class="ab2-val-card ab2-reveal"><div class="ab2-val-icon"><i class="fa-solid fa-gem"></i></div><h3>Premium Quality</h3><p>Every stitch, every fabric — crafted to the highest standard so you always look your best.</p></div>
+    <div class="ab2-val-card ab2-reveal"><div class="ab2-val-icon"><i class="fa-solid fa-leaf"></i></div><h3>Sustainability</h3><p>Eco-friendly materials and ethical manufacturing — because fashion shouldn't cost the planet.</p></div>
+    <div class="ab2-val-card ab2-reveal"><div class="ab2-val-icon"><i class="fa-solid fa-users"></i></div><h3>Inclusive Style</h3><p>Fashion for every body, every age, every occasion. We celebrate diversity in every collection.</p></div>
+    <div class="ab2-val-card ab2-reveal"><div class="ab2-val-icon"><i class="fa-solid fa-bolt"></i></div><h3>Fast Delivery</h3><p>From our warehouse to your wardrobe — quick, reliable delivery with real-time tracking.</p></div>
+    <div class="ab2-val-card ab2-reveal"><div class="ab2-val-icon"><i class="fa-solid fa-shield-halved"></i></div><h3>100% Authentic</h3><p>Every product is verified for authenticity. Zero counterfeits, guaranteed.</p></div>
+    <div class="ab2-val-card ab2-reveal"><div class="ab2-val-icon"><i class="fa-solid fa-rotate-left"></i></div><h3>Easy Returns</h3><p>Not happy? Return within 30 days, no questions asked. Your satisfaction is our priority.</p></div>
+  </div>
+</section>
+
+<section class="ab2-how">
+  <div class="ab2-section-head"><p class="ab2-eyebrow-dark"><span></span> SIMPLE PROCESS</p><h2>How Vastra Works</h2></div>
+  <div class="ab2-steps">
+    <div class="ab2-step ab2-reveal"><div class="ab2-step-num">01</div><div class="ab2-step-icon"><i class="fa-solid fa-magnifying-glass"></i></div><h3>Browse</h3><p>Explore thousands of curated styles across Men, Women, Kids & Accessories.</p></div>
+    <div class="ab2-step ab2-reveal"><div class="ab2-step-num">02</div><div class="ab2-step-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><h3>Curate</h3><p>Save your favorites, build outfits, and get style picks tailored to you.</p></div>
+    <div class="ab2-step ab2-reveal"><div class="ab2-step-num">03</div><div class="ab2-step-icon"><i class="fa-solid fa-ruler-combined"></i></div><h3>Size & Fit</h3><p>Use our fit guide and reviews to pick the perfect size in seconds.</p></div>
+    <div class="ab2-step ab2-reveal"><div class="ab2-step-num">04</div><div class="ab2-step-icon"><i class="fa-solid fa-cart-shopping"></i></div><h3>Add to Bag</h3><p>Select your size, add to bag, and move to checkout quickly.</p></div>
+    <div class="ab2-step ab2-reveal"><div class="ab2-step-num">05</div><div class="ab2-step-icon"><i class="fa-solid fa-credit-card"></i></div><h3>Secure Checkout</h3><p>Pay safely with UPI, cards, or COD with encrypted transactions.</p></div>
+    <div class="ab2-step ab2-reveal"><div class="ab2-step-num">06</div><div class="ab2-step-icon"><i class="fa-solid fa-box"></i></div><h3>Smart Packing</h3><p>Orders are quality-checked and packed with care for a premium unbox.</p></div>
+    <div class="ab2-step ab2-reveal"><div class="ab2-step-num">07</div><div class="ab2-step-icon"><i class="fa-solid fa-truck-fast"></i></div><h3>Fast Delivery</h3><p>Dispatched within 24 hours and tracked at every step.</p></div>
+    <div class="ab2-step ab2-reveal"><div class="ab2-step-num">08</div><div class="ab2-step-icon"><i class="fa-solid fa-star"></i></div><h3>Love It</h3><p>Wear it, review it, or return easily within 30 days.</p></div>
+  </div>
+</section>
+
+<section class="ab2-sustain">
+  <div class="ab2-sustain-img ab2-reveal"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&h=600&fit=crop&q=85" alt="Sustainability" /></div>
+  <div class="ab2-sustain-copy ab2-reveal">
+    <p class="ab2-eyebrow-gold"><span></span> SUSTAINABILITY</p>
+    <h2>Fashion With A Conscience</h2>
+    <p>At Vastra, we believe fashion and responsibility go hand in hand. Our sustainable line uses organic cotton, recycled fibres, and low-impact dyes.</p>
+    <ul class="ab2-sustain-list">
+      <li><i class="fa-solid fa-seedling"></i> 100% organic cotton in our basics line</li>
+      <li><i class="fa-solid fa-recycle"></i> Recycled packaging on all orders</li>
+      <li><i class="fa-solid fa-droplet-slash"></i> Low-water dyeing processes</li>
+      <li><i class="fa-solid fa-hand-holding-heart"></i> Fair wages for all workers</li>
+    </ul>
+    <a href="/shop" class="ab2-btn-gold">SHOP SUSTAINABLE</a>
+  </div>
+</section>
+
+<section class="ab2-testi-section">
+  <div class="ab2-section-head"><p class="ab2-eyebrow-dark"><span></span> CUSTOMER LOVE</p><h2>What People Say</h2></div>
+  <div class="ab2-testi-track-wrap">
+    <div class="ab2-testi-track" id="ab2-testi-track">
+      <div class="ab2-testi-card"><div class="ab2-testi-stars">★★★★★</div><p>"Absolutely love the quality! The fabric is so soft and the fit is perfect. Vastra has become my go-to for everything."</p><div class="ab2-testi-author"><div class="ab2-testi-av">P</div><div><strong>Priya S.</strong><span>Mumbai</span></div></div></div>
+      <div class="ab2-testi-card"><div class="ab2-testi-stars">★★★★★</div><p>"Super fast delivery and the packaging was beautiful. The blazer I ordered looks even better in person!"</p><div class="ab2-testi-author"><div class="ab2-testi-av">R</div><div><strong>Rahul M.</strong><span>Delhi</span></div></div></div>
+      <div class="ab2-testi-card"><div class="ab2-testi-stars">★★★★☆</div><p>"Great selection and easy returns. The women's collection is stunning — I bought three dresses in one go!"</p><div class="ab2-testi-author"><div class="ab2-testi-av">A</div><div><strong>Ananya K.</strong><span>Bangalore</span></div></div></div>
+      <div class="ab2-testi-card"><div class="ab2-testi-stars">★★★★★</div><p>"The accessories section is amazing. Got a beautiful watch at a great price. Will definitely shop again!"</p><div class="ab2-testi-author"><div class="ab2-testi-av">V</div><div><strong>Vikram T.</strong><span>Pune</span></div></div></div>
+      <div class="ab2-testi-card"><div class="ab2-testi-stars">★★★★★</div><p>"Kids section is so cute! My daughter loves her new outfits. Quality is top-notch for the price."</p><div class="ab2-testi-author"><div class="ab2-testi-av">S</div><div><strong>Sneha R.</strong><span>Chennai</span></div></div></div>
+    </div>
+    <button class="ab2-testi-arrow prev" id="ab2-tprev"><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="ab2-testi-arrow next" id="ab2-tnext"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
+</section>
+
+<section class="ab2-press">
+  <div class="ab2-section-head"><p class="ab2-eyebrow-dark"><span></span> AS SEEN IN</p><h2>Press & Media</h2></div>
+  <div class="ab2-press-grid">
+    <div class="ab2-press-card ab2-reveal"><span>VOGUE INDIA</span></div>
+    <div class="ab2-press-card ab2-reveal"><span>ELLE</span></div>
+    <div class="ab2-press-card ab2-reveal"><span>HARPER'S BAZAAR</span></div>
+    <div class="ab2-press-card ab2-reveal"><span>FEMINA</span></div>
+    <div class="ab2-press-card ab2-reveal"><span>GQ INDIA</span></div>
+  </div>
+</section>
+
+<section class="ab2-newsletter">
+  <div class="ab2-nl-inner">
+    <p class="ab2-eyebrow-dark"><span></span> STAY IN THE LOOP</p>
+    <h2>Get Exclusive Offers & New Arrivals</h2>
+    <p>Join 50,000+ fashion lovers. No spam, unsubscribe anytime.</p>
+    <form class="ab2-nl-form" id="ab2-nl-form">
+      <input type="email" id="ab2-nl-email" placeholder="Enter your email address" required />
+      <button type="submit">SUBSCRIBE</button>
+    </form>
+    <p class="ab2-nl-msg" id="ab2-nl-msg"></p>
+  </div>
+</section>
+
+<section class="ab2-cta">
+  <div class="ab2-cta-overlay"></div>
+  <div class="ab2-cta-content">
+    <p class="ab2-eyebrow">READY TO SHOP?</p>
+    <h2>Discover Your Style Today</h2>
+    <p>New arrivals every week. Free shipping on orders above Rs. 999.</p>
+    <div class="ab2-cta-btns">
+      <a href="/shop" class="ab2-btn-gold">SHOP NOW</a>
+      <a href="/signup" class="ab2-btn-outline">JOIN VASTRA</a>
+    </div>
+  </div>
+</section>
+`;
+
+export default function About() {
+  useEffect(() => {
+    function animateCounters() {
+      const nums = document.querySelectorAll(".ab2-stat-num, .ab-stat-num");
+      if (!nums.length) return;
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const target = parseInt(el.dataset.target, 10);
+          const step = target / (1600 / 16);
+          let current = 0;
+          const timer = setInterval(() => {
+            current = Math.min(current + step, target);
+            el.textContent = Math.floor(current);
+            if (current >= target) clearInterval(timer);
+          }, 16);
+          observer.unobserve(el);
+        });
+      }, { threshold: 0.5 });
+      nums.forEach((el) => observer.observe(el));
+    }
+
+    function initScrollReveal() {
+      const ab2Els = document.querySelectorAll(".ab2-reveal");
+      if (ab2Els.length) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("ab2-revealed");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        ab2Els.forEach((el, i) => {
+          el.style.transitionDelay = `${(i % 4) * 80}ms`;
+          observer.observe(el);
+        });
+      }
+    }
+
+    function initNewsletter() {
+      const form = document.getElementById("ab2-nl-form");
+      const msg = document.getElementById("ab2-nl-msg");
+      if (!form || !msg) return;
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const emailField = document.getElementById("ab2-nl-email");
+        const email = emailField ? emailField.value.trim() : "";
+        if (!email) return;
+        const subs = JSON.parse(localStorage.getItem("vastra_newsletter") || "[]");
+        if (subs.includes(email)) {
+          msg.textContent = "You're already subscribed!";
+          msg.style.color = "#c9a84c";
+        } else {
+          subs.push(email);
+          localStorage.setItem("vastra_newsletter", JSON.stringify(subs));
+          msg.textContent = "🎉 You're in! Welcome to the Vastra family.";
+          msg.style.color = "#2ecc71";
+          form.reset();
+        }
+        setTimeout(() => { msg.textContent = ""; }, 4000);
+      });
+    }
+
+    function initTestimonials() {
+      const tTrack = document.getElementById("ab2-testi-track");
+      if (!tTrack) return;
+      let tIdx = 0;
+      function tSlide() {
+        const cards = tTrack.querySelectorAll(".ab2-testi-card");
+        const visible = window.innerWidth < 768 ? 1 : window.innerWidth < 1100 ? 2 : 3;
+        const max = Math.max(0, cards.length - visible);
+        tIdx = Math.min(tIdx, max);
+        const w = (cards[0]?.offsetWidth || 0) + 24;
+        tTrack.style.transform = `translateX(-${tIdx * w}px)`;
+      }
+      document.getElementById("ab2-tprev")?.addEventListener("click", () => { tIdx = Math.max(0, tIdx - 1); tSlide(); });
+      document.getElementById("ab2-tnext")?.addEventListener("click", () => { tIdx += 1; tSlide(); });
+      window.addEventListener("resize", tSlide);
+      tSlide();
+    }
+
+    animateCounters();
+    initScrollReveal();
+    initNewsletter();
+    initTestimonials();
+  }, []);
+
+  return <div dangerouslySetInnerHTML={{ __html: markup }} />;
+}

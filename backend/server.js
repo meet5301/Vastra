@@ -79,9 +79,11 @@ app.get("/about", (req, res) =>
   res.sendFile(path.join(__dirname, "templates", "about.html"))
 );
 
-app.get("/contact", (req, res) =>
-  res.sendFile(path.join(__dirname, "templates", "contact.html"))
+app.get("/kids", (req, res) =>
+  res.sendFile(path.join(__dirname, "templates", "kids.html"))
 );
+
+app.get("/contact", (req, res) => res.redirect("/profile"));
 
 app.get("/review", (req, res) =>
   res.sendFile(path.join(__dirname, "templates", "review.html"))
@@ -112,37 +114,46 @@ app.get("/search", (req, res) =>
 );
 
 // ─── ADMIN ROUTES ───────────────────────────────────────────
-app.use("/admin", express.static(path.join(__dirname, "../frontend-admin/public")));
+const fs = require("fs");
+const adminDist = path.join(__dirname, "../admin/dist");
+const adminIndex = path.join(adminDist, "index.html");
 
-app.get("/admin", (req, res) =>
-  res.sendFile(path.join(__dirname, "../frontend-admin/templates/admin-login.html"))
-);
-
-app.get("/admin/dashboard", (req, res) =>
-  res.sendFile(path.join(__dirname, "../frontend-admin/templates/dashboard.html"))
-);
-
-app.get("/admin/products", (req, res) =>
-  res.sendFile(path.join(__dirname, "../frontend-admin/templates/admin-products.html"))
-);
-
-app.get("/admin/orders", (req, res) =>
-  res.sendFile(path.join(__dirname, "../frontend-admin/templates/admin-orders.html"))
-);
-
-app.get("/admin/users", (req, res) =>
-  res.sendFile(path.join(__dirname, "../frontend-admin/templates/admin-users.html"))
-);
+if (fs.existsSync(adminIndex)) {
+  app.use("/admin", express.static(adminDist));
+  app.get(["/admin", "/admin/*"], (req, res) => {
+    res.sendFile(adminIndex);
+  });
+} else {
+  app.use("/admin", express.static(path.join(__dirname, "../frontend-admin/public")));
+  app.get("/admin", (req, res) =>
+    res.sendFile(path.join(__dirname, "../frontend-admin/templates/admin-login.html"))
+  );
+  app.get("/admin/dashboard", (req, res) =>
+    res.sendFile(path.join(__dirname, "../frontend-admin/templates/dashboard.html"))
+  );
+  app.get("/admin/products", (req, res) =>
+    res.sendFile(path.join(__dirname, "../frontend-admin/templates/admin-products.html"))
+  );
+  app.get("/admin/orders", (req, res) =>
+    res.sendFile(path.join(__dirname, "../frontend-admin/templates/admin-orders.html"))
+  );
+  app.get("/admin/users", (req, res) =>
+    res.sendFile(path.join(__dirname, "../frontend-admin/templates/admin-users.html"))
+  );
+}
 
 // ─── API ROUTES ─────────────────────────────────────────────
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/products", require("./routes/products"));
 app.use("/api/orders", require("./routes/orders"));
 app.use("/api/admin", require("./routes/admin"));
+app.use("/api/brands", require("./routes/brands"));
+app.use("/api/coupons", require("./routes/coupons"));
+app.use("/api/placements", require("./routes/placements"));
 
 // ─── SERVER START ───────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });

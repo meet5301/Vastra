@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const Order = require("../models/Order");
 const { protect, adminOnly } = require("../middleware/auth");
 
 // GET /api/admin/users - all users
@@ -32,6 +33,65 @@ router.delete("/users/:id", protect, adminOnly, async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: "User deleted" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// GET /api/admin/analytics - dashboard analytics
+router.get("/analytics", protect, adminOnly, async (req, res) => {
+  try {
+    const now = new Date();
+    const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    const totalUsers = await User.countDocuments();
+    const activeUsers = await User.countDocuments({ lastLogin: { $gte: last24h } });
+    const totalOrders = await Order.countDocuments();
+    const totalRevenueAgg = await Order.aggregate([
+      { $match: { orderStatus: { $ne: "Cancelled" } } },
+      { $group: { _id: null, total: { $sum: "$totalAmount" } } },
+    ]);
+    const totalRevenue = totalRevenueAgg[0]?.total || 0;
+    const pending = await Order.countDocuments({ orderStatus: "Processing" });
+    const delivered = await Order.countDocuments({ orderStatus: "Delivered" });
+
+    const ordersByStatus = await Order.aggregate([
+      { $group: { _id: "$orderStatus", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+    ]);
+
+    const ordersByUser = await Order.aggregate([
+      { $group: { _id: "$user", count: { $sum: 1 }, revenue: { $sum: "$totalAmount" } } },
+      { $sort: { count: -1 } },
+      { $limit: 20 },
+    ]);
+
+    const userIds = ordersByUser.map((u) => u._id).filter(Boolean);
+    const users = await User.find({ _id: { $in: userIds } }).select("username email");
+    const userMap = users.reduce((acc, u) => {
+      acc[u._id.toString()] = u;
+      return acc;
+    }, {});
+
+    const ordersByUserEnriched = ordersByUser.map((u) => ({
+      user: userMap[u._id?.toString()] || null,
+      count: u.count,
+      revenue: u.revenue,
+    }));
+
+    res.json({
+      success: true,
+      analytics: {
+        totalUsers,
+        activeUsers,
+        totalOrders,
+        totalRevenue,
+        pending,
+        delivered,
+        ordersByStatus,
+        ordersByUser: ordersByUserEnriched,
+      },
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

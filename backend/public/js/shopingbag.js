@@ -13,7 +13,7 @@ function renderCart() {
   if (!container) return;
 
   if (cart.length === 0) {
-    container.innerHTML = '<div style="text-align:center;padding:4rem;"><h2>Your bag is empty</h2><a href="/shop" style="text-decoration:underline;">Continue Shopping</a></div>';
+    container.innerHTML = '<div class="empty-state"><h2>Your bag is empty</h2><a href="/shop" class="empty-state-link">Continue Shopping</a></div>';
     return;
   }
 

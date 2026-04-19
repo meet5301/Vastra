@@ -1,6 +1,192 @@
 <footer class="vastra-footer">
-    <div class="vastra-footer-inner">
-        <h1>VASTRA.</h1>
-        <p>Minimal Fashion Brand</p>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <h1 class="footer-logo">VASTRA.</h1>
+      <p class="footer-tagline">Premium fashion for the modern wardrobe.</p>
+      <div class="footer-socials">
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-pinterest"></i></a>
+        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+      </div>
     </div>
+    <div class="footer-col">
+      <h4>SHOP</h4>
+      <a href="/men">Men</a>
+      <a href="/women">Women</a>
+      <a href="/accessories">Accessories</a>
+      <a href="/shop">New Arrivals</a>
+      <a href="/shop">Sale</a>
+    </div>
+    <div class="footer-col">
+      <h4>HELP</h4>
+      <a href="/contact">Contact Us</a>
+      <a href="#">Shipping Info</a>
+      <a href="#">Returns</a>
+      <a href="#">Size Guide</a>
+      <a href="#">FAQs</a>
+    </div>
+    <div class="footer-col">
+      <h4>COMPANY</h4>
+      <a href="/about">About Us</a>
+      <a href="/journal">Style Journal</a>
+      <a href="#">Careers</a>
+      <a href="#">Press</a>
+      <a href="#">Sustainability</a>
+    </div>
+    <div class="footer-newsletter">
+      <h4>STAY IN STYLE</h4>
+      <p>Get exclusive offers and new arrivals in your inbox.</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="Your email address" />
+        <button>JOIN</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 VASTRA. All rights reserved.</p>
+    <div class="footer-payments">
+      <i class="fa-brands fa-cc-visa"></i>
+      <i class="fa-brands fa-cc-mastercard"></i>
+      <i class="fa-brands fa-cc-amex"></i>
+      <i class="fa-brands fa-cc-paypal"></i>
+    </div>
+  </div>
 </footer>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+.vastra-footer {
+  background: #0a0a0a;
+  color: #fff;
+  font-family: 'Inter', Arial, sans-serif;
+  margin-top: 0;
+}
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1.8fr;
+  gap: 48px;
+  padding: 64px 5% 48px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.footer-logo {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.footer-tagline {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  margin-bottom: 24px;
+  letter-spacing: 0.5px;
+}
+.footer-socials { display: flex; gap: 14px; }
+.footer-socials a {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+  text-decoration: none;
+  transition: border-color 0.25s, color 0.25s, background 0.25s;
+}
+.footer-socials a:hover { border-color: #c9a84c; color: #c9a84c; }
+
+.footer-col h4 {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #c9a84c;
+  margin-bottom: 18px;
+}
+.footer-col a {
+  display: block;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: #fff; }
+
+.footer-newsletter h4 {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #c9a84c;
+  margin-bottom: 12px;
+}
+.footer-newsletter p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.newsletter-form { display: flex; }
+.newsletter-form input {
+  flex: 1;
+  padding: 11px 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-right: none;
+  color: #fff;
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.newsletter-form input::placeholder { color: rgba(255,255,255,0.3); }
+.newsletter-form input:focus { border-color: #c9a84c; }
+.newsletter-form button {
+  padding: 11px 20px;
+  background: #c9a84c;
+  color: #000;
+  border: none;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s;
+}
+.newsletter-form button:hover { background: #e0bc5a; }
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 5%;
+}
+.footer-bottom p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 1px;
+}
+.footer-payments { display: flex; gap: 12px; }
+.footer-payments i {
+  font-size: 26px;
+  color: rgba(255,255,255,0.25);
+  transition: color 0.2s;
+}
+.footer-payments i:hover { color: rgba(255,255,255,0.6); }
+
+@media (max-width: 1024px) {
+  .footer-top { grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-newsletter { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
+  .footer-top { grid-template-columns: 1fr 1fr; padding: 40px 5% 32px; gap: 28px; }
+  .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
+}
+</style>

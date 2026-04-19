@@ -1,181 +1,196 @@
-// ─── VASTRA SHOP PAGE JS ──────────────────────────────────────────
-// Fetches products from /api/products and renders them
-
+// ── VASTRA SHOP JS ────────────────────────────────────────────────
 let currentPage = 1;
 let currentCategory = "All";
 let currentSearch = "";
 let currentSort = "";
+let currentPriceRange = "";
 
 async function loadProducts() {
-  const grid = document.querySelector(".product-grid");
+  const grid = document.getElementById("product-grid");
   if (!grid) return;
 
-  grid.innerHTML = '<p style="text-align:center;padding:2rem;">Loading...</p>';
+  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:#888;font-family:'Inter',sans-serif;letter-spacing:2px;font-size:13px;">LOADING...</div>`;
+
+  // Read filters from sidebar
+  const catEl = document.querySelector('input[name="category"]:checked');
+  if (catEl) currentCategory = catEl.value;
+
+  const priceEl = document.querySelector('input[name="price"]:checked');
+  if (priceEl) currentPriceRange = priceEl.value;
+
+  const sortEl = document.getElementById("sort-select");
+  if (sortEl) currentSort = sortEl.value;
+
+  const searchEl = document.getElementById("shop-search-input");
+  if (searchEl) currentSearch = searchEl.value;
 
   const params = new URLSearchParams({
     page: currentPage,
-    limit: 12,
+    limit: 16,
     ...(currentCategory !== "All" && { category: currentCategory }),
     ...(currentSearch && { search: currentSearch }),
     ...(currentSort && { sort: currentSort }),
   });
 
   try {
-    const res = await fetch(`/api/products?${params}`);
+    const res  = await fetch(`/api/products?${params}`);
     const data = await res.json();
 
-    if (!data.success || data.products.length === 0) {
-      grid.innerHTML = '<p style="text-align:center;padding:2rem;color:#888;">No products found.</p>';
+    // Update count
+    const countEl = document.getElementById("result-count");
+    if (countEl) countEl.innerHTML = `<strong>${data.total || 0}</strong> Products`;
+
+    if (!data.success || !data.products.length) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <i class="fa-regular fa-face-sad-tear"></i>
+          <h3>No Products Found</h3>
+          <p>Try adjusting your filters or search term.</p>
+          <a href="/shop" class="empty-state-link">CLEAR FILTERS</a>
+        </div>`;
+      document.getElementById("pagination-wrap").innerHTML = "";
       return;
     }
 
-    // Update item count
-    const countEl = document.querySelector(".grid-controls span");
-    if (countEl) countEl.textContent = `${data.total} Items`;
+    // Client-side price filter
+    let products = data.products;
+    if (currentPriceRange) {
+      const [min, max] = currentPriceRange.split("-").map(Number);
+      products = products.filter(p => p.price >= min && p.price <= max);
+    }
 
-    grid.innerHTML = data.products
-      .map(
-        (p) => `
-      <div class="product-card">
-        <div class="product-image-wrapper">
-          <img src="${p.image}" loading="lazy" class="product-img" onerror="this.src='https://via.placeholder.com/300x400/cccccc/666666?text=No+Image'">
-          <button class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist('${p._id}','${p.name}',${p.price},'${p.image}')">
-            <i class="far fa-heart"></i>
-          </button>
-        </div>
-        <div onclick="window.location.href='/detail?id=${p._id}'">
-          <p class="name">${p.name}</p>
-          <p class="price">$${p.price}</p>
-        </div>
-        <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">
-          ADD TO BAG
-        </button>
-      </div>`
-      )
-      .join("");
+    // Reliable fallback images per category
+  const fallbacks = {
+    Men: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop',
+    Women: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop',
+    Accessories: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=500&fit=crop',
+    Other: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=500&fit=crop',
+  };
 
-    // Pagination
+  grid.innerHTML = products.map(p => {
+      const fallback = fallbacks[p.category] || fallbacks.Other;
+      const stars = p.avgRating ? '★'.repeat(Math.round(p.avgRating)) + '☆'.repeat(5 - Math.round(p.avgRating)) : '';
+      const reviewCount = p.numReviews || 0;
+      return `
+        <div class="product-card" onclick="window.location.href='/detail?id=${p._id}'">
+          <div class="product-image-wrapper">
+            <img src="${p.image}" loading="lazy" class="product-img"
+              onerror="this.onerror=null;this.src='${fallback}'" />
+            ${p.isFeatured ? '<span class="product-badge">NEW</span>' : ''}
+            <button class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist('${p._id}','${p.name}',${p.price},'${p.image}')">
+              <i class="far fa-heart"></i>
+            </button>
+          </div>
+          <div class="product-info">
+            <p class="product-category-tag">${p.category || ""}</p>
+            <p class="name">${p.name}</p>
+            ${reviewCount > 0 ? `
+            <div class="rating-row">
+              <span class="rating-stars">${stars}</span>
+              <span class="rating-count">(${reviewCount})</span>
+            </div>` : ""}
+            <div class="price-row">
+              <span class="price">$${p.price}</span>
+            </div>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">
+              ADD TO BAG
+            </button>
+          </div>
+        </div>`;
+    }).join("");
+
     renderPagination(data.pages, data.page);
   } catch (err) {
-    grid.innerHTML = '<p style="text-align:center;color:red;">Failed to load products.</p>';
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:#e63946;">Failed to load products. Please try again.</div>`;
   }
 }
 
 function renderPagination(totalPages, current) {
-  let el = document.querySelector(".pagination");
-  if (!el) {
-    el = document.createElement("div");
-    el.className = "pagination";
-    el.style.cssText = "display:flex;gap:8px;justify-content:center;margin:2rem 0;";
-    document.querySelector(".content")?.appendChild(el);
-  }
-  el.innerHTML = "";
+  const wrap = document.getElementById("pagination-wrap");
+  if (!wrap || totalPages <= 1) { if (wrap) wrap.innerHTML = ""; return; }
+
+  let html = "";
+  if (current > 1) html += `<button class="page-btn" onclick="goPage(${current - 1})"><i class="fa-solid fa-chevron-left"></i></button>`;
+
   for (let i = 1; i <= totalPages; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = i;
-    btn.style.cssText = `padding:6px 12px;border:1px solid #000;background:${i === current ? "#000" : "#fff"};color:${i === current ? "#fff" : "#000"};cursor:pointer;`;
-    btn.onclick = () => { currentPage = i; loadProducts(); };
-    el.appendChild(btn);
+    if (i === 1 || i === totalPages || (i >= current - 1 && i <= current + 1)) {
+      html += `<button class="page-btn${i === current ? " active" : ""}" onclick="goPage(${i})">${i}</button>`;
+    } else if (i === current - 2 || i === current + 2) {
+      html += `<button class="page-btn dots">...</button>`;
+    }
   }
+
+  if (current < totalPages) html += `<button class="page-btn" onclick="goPage(${current + 1})"><i class="fa-solid fa-chevron-right"></i></button>`;
+  wrap.innerHTML = html;
 }
 
-// ── CART (localStorage) ────────────────────────────────────────────
-function getCart() {
-  return JSON.parse(localStorage.getItem("vastra_cart") || "[]");
+function goPage(p) {
+  currentPage = p;
+  loadProducts();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
-function saveCart(cart) {
-  localStorage.setItem("vastra_cart", JSON.stringify(cart));
-  updateCartBadge();
-}
+
+// ── CART ──────────────────────────────────────────────────────────
+function getCart() { return JSON.parse(localStorage.getItem("vastra_cart") || "[]"); }
+function saveCart(cart) { localStorage.setItem("vastra_cart", JSON.stringify(cart)); updateCartBadge(); }
+
 function addToCart(id, name, price, image, size = "M") {
   const cart = getCart();
-  const existing = cart.find((i) => i.id === id && i.size === size);
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    cart.push({ id, name, price, image, size, quantity: 1 });
-  }
+  const existing = cart.find(i => i.id === id && i.size === size);
+  if (existing) { existing.quantity += 1; }
+  else { cart.push({ id, name, price, image, size, quantity: 1 }); }
   saveCart(cart);
   showToast(`${name} added to bag!`);
 }
+
 function updateCartBadge() {
-  const cart = getCart();
-  const total = cart.reduce((sum, i) => sum + i.quantity, 0);
+  const total = getCart().reduce((s, i) => s + i.quantity, 0);
   const badge = document.querySelector(".cart-badge, #cart-count");
   if (badge) badge.textContent = total;
 }
-function showToast(msg) {
-  let t = document.getElementById("toast");
-  if (!t) {
-    t = document.createElement("div");
-    t.id = "toast";
-    t.style.cssText = "position:fixed;bottom:2rem;right:2rem;background:#000;color:#fff;padding:12px 20px;z-index:9999;font-size:14px;letter-spacing:1px;";
-    document.body.appendChild(t);
-  }
-  t.textContent = msg;
-  t.style.display = "block";
-  setTimeout(() => (t.style.display = "none"), 2500);
-}
 
-// ── WISHLIST ───────────────────────────────────────────────
-function getWishlist() {
-  return JSON.parse(localStorage.getItem("vastra_wishlist") || "[]");
-}
-function saveWishlist(wishlist) {
-  localStorage.setItem("vastra_wishlist", JSON.stringify(wishlist));
-}
-function toggleWishlist(id, name, price, image) {
-  const wishlist = getWishlist();
-  const exists = wishlist.find((item) => item.id === id);
+// ── WISHLIST ──────────────────────────────────────────────────────
+async function toggleWishlist(id, name, price, image) {
+  const token = localStorage.getItem("vastra_token");
+  if (token) await fetch(`/api/auth/wishlist/${id}`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
+  const wl = JSON.parse(localStorage.getItem("vastra_wishlist") || "[]");
+  const exists = wl.find(i => i.id === id);
   if (exists) {
-    saveWishlist(wishlist.filter((item) => item.id !== id));
+    localStorage.setItem("vastra_wishlist", JSON.stringify(wl.filter(i => i.id !== id)));
     showToast(`${name} removed from wishlist`);
   } else {
-    wishlist.push({ id, name, price, image });
-    saveWishlist(wishlist);
-    showToast(`${name} added to wishlist`);
+    wl.push({ id, name, price, image });
+    localStorage.setItem("vastra_wishlist", JSON.stringify(wl));
+    showToast(`${name} added to wishlist!`);
   }
-  loadProducts();
 }
 
-// ── FILTERS & SEARCH ───────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   loadProducts();
   updateCartBadge();
 
-  // Search
-  const searchInput = document.querySelector(".search-bar input");
-  if (searchInput) {
-    searchInput.addEventListener("input", (e) => {
-      currentSearch = e.target.value;
-      currentPage = 1;
-      loadProducts();
+  // Sort change
+  const sortEl = document.getElementById("sort-select");
+  if (sortEl) sortEl.addEventListener("change", () => { currentPage = 1; loadProducts(); });
+
+  // Search input
+  const searchEl = document.getElementById("shop-search-input");
+  if (searchEl) {
+    let t;
+    searchEl.addEventListener("input", () => {
+      clearTimeout(t);
+      t = setTimeout(() => { currentPage = 1; loadProducts(); }, 350);
     });
   }
 
-  // Sort
-  const sortSelect = document.querySelector(".grid-controls select");
-  if (sortSelect) {
-    sortSelect.innerHTML = `
-      <option value="">Sort by: All Items</option>
-      <option value="price_asc">Price: Low to High</option>
-      <option value="price_desc">Price: High to Low</option>
-      <option value="rating">Top Rated</option>`;
-    sortSelect.addEventListener("change", (e) => {
-      currentSort = e.target.value;
-      currentPage = 1;
-      loadProducts();
-    });
-  }
+  // Category radio
+  document.querySelectorAll('input[name="category"]').forEach(r => {
+    r.addEventListener("change", () => { currentPage = 1; loadProducts(); });
+  });
 
-  // Category checkboxes
-  const checkboxes = document.querySelectorAll(".filter-section input[type='checkbox']");
-  checkboxes.forEach((cb) => {
-    cb.addEventListener("change", () => {
-      const label = cb.parentElement.textContent.trim();
-      currentCategory = label === "All" ? "All" : label;
-      currentPage = 1;
-      loadProducts();
-    });
+  // Price radio
+  document.querySelectorAll('input[name="price"]').forEach(r => {
+    r.addEventListener("change", () => { currentPage = 1; loadProducts(); });
   });
 });

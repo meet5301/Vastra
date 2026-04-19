@@ -5,8 +5,8 @@ const loginForm = document.querySelector("form[data-form='login']");
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email    = loginForm.querySelector("[name='email']").value;
-    const password = loginForm.querySelector("[name='password']").value;
+    const email    = loginForm.querySelector("[name='login_email']").value;
+    const password = loginForm.querySelector("[name='login_pass']").value;
     const btn      = loginForm.querySelector("button");
     btn.textContent = "Logging in...";
     btn.disabled    = true;
@@ -50,9 +50,9 @@ const signupForm = document.querySelector("form[data-form='signup']");
 if (signupForm) {
   signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const username = signupForm.querySelector("[name='username']").value;
-    const email    = signupForm.querySelector("[name='email']").value;
-    const password = signupForm.querySelector("[name='password']").value;
+    const username = signupForm.querySelector("[name='signup_username']").value;
+    const email    = signupForm.querySelector("[name='signup_email']").value;
+    const password = signupForm.querySelector("[name='signup_pass']").value;
     const btn      = signupForm.querySelector("button");
     btn.textContent = "Creating account...";
     btn.disabled    = true;

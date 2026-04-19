@@ -3,66 +3,122 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile</title>
-
-    <!-- CSS -->
+    <title>Profile - VASTRA</title>
     <link rel="stylesheet" href="/css/profile.css" />
     <link rel="stylesheet" href="/css/navbar.css" />
-    <script src="/js/profile.js"></script>
-
-
-
-    <!-- FONT AWESOME -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   </head>
 
   <body>
-    <!-- NAVBAR -->
     <div id="navbar"></div>
     <script src="/js/navbar.js"></script>
 
-    <div class="container">
-      <h1>User Profile</h1>
-      <p class="subtitle">Royal Dashboard</p>
+    <main class="profile-page">
 
-      <!-- PROFILE ICON -->
-      <div class="profile-icon">
-        <i class="fa-solid fa-user"></i>
-      </div>
+      <!-- HERO -->
+      <section class="profile-hero">
+        <div class="profile-badge">
+          <div class="avatar" id="profile-avatar">V</div>
+          <div class="profile-meta">
+            <p class="eyebrow">MY ACCOUNT</p>
+            <h1 id="profile-name">Guest</h1>
+            <p id="profile-email" class="muted">Login to view your orders and details.</p>
+            <div class="profile-actions">
+              <a id="profile-login-btn" class="btn btn-solid" href="/login">LOGIN</a>
+              <button id="profile-logout-btn" class="btn btn-outline" type="button">LOGOUT</button>
+            </div>
+          </div>
+        </div>
+        <div class="help-card">
+          <h3>HELPLINE</h3>
+          <p>Mon - Sat, 10am - 7pm</p>
+          <a href="tel:+919999999999">+91 99999 99999</a>
+          <span class="divider"></span>
+          <a href="mailto:support@vastra.com">support@vastra.com</a>
+        </div>
+      </section>
 
-      <!-- CARDS -->
-      <div class="cards">
-        <div class="card">
-          <i class="fa-solid fa-cart-shopping"></i>
-          <h3>MY ORDERS</h3>
+      <!-- ORDERS + QUICK LINKS -->
+      <section class="profile-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>MY ORDERS</h2>
+            <a class="link" href="/shop">Continue shopping</a>
+          </div>
+          <div id="orders-list" class="orders-list"></div>
         </div>
 
-        <div class="card">
-          <i class="fa-regular fa-heart"></i>
-          <h3>WISHLIST</h3>
+        <div class="panel">
+          <h2>QUICK LINKS</h2>
+          <div class="quick-links">
+            <a href="/wishlist"><i class="fa-regular fa-heart"></i> Wishlist</a>
+            <a href="/shopingbag"><i class="fa-solid fa-bag-shopping"></i> My Bag</a>
+            <a href="#" onclick="document.getElementById('address-section').scrollIntoView({behavior:'smooth'});return false;"><i class="fa-solid fa-location-dot"></i> Addresses</a>
+            <a href="#" onclick="document.getElementById('edit-section').scrollIntoView({behavior:'smooth'});return false;"><i class="fa-regular fa-user"></i> Edit Profile</a>
+            <a href="#" onclick="document.getElementById('password-section').scrollIntoView({behavior:'smooth'});return false;"><i class="fa-solid fa-lock"></i> Change Password</a>
+            <a href="/shop"><i class="fa-solid fa-bag-shopping"></i> Shop Now</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- EDIT PROFILE + CHANGE PASSWORD -->
+      <section class="profile-grid" id="edit-section">
+        <div class="panel">
+          <div class="panel-header"><h2>EDIT PROFILE</h2></div>
+          <form id="edit-profile-form" class="profile-form">
+            <div class="form-group">
+              <label>USERNAME</label>
+              <input id="edit-username" type="text" required />
+            </div>
+            <div class="form-group">
+              <label>EMAIL</label>
+              <input id="edit-email" type="email" required />
+            </div>
+            <button type="submit" class="btn btn-solid">SAVE CHANGES</button>
+          </form>
         </div>
 
-        <div class="card">
-          <i class="fa-solid fa-location-dot"></i>
-          <h3>ADDRESSES</h3>
+        <div class="panel" id="password-section">
+          <div class="panel-header"><h2>CHANGE PASSWORD</h2></div>
+          <form id="change-password-form" class="profile-form">
+            <div class="form-group">
+              <label>OLD PASSWORD</label>
+              <input id="old-password" type="password" required />
+            </div>
+            <div class="form-group">
+              <label>NEW PASSWORD</label>
+              <input id="new-password" type="password" required minlength="6" />
+            </div>
+            <button type="submit" class="btn btn-solid">UPDATE PASSWORD</button>
+          </form>
         </div>
-      </div>
+      </section>
 
-      <!-- FOOTER LINKS -->
-      <div class="bottom-links">
-        <span>Your order Dashboard</span>
-        <div>
-          <a href="#">Register</a>
-          <a href="#">Login</a>
+      <!-- MY ADDRESSES + ADD ADDRESS -->
+      <section class="profile-grid" id="address-section">
+        <div class="panel">
+          <div class="panel-header"><h2>MY ADDRESSES</h2></div>
+          <div id="addresses-list" class="orders-list"></div>
         </div>
-      </div>
-    </div>
 
-    <!-- NAVBAR JS -->
-    <script src="/js/navbar.js"></script>
+        <div class="panel">
+          <div class="panel-header"><h2>ADD ADDRESS</h2></div>
+          <form id="add-address-form" class="profile-form">
+            <input id="addr-name"    type="text" placeholder="Full Name" required />
+            <input id="addr-phone"   type="text" placeholder="Phone" required />
+            <input id="addr-address" type="text" placeholder="Address" required />
+            <input id="addr-city"    type="text" placeholder="City" required />
+            <label class="checkbox-label">
+              <input id="addr-default" type="checkbox" /> Set as default
+            </label>
+            <button type="submit" class="btn btn-solid">SAVE ADDRESS</button>
+          </form>
+        </div>
+      </section>
+
+    </main>
+
+    <script src="/js/profile.js"></script>
     <script src="/js/footer.js"></script>
   </body>
 </html>

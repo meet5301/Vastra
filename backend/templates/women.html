@@ -3,121 +3,235 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Women - VASTRA</title>
-    <link rel="stylesheet" href="/css/shop.css" />
+    <title>Women — VASTRA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/men.css" />
     <link rel="stylesheet" href="/css/navbar.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   </head>
-
   <body>
     <div id="navbar"></div>
     <script src="/js/navbar.js"></script>
 
-    <main>
-      <h1>WOMEN'S COLLECTION</h1>
-
-      <div class="container">
-        <aside class="sidebar">
-          <div class="search-bar">
-            <input type="text" placeholder="Search women's items..." />
+    <!-- HERO SLIDER -->
+    <section class="men-hero">
+      <div class="men-hero-track" id="men-hero-track">
+        <div class="men-hero-slide" style="background-image:url('https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1600&h=600&fit=crop&q=90');">
+          <div class="men-hero-overlay"></div>
+          <div class="men-hero-content">
+            <p class="men-hero-tag"><span class="gold-line"></span> NEW SEASON <span class="gold-line"></span></p>
+            <h1>WOMEN'S EDIT</h1>
+            <h2>Elegant. Timeless. Powerful.</h2>
+            <button onclick="window.location.href='/women#products'">SHOP NOW</button>
           </div>
-          
-          <div class="filter-section">
-            <h3>FILTER <span>−</span></h3>
-            <ul>
-              <li><input type="checkbox" checked /> All</li>
-            </ul>
+        </div>
+        <div class="men-hero-slide" style="background-image:url('https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=1600&h=600&fit=crop&q=90');">
+          <div class="men-hero-overlay"></div>
+          <div class="men-hero-content">
+            <p class="men-hero-tag"><span class="gold-line"></span> PREMIUM DRESSES <span class="gold-line"></span></p>
+            <h1>EVENING WEAR</h1>
+            <h2>Dress to dazzle every occasion.</h2>
+            <button onclick="window.location.href='/women#products'">EXPLORE</button>
           </div>
-        </aside>
+        </div>
+        <div class="men-hero-slide" style="background-image:url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600&h=600&fit=crop&q=90');">
+          <div class="men-hero-overlay"></div>
+          <div class="men-hero-content">
+            <p class="men-hero-tag"><span class="gold-line"></span> CASUAL COLLECTION <span class="gold-line"></span></p>
+            <h1>EVERYDAY CHIC</h1>
+            <h2>Comfort meets effortless style.</h2>
+            <button onclick="window.location.href='/women#products'">SHOP NOW</button>
+          </div>
+        </div>
+      </div>
+      <button class="men-hero-arrow prev" id="mh-prev"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="men-hero-arrow next" id="mh-next"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="men-hero-dots" id="mh-dots">
+        <button class="mh-dot active"></button>
+        <button class="mh-dot"></button>
+        <button class="mh-dot"></button>
+      </div>
+    </section>
 
-        <section class="content">
-          <div class="grid-controls">
-            <span id="product-count">Loading...</span>
-            <select>
-              <option value="">Sort by: All Items</option>
+    <div class="men-page">
+
+      <!-- BIGGEST DEALS -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">EXCLUSIVE OFFERS</p><h2>Biggest Deals On Top Brands</h2></div>
+          <a href="/women#products" class="men-view-all">VIEW ALL <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="deals-grid">
+          <div class="deal-card" onclick="window.location.href='/women#products'" style="background:url('https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">UP TO 50% OFF</span><h3>Dresses</h3></div>
+          </div>
+          <div class="deal-card" onclick="window.location.href='/women#products'" style="background:url('https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">NEW IN</span><h3>Blouses</h3></div>
+          </div>
+          <div class="deal-card" onclick="window.location.href='/women#products'" style="background:url('https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">TRENDING</span><h3>Coats</h3></div>
+          </div>
+          <div class="deal-card" onclick="window.location.href='/women#products'" style="background:url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">BEST SELLER</span><h3>Skirts</h3></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATEGORIES TO BAG -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">SHOP BY TYPE</p><h2>Categories To Bag</h2></div>
+        </div>
+        <div class="cat-chips-row">
+          <div class="cat-chip-card" onclick="window.location.href='/women#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Dresses</span>
+          </div>
+          <div class="cat-chip-card" onclick="window.location.href='/women#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Blouses</span>
+          </div>
+          <div class="cat-chip-card" onclick="window.location.href='/women#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Coats</span>
+          </div>
+          <div class="cat-chip-card" onclick="window.location.href='/women#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Skirts</span>
+          </div>
+          <div class="cat-chip-card" onclick="window.location.href='/women#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Jackets</span>
+          </div>
+          <div class="cat-chip-card" onclick="window.location.href='/women#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Sweaters</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPLORE TOP BRANDS -->
+      <section class="men-section brands-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">PREMIUM WOMEN'S BRANDS</p><h2>Explore Top Brands</h2></div>
+        </div>
+        <div class="brands-grid">
+          <div class="brand-card" onclick="window.location.href='/women#products'"><span>VASTRA FEMME</span></div>
+          <div class="brand-card" onclick="window.location.href='/women#products'"><span>VASTRA LUXE</span></div>
+          <div class="brand-card" onclick="window.location.href='/women#products'"><span>VASTRA ELEGANCE</span></div>
+          <div class="brand-card" onclick="window.location.href='/women#products'"><span>VASTRA CASUAL</span></div>
+          <div class="brand-card" onclick="window.location.href='/women#products'"><span>VASTRA COUTURE</span></div>
+        </div>
+      </section>
+
+      <!-- LUXE BANNER -->
+      <section class="luxe-banner" onclick="window.location.href='/women#products'">
+        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400&h=400&fit=crop&q=85" alt="Vastra Femme" />
+        <div class="luxe-overlay">
+          <p class="men-tag">EXCLUSIVE</p>
+          <h2>VASTRA FEMME</h2>
+          <p>Premium womenswear — crafted for the modern woman</p>
+          <button>SHOP FEMME</button>
+        </div>
+      </section>
+
+      <!-- TRENDING -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">HOT RIGHT NOW</p><h2>Trending In Indian Wear</h2></div>
+          <a href="/women#products" class="men-view-all">VIEW ALL <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="trending-scroll" id="trending-formal"></div>
+      </section>
+
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">POPULAR</p><h2>Trending In Western Wear</h2></div>
+          <a href="/women#products" class="men-view-all">VIEW ALL <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="trending-scroll" id="trending-casual"></div>
+      </section>
+
+      <!-- ALL PRODUCTS -->
+      <section class="men-section" id="products">
+        <div class="men-section-header">
+          <div><p class="men-tag">COMPLETE COLLECTION</p><h2>All Women's Products</h2></div>
+          <span class="result-count" id="result-count"></span>
+        </div>
+        <div class="men-filter-bar">
+          <div class="mfb-group">
+            <span class="mfb-label">SORT</span>
+            <select id="sort-select" class="mfb-select">
+              <option value="">Recommended</option>
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
             </select>
           </div>
-
-          <div class="product-grid"></div>
-        </section>
-      </div>
-    </main>
-
-    <script>
-      const gridControls = document.querySelector(".grid-controls select");
-      const searchInput = document.querySelector(".search-bar input");
-      const productGrid = document.querySelector(".product-grid");
-
-      async function loadWomenProducts() {
-        try {
-          const res = await fetch("/api/products?category=Women&limit=100");
-          const data = await res.json();
-          if (data.success) {
-            renderProducts(data.products);
-            document.getElementById("product-count").textContent = `${data.products.length} Items`;
-          }
-        } catch (err) {
-          productGrid.innerHTML = '<p style="text-align:center;color:red;">Failed to load products.</p>';
-        }
-      }
-
-      function renderProducts(products) {
-        productGrid.innerHTML = products
-          .map(
-            (p) => `
-          <div class="product-card">
-            <div class="product-image-wrapper">
-              <img src="${p.image}" loading="lazy" class="product-img" onerror="this.src='https://via.placeholder.com/300x400/cccccc/666666?text=No+Image'">
-              <button class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist('${p._id}','${p.name}',${p.price},'${p.image}')">
-                <i class="far fa-heart"></i>
-              </button>
+          <div class="mfb-divider"></div>
+          <div class="mfb-group">
+            <span class="mfb-label">PRICE</span>
+            <div class="mfb-pills" id="price-pills">
+              <button class="mfb-pill active" data-val="">All</button>
+              <button class="mfb-pill" data-val="0-4000">Under Rs. 4,000</button>
+              <button class="mfb-pill" data-val="4000-8000">Rs. 4,000–Rs. 8,000</button>
+              <button class="mfb-pill" data-val="8000-16000">Rs. 8,000–Rs. 16,000</button>
+              <button class="mfb-pill" data-val="16000-999999">Rs. 16,000+</button>
             </div>
-            <div onclick="window.location.href='/detail?id=${p._id}'">
-              <p class="name">${p.name}</p>
-              <p class="price">$${p.price}</p>
+          </div>
+          <div class="mfb-divider"></div>
+          <div class="mfb-group">
+            <span class="mfb-label">TYPE</span>
+            <div class="mfb-pills" id="type-pills">
+              <button class="mfb-pill active" data-val="">All</button>
+              <button class="mfb-pill" data-val="Dresses">Dresses</button>
+              <button class="mfb-pill" data-val="Blouses">Blouses</button>
+              <button class="mfb-pill" data-val="Coats">Coats</button>
+              <button class="mfb-pill" data-val="Skirts">Skirts</button>
+              <button class="mfb-pill" data-val="Jackets">Jackets</button>
+              <button class="mfb-pill" data-val="Sweaters">Sweaters</button>
             </div>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">
-              ADD TO BAG
-            </button>
-          </div>`
-          )
-          .join("");
-      }
+          </div>
+          <div class="mfb-divider"></div>
+          <div class="mfb-group">
+            <span class="mfb-label">RATING</span>
+            <div class="mfb-pills" id="rating-pills">
+              <button class="mfb-pill active" data-val="">All</button>
+              <button class="mfb-pill" data-val="4">4★ & above</button>
+              <button class="mfb-pill" data-val="3">3★ & above</button>
+            </div>
+          </div>
+        </div>
+        <div class="men-product-grid" id="product-grid"></div>
+        <div class="pagination-wrap" id="pagination-wrap"></div>
+      </section>
 
-      function toggleWishlist(id, name, price, image) {
-        const wishlist = JSON.parse(localStorage.getItem('vastra_wishlist') || '[]');
-        const exists = wishlist.find(item => item.id === id);
-        if (exists) {
-          localStorage.setItem('vastra_wishlist', JSON.stringify(wishlist.filter(item => item.id !== id)));
-          alert(`${name} removed from wishlist`);
-        } else {
-          wishlist.push({id, name, price, image});
-          localStorage.setItem('vastra_wishlist', JSON.stringify(wishlist));
-          alert(`${name} added to wishlist`);
-        }
-        loadWomenProducts();
-      }
+    </div>
 
-      function addToCart(id, name, price, image, size = "M") {
-        const cart = JSON.parse(localStorage.getItem("vastra_cart") || "[]");
-        const existing = cart.find((i) => i.id === id && i.size === size);
-        if (existing) {
-          existing.quantity += 1;
-        } else {
-          cart.push({ id, name, price, image, size, quantity: 1 });
-        }
-        localStorage.setItem("vastra_cart", JSON.stringify(cart));
-        alert(`${name} added to bag!`);
-      }
-
-      loadWomenProducts();
-    </script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/women-page.js"></script>
     <script src="/js/footer.js"></script>
+    <script>
+      const mhTrack = document.getElementById('men-hero-track');
+      const mhDots  = document.querySelectorAll('.mh-dot');
+      let mhCur = 0, mhTimer;
+      function mhGoTo(i) { mhCur=(i+3)%3; mhTrack.style.transform=`translateX(-${mhCur*100}%)`; mhDots.forEach((d,j)=>d.classList.toggle('active',j===mhCur)); }
+      function mhStart() { mhTimer=setInterval(()=>mhGoTo(mhCur+1),4000); }
+      document.getElementById('mh-prev').addEventListener('click',()=>{clearInterval(mhTimer);mhGoTo(mhCur-1);mhStart();});
+      document.getElementById('mh-next').addEventListener('click',()=>{clearInterval(mhTimer);mhGoTo(mhCur+1);mhStart();});
+      mhDots.forEach((d,i)=>d.addEventListener('click',()=>{clearInterval(mhTimer);mhGoTo(i);mhStart();}));
+      mhStart();
+      document.querySelectorAll('.mfb-pills').forEach(group=>{
+        group.querySelectorAll('.mfb-pill').forEach(pill=>{
+          pill.addEventListener('click',()=>{
+            group.querySelectorAll('.mfb-pill').forEach(p=>p.classList.remove('active'));
+            pill.classList.add('active');
+            if(typeof loadWomenProducts==='function'){currentPage=1;loadWomenProducts();}
+          });
+        });
+      });
+    </script>
   </body>
 </html>

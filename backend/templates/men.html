@@ -3,121 +3,250 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Men - VASTRA</title>
-    <link rel="stylesheet" href="/css/shop.css" />
+    <title>Men — VASTRA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/men.css" />
     <link rel="stylesheet" href="/css/navbar.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   </head>
-
   <body>
     <div id="navbar"></div>
     <script src="/js/navbar.js"></script>
 
-    <main>
-      <h1>MEN'S COLLECTION</h1>
-
-      <div class="container">
-        <aside class="sidebar">
-          <div class="search-bar">
-            <input type="text" placeholder="Search men's items..." />
+    <!-- HERO SLIDER -->
+    <section class="men-hero">
+      <div class="men-hero-track" id="men-hero-track">
+        <div class="men-hero-slide" style="background-image:url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=1600&h=600&fit=crop&q=90');">
+          <div class="men-hero-overlay"></div>
+          <div class="men-hero-content">
+            <p class="men-hero-tag"><span class="gold-line"></span> NEW SEASON <span class="gold-line"></span></p>
+            <h1>MEN'S EDIT</h1>
+            <h2>Bold. Minimal. Powerful.</h2>
+            <button onclick="window.location.href='/men#products'">SHOP NOW</button>
           </div>
-          
-          <div class="filter-section">
-            <h3>FILTER <span>−</span></h3>
-            <ul>
-              <li><input type="checkbox" checked /> All</li>
-            </ul>
+        </div>
+        <div class="men-hero-slide" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&h=600&fit=crop&q=90');">
+          <div class="men-hero-overlay"></div>
+          <div class="men-hero-content">
+            <p class="men-hero-tag"><span class="gold-line"></span> PREMIUM BLAZERS <span class="gold-line"></span></p>
+            <h1>FORMAL WEAR</h1>
+            <h2>Dress to impress every occasion.</h2>
+            <button onclick="window.location.href='/men#products'">EXPLORE</button>
           </div>
-        </aside>
+        </div>
+        <div class="men-hero-slide" style="background-image:url('https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=1600&h=600&fit=crop&q=90');">
+          <div class="men-hero-overlay"></div>
+          <div class="men-hero-content">
+            <p class="men-hero-tag"><span class="gold-line"></span> CASUAL COLLECTION <span class="gold-line"></span></p>
+            <h1>EVERYDAY STYLE</h1>
+            <h2>Comfort meets premium quality.</h2>
+            <button onclick="window.location.href='/men#products'">SHOP NOW</button>
+          </div>
+        </div>
+      </div>
+      <button class="men-hero-arrow prev" id="mh-prev"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="men-hero-arrow next" id="mh-next"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="men-hero-dots" id="mh-dots">
+        <button class="mh-dot active"></button>
+        <button class="mh-dot"></button>
+        <button class="mh-dot"></button>
+      </div>
+    </section>
 
-        <section class="content">
-          <div class="grid-controls">
-            <span id="product-count">Loading...</span>
-            <select>
-              <option value="">Sort by: All Items</option>
+    <div class="men-page">
+
+      <!-- BIGGEST DEALS -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">EXCLUSIVE OFFERS</p><h2>Biggest Deals On Top Brands</h2></div>
+          <a href="/men#products" class="men-view-all">VIEW ALL <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="deals-grid">
+          <div class="deal-card" onclick="window.location.href='/men#products'" style="background:url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">UP TO 50% OFF</span><h3>Blazers</h3></div>
+          </div>
+          <div class="deal-card" onclick="window.location.href='/men#products'" style="background:url('https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">NEW IN</span><h3>Shirts</h3></div>
+          </div>
+          <div class="deal-card" onclick="window.location.href='/men#products'" style="background:url('https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">TRENDING</span><h3>Jackets</h3></div>
+          </div>
+          <div class="deal-card" onclick="window.location.href='/men#products'" style="background:url('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">BEST SELLER</span><h3>Trousers</h3></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATEGORIES TO BAG -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">SHOP BY TYPE</p><h2>Categories To Bag</h2></div>
+        </div>
+        <div class="cat-chips-row">
+          <div class="cat-chip-card" onclick="window.location.href='/men#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Blazers</span>
+          </div>
+          <div class="cat-chip-card" onclick="window.location.href='/men#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Shirts</span>
+          </div>
+          <div class="cat-chip-card" onclick="window.location.href='/men#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Jackets</span>
+          </div>
+          <div class="cat-chip-card" onclick="window.location.href='/men#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Trousers</span>
+          </div>
+          <div class="cat-chip-card" onclick="window.location.href='/men#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Sweaters</span>
+          </div>
+          <div class="cat-chip-card" onclick="window.location.href='/men#products'">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Coats</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPLORE TOP BRANDS — with padding top & bottom -->
+      <section class="men-section brands-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">PREMIUM</p><h2>Explore Top Brands</h2></div>
+        </div>
+        <div class="brands-grid">
+          <div class="brand-card" onclick="window.location.href='/men#products'"><span>VASTRA LUXE</span></div>
+          <div class="brand-card" onclick="window.location.href='/men#products'"><span>VASTRA SPORT</span></div>
+          <div class="brand-card" onclick="window.location.href='/men#products'"><span>VASTRA FORMAL</span></div>
+          <div class="brand-card" onclick="window.location.href='/men#products'"><span>VASTRA CASUAL</span></div>
+          <div class="brand-card" onclick="window.location.href='/men#products'"><span>VASTRA PREMIUM</span></div>
+        </div>
+      </section>
+
+      <!-- VASTRA LUXE BANNER -->
+      <section class="luxe-banner" onclick="window.location.href='/men#products'">
+        <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=1400&h=400&fit=crop&q=85" alt="Vastra Luxe" />
+        <div class="luxe-overlay">
+          <p class="men-tag">EXCLUSIVE</p>
+          <h2>VASTRA LUXE</h2>
+          <p>Premium menswear — crafted for the discerning gentleman</p>
+          <button>SHOP LUXE</button>
+        </div>
+      </section>
+
+      <!-- TRENDING FORMAL -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">HOT RIGHT NOW</p><h2>Trending In Formal Wear</h2></div>
+          <a href="/men#products" class="men-view-all">VIEW ALL <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="trending-scroll" id="trending-formal"></div>
+      </section>
+
+      <!-- TRENDING CASUAL -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">POPULAR</p><h2>Trending In Casual Wear</h2></div>
+          <a href="/men#products" class="men-view-all">VIEW ALL <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="trending-scroll" id="trending-casual"></div>
+      </section>
+
+      <!-- ALL MEN'S PRODUCTS -->
+      <section class="men-section" id="products">
+        <div class="men-section-header">
+          <div><p class="men-tag">COMPLETE COLLECTION</p><h2>All Men's Products</h2></div>
+          <span class="result-count" id="result-count"></span>
+        </div>
+
+        <!-- HORIZONTAL FILTER BAR -->
+        <div class="men-filter-bar">
+          <div class="mfb-group">
+            <span class="mfb-label">SORT</span>
+            <select id="sort-select" class="mfb-select">
+              <option value="">Recommended</option>
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
             </select>
           </div>
+          <div class="mfb-divider"></div>
+          <div class="mfb-group">
+            <span class="mfb-label">PRICE</span>
+            <div class="mfb-pills" id="price-pills">
+              <button class="mfb-pill active" data-val="">All</button>
+              <button class="mfb-pill" data-val="0-4000">Under Rs. 4,000</button>
+              <button class="mfb-pill" data-val="4000-8000">Rs. 4,000–Rs. 8,000</button>
+              <button class="mfb-pill" data-val="8000-16000">Rs. 8,000–Rs. 16,000</button>
+              <button class="mfb-pill" data-val="16000-999999">Rs. 16,000+</button>
+            </div>
+          </div>
+          <div class="mfb-divider"></div>
+          <div class="mfb-group">
+            <span class="mfb-label">TYPE</span>
+            <div class="mfb-pills" id="type-pills">
+              <button class="mfb-pill active" data-val="">All</button>
+              <button class="mfb-pill" data-val="Blazers">Blazers</button>
+              <button class="mfb-pill" data-val="Shirts">Shirts</button>
+              <button class="mfb-pill" data-val="Jackets">Jackets</button>
+              <button class="mfb-pill" data-val="Trousers">Trousers</button>
+              <button class="mfb-pill" data-val="Sweaters">Sweaters</button>
+              <button class="mfb-pill" data-val="Coats">Coats</button>
+            </div>
+          </div>
+          <div class="mfb-divider"></div>
+          <div class="mfb-group">
+            <span class="mfb-label">RATING</span>
+            <div class="mfb-pills" id="rating-pills">
+              <button class="mfb-pill active" data-val="">All</button>
+              <button class="mfb-pill" data-val="4">4★ & above</button>
+              <button class="mfb-pill" data-val="3">3★ & above</button>
+            </div>
+          </div>
+        </div>
 
-          <div class="product-grid"></div>
-        </section>
-      </div>
-    </main>
+        <div class="men-product-grid" id="product-grid"></div>
+        <div class="pagination-wrap" id="pagination-wrap"></div>
+      </section>
+
+    </div>
+
+    <script src="/js/toast.js"></script>
+    <script src="/js/men-page.js"></script>
+    <script src="/js/footer.js"></script>
 
     <script>
-      const gridControls = document.querySelector(".grid-controls select");
-      const searchInput = document.querySelector(".search-bar input");
-      const productGrid = document.querySelector(".product-grid");
-
-      async function loadMenProducts() {
-        try {
-          const res = await fetch("/api/products?category=Men&limit=100");
-          const data = await res.json();
-          if (data.success) {
-            renderProducts(data.products);
-            document.getElementById("product-count").textContent = `${data.products.length} Items`;
-          }
-        } catch (err) {
-          productGrid.innerHTML = '<p style="text-align:center;color:red;">Failed to load products.</p>';
-        }
+      // Hero slider
+      const mhTrack = document.getElementById('men-hero-track');
+      const mhDots  = document.querySelectorAll('.mh-dot');
+      let mhCur = 0, mhTimer;
+      function mhGoTo(i) {
+        mhCur = (i + 3) % 3;
+        mhTrack.style.transform = `translateX(-${mhCur * 100}%)`;
+        mhDots.forEach((d, j) => d.classList.toggle('active', j === mhCur));
       }
+      function mhStart() { mhTimer = setInterval(() => mhGoTo(mhCur + 1), 4000); }
+      document.getElementById('mh-prev').addEventListener('click', () => { clearInterval(mhTimer); mhGoTo(mhCur - 1); mhStart(); });
+      document.getElementById('mh-next').addEventListener('click', () => { clearInterval(mhTimer); mhGoTo(mhCur + 1); mhStart(); });
+      mhDots.forEach((d, i) => d.addEventListener('click', () => { clearInterval(mhTimer); mhGoTo(i); mhStart(); }));
+      mhStart();
 
-      function renderProducts(products) {
-        productGrid.innerHTML = products
-          .map(
-            (p) => `
-          <div class="product-card">
-            <div class="product-image-wrapper">
-              <img src="${p.image}" loading="lazy" class="product-img" onerror="this.src='https://via.placeholder.com/300x400/cccccc/666666?text=No+Image'">
-              <button class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist('${p._id}','${p.name}',${p.price},'${p.image}')">
-                <i class="far fa-heart"></i>
-              </button>
-            </div>
-            <div onclick="window.location.href='/detail?id=${p._id}'">
-              <p class="name">${p.name}</p>
-              <p class="price">$${p.price}</p>
-            </div>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">
-              ADD TO BAG
-            </button>
-          </div>`
-          )
-          .join("");
-      }
-
-      function toggleWishlist(id, name, price, image) {
-        const wishlist = JSON.parse(localStorage.getItem('vastra_wishlist') || '[]');
-        const exists = wishlist.find(item => item.id === id);
-        if (exists) {
-          localStorage.setItem('vastra_wishlist', JSON.stringify(wishlist.filter(item => item.id !== id)));
-          alert(`${name} removed from wishlist`);
-        } else {
-          wishlist.push({id, name, price, image});
-          localStorage.setItem('vastra_wishlist', JSON.stringify(wishlist));
-          alert(`${name} added to wishlist`);
-        }
-        loadMenProducts();
-      }
-
-      function addToCart(id, name, price, image, size = "M") {
-        const cart = JSON.parse(localStorage.getItem("vastra_cart") || "[]");
-        const existing = cart.find((i) => i.id === id && i.size === size);
-        if (existing) {
-          existing.quantity += 1;
-        } else {
-          cart.push({ id, name, price, image, size, quantity: 1 });
-        }
-        localStorage.setItem("vastra_cart", JSON.stringify(cart));
-        alert(`${name} added to bag!`);
-      }
-
-      loadMenProducts();
+      // Horizontal filter pills
+      document.querySelectorAll('.mfb-pills').forEach(group => {
+        group.querySelectorAll('.mfb-pill').forEach(pill => {
+          pill.addEventListener('click', () => {
+            group.querySelectorAll('.mfb-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            if (typeof loadMenProducts === 'function') {
+              currentPage = 1;
+              loadMenProducts();
+            }
+          });
+        });
+      });
     </script>
-    <script src="/js/footer.js"></script>
   </body>
 </html>

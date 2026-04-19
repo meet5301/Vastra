@@ -3,121 +3,253 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Accessories - VASTRA</title>
-    <link rel="stylesheet" href="/css/shop.css" />
+    <title>Accessories — VASTRA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/men.css" />
     <link rel="stylesheet" href="/css/navbar.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   </head>
-
   <body>
     <div id="navbar"></div>
     <script src="/js/navbar.js"></script>
 
-    <main>
-      <h1>ACCESSORIES</h1>
-
-      <div class="container">
-        <aside class="sidebar">
-          <div class="search-bar">
-            <input type="text" placeholder="Search accessories..." />
+    <!-- HERO SLIDER -->
+    <section class="men-hero">
+      <div class="men-hero-track" id="men-hero-track">
+        <div class="men-hero-slide" style="background-image:url('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=1600&h=600&fit=crop&q=90');">
+          <div class="men-hero-overlay"></div>
+          <div class="men-hero-content">
+            <p class="men-hero-tag"><span class="gold-line"></span> NEW ARRIVALS <span class="gold-line"></span></p>
+            <h1>ACCESSORIES</h1>
+            <h2>Complete your look, define your style.</h2>
+            <button onclick="window.location.href='/accessories#products'">SHOP NOW</button>
           </div>
-          
-          <div class="filter-section">
-            <h3>FILTER <span>−</span></h3>
-            <ul>
-              <li><input type="checkbox" checked /> All</li>
-            </ul>
+        </div>
+        <div class="men-hero-slide" style="background-image:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600&h=600&fit=crop&q=90');">
+          <div class="men-hero-overlay"></div>
+          <div class="men-hero-content">
+            <p class="men-hero-tag"><span class="gold-line"></span> PREMIUM WATCHES <span class="gold-line"></span></p>
+            <h1>TIMEPIECES</h1>
+            <h2>Luxury watches for every wrist.</h2>
+            <button onclick="window.location.href='/accessories#products'">EXPLORE</button>
           </div>
-        </aside>
+        </div>
+        <div class="men-hero-slide" style="background-image:url('https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=1600&h=600&fit=crop&q=90');">
+          <div class="men-hero-overlay"></div>
+          <div class="men-hero-content">
+            <p class="men-hero-tag"><span class="gold-line"></span> TRENDING NOW <span class="gold-line"></span></p>
+            <h1>JEWELLERY</h1>
+            <h2>Elevate every outfit effortlessly.</h2>
+            <button onclick="window.location.href='/accessories#products'">SHOP NOW</button>
+          </div>
+        </div>
+      </div>
+      <button class="men-hero-arrow prev" id="mh-prev"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="men-hero-arrow next" id="mh-next"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="men-hero-dots" id="mh-dots">
+        <button class="mh-dot active"></button>
+        <button class="mh-dot"></button>
+        <button class="mh-dot"></button>
+      </div>
+    </section>
 
-        <section class="content">
-          <div class="grid-controls">
-            <span id="product-count">Loading...</span>
-            <select>
-              <option value="">Sort by: All Items</option>
+    <div class="men-page">
+
+      <!-- BIGGEST DEALS -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">EXCLUSIVE OFFERS</p><h2>Biggest Deals On Accessories</h2></div>
+          <a href="/accessories#products" class="men-view-all">VIEW ALL <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="deals-grid">
+          <div class="deal-card" onclick="setTypeFilter('Bags')" style="background:url('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">UP TO 40% OFF</span><h3>Bags</h3></div>
+          </div>
+          <div class="deal-card" onclick="setTypeFilter('Jewellery')" style="background:url('https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">NEW IN</span><h3>Jewellery</h3></div>
+          </div>
+          <div class="deal-card" onclick="setTypeFilter('Watches')" style="background:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">TRENDING</span><h3>Watches</h3></div>
+          </div>
+          <div class="deal-card" onclick="setTypeFilter('Scarves')" style="background:url('https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=500&fit=crop') center/cover;">
+            <div class="deal-overlay"><span class="deal-badge">BEST SELLER</span><h3>Scarves</h3></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SHOP BY TYPE -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">SHOP BY TYPE</p><h2>Categories To Bag</h2></div>
+        </div>
+        <div class="cat-chips-row">
+          <div class="cat-chip-card" onclick="setTypeFilter('Bags')">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Bags</span>
+          </div>
+          <div class="cat-chip-card" onclick="setTypeFilter('Watches')">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Watches</span>
+          </div>
+          <div class="cat-chip-card" onclick="setTypeFilter('Jewellery')">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Jewellery</span>
+          </div>
+          <div class="cat-chip-card" onclick="setTypeFilter('Scarves')">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Scarves</span>
+          </div>
+          <div class="cat-chip-card" onclick="setTypeFilter('Belts')">
+            <div class="cat-chip-img" style="background:url('https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=200&h=200&fit=crop') center/cover;"></div>
+            <span>Belts</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPLORE TOP BRANDS -->
+      <section class="men-section brands-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">PREMIUM</p><h2>Explore Top Brands</h2></div>
+        </div>
+        <div class="brands-grid">
+          <div class="brand-card" onclick="window.location.href='/accessories#products'"><span>VASTRA LUXE</span></div>
+          <div class="brand-card" onclick="window.location.href='/accessories#products'"><span>VASTRA GOLD</span></div>
+          <div class="brand-card" onclick="window.location.href='/accessories#products'"><span>VASTRA CRAFT</span></div>
+          <div class="brand-card" onclick="window.location.href='/accessories#products'"><span>VASTRA SPORT</span></div>
+          <div class="brand-card" onclick="window.location.href='/accessories#products'"><span>VASTRA EDIT</span></div>
+        </div>
+      </section>
+
+      <!-- LUXE BANNER -->
+      <section class="luxe-banner" onclick="window.location.href='/accessories#products'">
+        <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=1400&h=400&fit=crop&q=85" alt="Vastra Accessories" />
+        <div class="luxe-overlay">
+          <p class="men-tag">EXCLUSIVE</p>
+          <h2>VASTRA LUXE ACCESSORIES</h2>
+          <p>Premium accessories — crafted for the discerning individual</p>
+          <button>SHOP LUXE</button>
+        </div>
+      </section>
+
+      <!-- TRENDING BAGS & WALLETS -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">HOT RIGHT NOW</p><h2>Trending Bags & Wallets</h2></div>
+          <a href="/accessories#products" class="men-view-all">VIEW ALL <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="trending-scroll" id="trending-bags"></div>
+      </section>
+
+      <!-- TRENDING JEWELLERY & WATCHES -->
+      <section class="men-section">
+        <div class="men-section-header">
+          <div><p class="men-tag">POPULAR</p><h2>Trending Jewellery & Watches</h2></div>
+          <a href="/accessories#products" class="men-view-all">VIEW ALL <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="trending-scroll" id="trending-jewellery"></div>
+      </section>
+
+      <!-- ALL ACCESSORIES PRODUCTS -->
+      <section class="men-section" id="products">
+        <div class="men-section-header">
+          <div><p class="men-tag">COMPLETE COLLECTION</p><h2>All Accessories</h2></div>
+          <span class="result-count" id="result-count"></span>
+        </div>
+
+        <!-- HORIZONTAL FILTER BAR -->
+        <div class="men-filter-bar">
+          <div class="mfb-group">
+            <span class="mfb-label">SORT</span>
+            <select id="sort-select" class="mfb-select">
+              <option value="">Recommended</option>
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
             </select>
           </div>
+          <div class="mfb-divider"></div>
+          <div class="mfb-group">
+            <span class="mfb-label">PRICE</span>
+            <div class="mfb-pills" id="price-pills">
+              <button class="mfb-pill active" data-val="">All</button>
+              <button class="mfb-pill" data-val="0-4000">Under Rs. 4,000</button>
+              <button class="mfb-pill" data-val="4000-8000">Rs. 4,000–Rs. 8,000</button>
+              <button class="mfb-pill" data-val="8000-16000">Rs. 8,000–Rs. 16,000</button>
+              <button class="mfb-pill" data-val="16000-999999">Rs. 16,000+</button>
+            </div>
+          </div>
+          <div class="mfb-divider"></div>
+          <div class="mfb-group">
+            <span class="mfb-label">TYPE</span>
+            <div class="mfb-pills" id="type-pills">
+              <button class="mfb-pill active" data-val="">All</button>
+              <button class="mfb-pill" data-val="Bags">Bags</button>
+              <button class="mfb-pill" data-val="Watches">Watches</button>
+              <button class="mfb-pill" data-val="Jewellery">Jewellery</button>
+              <button class="mfb-pill" data-val="Scarves">Scarves</button>
+              <button class="mfb-pill" data-val="Belts">Belts</button>
+              <button class="mfb-pill" data-val="Sunglasses">Sunglasses</button>
+            </div>
+          </div>
+          <div class="mfb-divider"></div>
+          <div class="mfb-group">
+            <span class="mfb-label">RATING</span>
+            <div class="mfb-pills" id="rating-pills">
+              <button class="mfb-pill active" data-val="">All</button>
+              <button class="mfb-pill" data-val="4">4★ & above</button>
+              <button class="mfb-pill" data-val="3">3★ & above</button>
+            </div>
+          </div>
+        </div>
 
-          <div class="product-grid"></div>
-        </section>
-      </div>
-    </main>
+        <div class="men-product-grid" id="product-grid"></div>
+        <div class="pagination-wrap" id="pagination-wrap"></div>
+      </section>
+
+    </div>
+
+    <script src="/js/toast.js"></script>
+    <script src="/js/accessories-page.js"></script>
+    <script src="/js/footer.js"></script>
 
     <script>
-      const gridControls = document.querySelector(".grid-controls select");
-      const searchInput = document.querySelector(".search-bar input");
-      const productGrid = document.querySelector(".product-grid");
-
-      async function loadAccessoriesProducts() {
-        try {
-          const res = await fetch("/api/products?category=Accessories&limit=100");
-          const data = await res.json();
-          if (data.success) {
-            renderProducts(data.products);
-            document.getElementById("product-count").textContent = `${data.products.length} Items`;
-          }
-        } catch (err) {
-          productGrid.innerHTML = '<p style="text-align:center;color:red;">Failed to load products.</p>';
-        }
+      // Hero slider
+      const mhTrack = document.getElementById('men-hero-track');
+      const mhDots  = document.querySelectorAll('.mh-dot');
+      let mhCur = 0, mhTimer;
+      function mhGoTo(i) {
+        mhCur = (i + 3) % 3;
+        mhTrack.style.transform = `translateX(-${mhCur * 100}%)`;
+        mhDots.forEach((d, j) => d.classList.toggle('active', j === mhCur));
       }
+      function mhStart() { mhTimer = setInterval(() => mhGoTo(mhCur + 1), 4000); }
+      document.getElementById('mh-prev').addEventListener('click', () => { clearInterval(mhTimer); mhGoTo(mhCur - 1); mhStart(); });
+      document.getElementById('mh-next').addEventListener('click', () => { clearInterval(mhTimer); mhGoTo(mhCur + 1); mhStart(); });
+      mhDots.forEach((d, i) => d.addEventListener('click', () => { clearInterval(mhTimer); mhGoTo(i); mhStart(); }));
+      mhStart();
 
-      function renderProducts(products) {
-        productGrid.innerHTML = products
-          .map(
-            (p) => `
-          <div class="product-card">
-            <div class="product-image-wrapper">
-              <img src="${p.image}" loading="lazy" class="product-img" onerror="this.src='https://via.placeholder.com/300x400/cccccc/666666?text=No+Image'">
-              <button class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist('${p._id}','${p.name}',${p.price},'${p.image}')">
-                <i class="far fa-heart"></i>
-              </button>
-            </div>
-            <div onclick="window.location.href='/detail?id=${p._id}'">
-              <p class="name">${p.name}</p>
-              <p class="price">$${p.price}</p>
-            </div>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">
-              ADD TO BAG
-            </button>
-          </div>`
-          )
-          .join("");
+      // Filter pills
+      document.querySelectorAll('.mfb-pills').forEach(group => {
+        group.querySelectorAll('.mfb-pill').forEach(pill => {
+          pill.addEventListener('click', () => {
+            group.querySelectorAll('.mfb-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            if (typeof loadAccProducts === 'function') { currentPage = 1; loadAccProducts(); }
+          });
+        });
+      });
+
+      // Deal card / category chip click → set type pill + scroll
+      function setTypeFilter(type) {
+        document.querySelectorAll('#type-pills .mfb-pill').forEach(p => {
+          p.classList.toggle('active', p.dataset.val === type);
+        });
+        currentPage = 1;
+        if (typeof loadAccProducts === 'function') loadAccProducts();
+        document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
       }
-
-      function toggleWishlist(id, name, price, image) {
-        const wishlist = JSON.parse(localStorage.getItem('vastra_wishlist') || '[]');
-        const exists = wishlist.find(item => item.id === id);
-        if (exists) {
-          localStorage.setItem('vastra_wishlist', JSON.stringify(wishlist.filter(item => item.id !== id)));
-          alert(`${name} removed from wishlist`);
-        } else {
-          wishlist.push({id, name, price, image});
-          localStorage.setItem('vastra_wishlist', JSON.stringify(wishlist));
-          alert(`${name} added to wishlist`);
-        }
-        loadAccessoriesProducts();
-      }
-
-      function addToCart(id, name, price, image, size = "M") {
-        const cart = JSON.parse(localStorage.getItem("vastra_cart") || "[]");
-        const existing = cart.find((i) => i.id === id && i.size === size);
-        if (existing) {
-          existing.quantity += 1;
-        } else {
-          cart.push({ id, name, price, image, size, quantity: 1 });
-        }
-        localStorage.setItem("vastra_cart", JSON.stringify(cart));
-        alert(`${name} added to bag!`);
-      }
-
-      loadAccessoriesProducts();
     </script>
-    <script src="/js/footer.js"></script>
   </body>
 </html>

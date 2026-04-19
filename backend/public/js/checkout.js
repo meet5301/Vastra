@@ -1,10 +1,18 @@
 // ─── VASTRA CHECKOUT JS ─────────────────────────────────────────────
 
-function getCart() {
-  return JSON.parse(localStorage.getItem("vastra_cart") || "[]");
-}
-function getToken() {
-  return localStorage.getItem("vastra_token");
+function getCart()  { return JSON.parse(localStorage.getItem("vastra_cart") || "[]"); }
+function getToken() { return localStorage.getItem("vastra_token"); }
+function showToast(msg) {
+  let t = document.getElementById("toast");
+  if (!t) {
+    t = document.createElement("div");
+    t.id = "toast";
+    t.style.cssText = "position:fixed;bottom:2rem;right:2rem;background:#000;color:#fff;padding:12px 20px;z-index:9999;font-size:14px;letter-spacing:1px;";
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(() => (t.style.display = "none"), 3000);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -18,9 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const tax = subtotal * 0.05;
     const total = subtotal + shipping + tax;
 
-    summarySection.querySelector("p:nth-child(2) span").textContent = `$${subtotal.toFixed(2)}`;
-    summarySection.querySelector("p:nth-child(3) span").textContent = shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`;
-    summarySection.querySelector("h3 span").textContent = `$${total.toFixed(2)}`;
+    summarySection.querySelector("p:nth-child(2) span").textContent = `Rs. ${Math.round(subtotal).toLocaleString("en-IN")}`;
+    summarySection.querySelector("p:nth-child(3) span").textContent = shipping === 0 ? "FREE" : `Rs. ${Math.round(shipping).toLocaleString("en-IN")}`;
+    summarySection.querySelector("h3 span").textContent = `Rs. ${Math.round(total).toLocaleString("en-IN")}`;
   }
 
   // Checkout button
@@ -38,12 +46,12 @@ async function placeOrder() {
     return;
   }
 
-  const firstName = document.querySelector("input[placeholder='First name'], input:nth-of-type(1)")?.value || "";
-  const lastName = document.querySelector("input[placeholder='Last name'], input:nth-of-type(2)")?.value || "";
-  const email = document.querySelector("input[type='email']")?.value || "";
-  const address = document.querySelector("input[placeholder='Address'], .row input")?.value || "";
-  const city = document.querySelector("select option:checked")?.value || "Ahmedabad";
-  const phone = document.querySelector("input[placeholder='Phone'], input[type='tel']")?.value || "";
+  const firstName = document.getElementById("checkout-firstname")?.value || "";
+  const lastName  = document.getElementById("checkout-lastname")?.value || "";
+  const email     = document.getElementById("checkout-email")?.value || "";
+  const address   = document.getElementById("checkout-address")?.value || "";
+  const city      = document.getElementById("checkout-city")?.value || "Ahmedabad";
+  const phone     = document.getElementById("checkout-phone")?.value || "";
 
   if (!address) {
     alert("Please fill in your shipping address.");
@@ -89,8 +97,8 @@ async function placeOrder() {
 
     if (data.success) {
       localStorage.removeItem("vastra_cart");
-      alert(`Order placed successfully! Order ID: ${data.order._id}`);
-      window.location.href = "/";
+      showToast(`Order placed! ID: ${data.order._id.slice(-8).toUpperCase()}`);
+      setTimeout(() => { window.location.href = "/profile"; }, 2000);
     } else {
       alert(data.message || "Failed to place order");
     }

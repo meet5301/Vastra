@@ -3,62 +3,191 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VASTRA</title>
-    
+    <title>Shop — VASTRA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/shop.css" />
     <link rel="stylesheet" href="/css/navbar.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   </head>
   <body>
     <div id="navbar"></div>
-
     <script src="/js/navbar.js"></script>
 
-    <main>
-      <h1>NEW ARRIVALS</h1>
-
-      <div class="container">
-        <aside class="sidebar">
-          <div class="search-bar">
-            <input type="text" placeholder="Search" />
-          </div>
-          
-          <div class="filter-section">
-            <h3>FILTER <span>−</span></h3>
-            <ul>
-              <li><input type="checkbox" checked /> All</li>
-              <li><input type="checkbox" /> Scarf</li>
-              <li><input type="checkbox" /> Blazer</li>
-              <li><input type="checkbox" /> Dress</li>
-              <li><input type="checkbox" /> Shirt</li>
-            </ul>
-          </div>
-
-          <div class="filter-section">
-            <h3>CATEGORY <span>+</span></h3>
-          </div>
-          <div class="filter-section">
-            <h3>COLORS <span>+</span></h3>
-          </div>
-        </aside>
-
-        <section class="content">
-          <div class="grid-controls">
-            <span>517 Items</span>
-            <select>
-              <option>Sort by: All Items</option>
-            </select>
-          </div>
-
-          <div class="product-grid"></div>
-        </section>
+    <!-- SHOP HEADER BANNER -->
+    <div class="shop-hero" style="background-image:url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&h=500&fit=crop&q=90');">
+      <div class="shop-hero-content">
+        <p class="shop-hero-tag"><span class="gold-line"></span> VASTRA COLLECTION <span class="gold-line"></span></p>
+        <h1 class="shop-hero-title">NEW ARRIVALS</h1>
+        <p class="shop-hero-sub">Premium fashion — curated for the modern wardrobe</p>
       </div>
-    </main>
+    </div>
+
+    <!-- ACTIVE FILTERS BAR -->
+    <div class="active-filters-bar" id="active-filters-bar" style="display:none;">
+      <span class="af-label">FILTERS:</span>
+      <div class="af-tags" id="af-tags"></div>
+      <button class="af-clear" id="af-clear">CLEAR ALL</button>
+    </div>
+
+    <div class="shop-layout">
+
+      <!-- SIDEBAR -->
+      <aside class="shop-sidebar" id="shop-sidebar">
+        <div class="sidebar-header">
+          <h2>FILTERS</h2>
+          <button class="sidebar-close" id="sidebar-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Search -->
+        <div class="filter-block">
+          <div class="shop-search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="shop-search-input" placeholder="Search products..." />
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="filter-block">
+          <div class="filter-block-header" onclick="toggleFilter('cat')">
+            <h4>CATEGORY</h4>
+            <i class="fa-solid fa-chevron-down" id="cat-icon"></i>
+          </div>
+          <div class="filter-block-body" id="cat-body">
+            <label class="filter-radio"><input type="radio" name="category" value="All" checked /> <span>All</span></label>
+            <label class="filter-radio"><input type="radio" name="category" value="Men" /> <span>Men</span></label>
+            <label class="filter-radio"><input type="radio" name="category" value="Women" /> <span>Women</span></label>
+            <label class="filter-radio"><input type="radio" name="category" value="Accessories" /> <span>Accessories</span></label>
+          </div>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-block">
+          <div class="filter-block-header" onclick="toggleFilter('price')">
+            <h4>PRICE RANGE</h4>
+            <i class="fa-solid fa-chevron-down" id="price-icon"></i>
+          </div>
+          <div class="filter-block-body" id="price-body">
+            <label class="filter-radio"><input type="radio" name="price" value="" checked /> <span>All Prices</span></label>
+            <label class="filter-radio"><input type="radio" name="price" value="0-4000" /> <span>Under Rs. 4,000</span></label>
+            <label class="filter-radio"><input type="radio" name="price" value="4000-8000" /> <span>Rs. 4,000 – Rs. 8,000</span></label>
+            <label class="filter-radio"><input type="radio" name="price" value="8000-16000" /> <span>Rs. 8,000 – Rs. 16,000</span></label>
+            <label class="filter-radio"><input type="radio" name="price" value="16000-999999" /> <span>Above Rs. 16,000</span></label>
+          </div>
+        </div>
+
+        <!-- Sub Category -->
+        <div class="filter-block">
+          <div class="filter-block-header" onclick="toggleFilter('sub')">
+            <h4>TYPE</h4>
+            <i class="fa-solid fa-chevron-down" id="sub-icon"></i>
+          </div>
+          <div class="filter-block-body" id="sub-body">
+            <label class="filter-check"><input type="checkbox" value="Blazers" /> <span>Blazers</span></label>
+            <label class="filter-check"><input type="checkbox" value="Shirts" /> <span>Shirts</span></label>
+            <label class="filter-check"><input type="checkbox" value="Dresses" /> <span>Dresses</span></label>
+            <label class="filter-check"><input type="checkbox" value="Jackets" /> <span>Jackets</span></label>
+            <label class="filter-check"><input type="checkbox" value="Trousers" /> <span>Trousers</span></label>
+            <label class="filter-check"><input type="checkbox" value="Coats" /> <span>Coats</span></label>
+            <label class="filter-check"><input type="checkbox" value="Bags" /> <span>Bags</span></label>
+            <label class="filter-check"><input type="checkbox" value="Scarves" /> <span>Scarves</span></label>
+          </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="filter-block">
+          <div class="filter-block-header" onclick="toggleFilter('rating')">
+            <h4>RATING</h4>
+            <i class="fa-solid fa-chevron-down" id="rating-icon"></i>
+          </div>
+          <div class="filter-block-body" id="rating-body">
+            <label class="filter-radio"><input type="radio" name="rating" value="" checked /> <span>All Ratings</span></label>
+            <label class="filter-radio"><input type="radio" name="rating" value="4" /> <span>★★★★☆ 4+ Stars</span></label>
+            <label class="filter-radio"><input type="radio" name="rating" value="3" /> <span>★★★☆☆ 3+ Stars</span></label>
+          </div>
+        </div>
+
+        <button class="apply-filters-btn" onclick="applyFilters()">APPLY FILTERS</button>
+      </aside>
+
+      <!-- OVERLAY for mobile sidebar -->
+      <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+      <!-- MAIN CONTENT -->
+      <main class="shop-main">
+
+        <!-- TOP BAR -->
+        <div class="shop-topbar">
+          <div class="topbar-left">
+            <button class="filter-toggle-btn" id="filter-toggle-btn" onclick="openSidebar()">
+              <i class="fa-solid fa-sliders"></i> FILTERS
+            </button>
+            <span class="result-count" id="result-count">Loading...</span>
+          </div>
+          <div class="topbar-right">
+            <div class="sort-wrap">
+              <label>SORT BY</label>
+              <select id="sort-select">
+                <option value="">Recommended</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="rating">Top Rated</option>
+              </select>
+            </div>
+            <div class="view-toggle">
+              <button class="view-btn active" id="view-grid" onclick="setView('grid')"><i class="fa-solid fa-grip"></i></button>
+              <button class="view-btn" id="view-list" onclick="setView('list')"><i class="fa-solid fa-list"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCT GRID -->
+        <div class="product-grid" id="product-grid"></div>
+
+        <!-- PAGINATION -->
+        <div class="pagination-wrap" id="pagination-wrap"></div>
+
+      </main>
+    </div>
+
+    <script src="/js/toast.js"></script>
     <script src="/js/shop.js"></script>
     <script src="/js/footer.js"></script>
+
+    <script>
+      // Filter toggle
+      function toggleFilter(id) {
+        const body = document.getElementById(id + '-body');
+        const icon = document.getElementById(id + '-icon');
+        body.classList.toggle('collapsed');
+        icon.style.transform = body.classList.contains('collapsed') ? 'rotate(-90deg)' : 'rotate(0)';
+      }
+
+      // Mobile sidebar
+      function openSidebar() {
+        document.getElementById('shop-sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').classList.add('show');
+      }
+      function closeSidebar() {
+        document.getElementById('shop-sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('show');
+      }
+      document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+
+      // View toggle
+      function setView(v) {
+        const grid = document.getElementById('product-grid');
+        grid.className = 'product-grid' + (v === 'list' ? ' list-view' : '');
+        document.getElementById('view-grid').classList.toggle('active', v === 'grid');
+        document.getElementById('view-list').classList.toggle('active', v === 'list');
+      }
+
+      // Apply filters — triggers shop.js reload
+      function applyFilters() {
+        closeSidebar();
+        if (typeof loadProducts === 'function') loadProducts();
+      }
+    </script>
   </body>
 </html>

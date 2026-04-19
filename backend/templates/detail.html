@@ -3,100 +3,135 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Product Detail Page</title>
+    <title>Product Detail - VASTRA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/detail.css" />
     <link rel="stylesheet" href="/css/navbar.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   </head>
   <body>
     <div id="navbar"></div>
-
     <script src="/js/navbar.js"></script>
-    <divc class="maincon"> </div>
-    
 
     <main class="product-container">
+
+      <!-- LEFT: IMAGE SLIDER -->
       <div class="product-image-section">
-        <div class="main-image-card">
-          <i class="fa-regular fa-heart wishlist-icon"></i>
-          <img src="/images/6.png" alt="Blue Blazer" />
+        <div class="slider-wrapper">
+          <button class="wishlist-icon" id="wishlist-icon-btn" aria-label="Add to wishlist">
+            <i class="far fa-heart"></i>
+          </button>
+
+          <div class="slider-track" id="slider-track">
+            <div class="slide">
+              <img src="/images/6.png" alt="Product" />
+            </div>
+          </div>
+
+          <button class="slider-btn prev" id="slider-prev">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button class="slider-btn next" id="slider-next">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
         </div>
-        <div class="thumbnail-row">
-          <span class="swatch blue"></span>
-          <span class="swatch green"></span>
-          <span class="swatch red"></span>
-          <span class="swatch purple"></span>
-        </div>
+
+        <div class="slider-dots" id="slider-dots"></div>
       </div>
 
+      <!-- RIGHT: INFO -->
       <div class="product-info-section">
-        <h1 class="product-title">PRODUCT DETAIL PAGE</h1>
-        <p class="price">$550</p>
+        <h1 class="product-title">PRODUCT NAME</h1>
+        <p class="price">Rs. 0</p>
 
-        <div class="selection-group">
+        <div class="info-divider"></div>
+
+        <!-- Colors -->
+        <div class="selection-group" id="color-selection-group">
           <label>Colors</label>
-          <div class="color-swatches">
-            <span class="swatch blue"></span>
-            <span class="swatch green"></span>
-            <span class="swatch red"></span>
-            <span class="swatch purple"></span>
-          </div>
+          <div class="color-swatches" id="info-color-swatches"></div>
         </div>
 
-        <div class="selection-group">
-          <label>Description</label>
-          <p class="description-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </p>
-        </div>
-
+        <!-- Size -->
         <div class="selection-group">
           <label>Size</label>
           <select class="size-dropdown">
-            <option>Sperone</option>
-            <option>Small</option>
-            <option>Medium</option>
-            <option>Large</option>
+            <option>S</option><option>M</option><option>L</option><option>XL</option>
           </select>
         </div>
 
-        <button class="add-to-cart">ADD TO BAG</button>
-        <button class="wishlist-toggle">
-          <i class="far fa-heart"></i> ADD TO WISHLIST
-        </button>
+        <!-- Description -->
+        <div class="selection-group">
+          <label>Description</label>
+          <p class="description-text">Loading...</p>
+        </div>
+
+        <div class="selection-group compare-section" id="compare-section">
+          <label>Price Compare (Other Websites)</label>
+          <p class="compare-note">Same product ka real price sirf admin ke added external offers se dikhaya jayega.</p>
+          <div class="compare-list" id="compare-prices-list">
+            <p class="compare-empty">Comparison data loading...</p>
+          </div>
+        </div>
+
+        <div class="info-divider"></div>
+
+        <div class="btn-group">
+          <button class="add-to-cart">ADD TO BAG</button>
+          <button class="wishlist-toggle">
+            <i class="far fa-heart"></i> ADD TO WISHLIST
+          </button>
+        </div>
+
+        <div class="delivery-info">
+          <div class="delivery-item">
+            <i class="fa-solid fa-truck"></i>
+            <span>Free shipping on orders above Rs. 999</span>
+          </div>
+          <div class="delivery-item">
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>Easy 7-day returns</span>
+          </div>
+          <div class="delivery-item">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Secure &amp; encrypted checkout</span>
+          </div>
+        </div>
       </div>
+
     </main>
 
     <hr class="divider" />
 
+    <!-- REVIEWS -->
     <section class="prizes-section">
       <div class="prizes-header">
-        <h2 class="section-title">PRZES YOU</h2>
-        <span class="view-all">View All</span>
+        <h2 class="section-title">REVIEWS</h2>
+        <span class="view-all" id="review-count"></span>
       </div>
 
-      <div class="prizes-grid">
-        <div class="prize-card">
-          <i class="fa-solid fa-shirt"></i>
-          <p>MY ORDERS</p>
-        </div>
-        <div class="prize-card">
-          <i class="fa-solid fa-heart"></i>
-          <p>WISHLIST</p>
-        </div>
-        <div class="prize-card">
-          <i class="fa-solid fa-location-dot"></i>
-          <p>ADDRESSES</p>
-        </div>
+      <div id="review-form-wrap" style="display:none;">
+        <h3>WRITE A REVIEW</h3>
+        <form id="review-form">
+          <select id="review-rating" required>
+            <option value="">Select Rating</option>
+            <option value="5">★★★★★ Excellent (5)</option>
+            <option value="4">★★★★☆ Good (4)</option>
+            <option value="3">★★★☆☆ Average (3)</option>
+            <option value="2">★★☆☆☆ Poor (2)</option>
+            <option value="1">★☆☆☆☆ Terrible (1)</option>
+          </select>
+          <textarea id="review-comment" rows="3" placeholder="Share your experience..." required></textarea>
+          <button type="submit">SUBMIT REVIEW</button>
+        </form>
       </div>
+
+      <div id="reviews-list"></div>
     </section>
+
+    <script src="/js/toast.js"></script>
     <script src="/js/detail.js"></script>
     <script src="/js/footer.js"></script>
   </body>

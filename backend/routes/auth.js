@@ -39,6 +39,8 @@ router.post("/login", async (req, res) => {
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
+    user.lastLogin = new Date();
+    await user.save();
     const token = generateToken(user._id);
     res.json({
       success: true,
@@ -86,6 +88,32 @@ router.put("/change-password", protect, async (req, res) => {
     user.password = newPassword;
     await user.save();
     res.json({ success: true, message: "Password updated" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// POST /api/auth/addresses - add address
+router.post("/addresses", protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const { fullName, phone, address, city, isDefault } = req.body;
+    if (isDefault) user.addresses.forEach((a) => (a.isDefault = false));
+    user.addresses.push({ fullName, phone, address, city, isDefault: !!isDefault });
+    await user.save();
+    res.json({ success: true, addresses: user.addresses });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// DELETE /api/auth/addresses/:addrId - delete address
+router.delete("/addresses/:addrId", protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    user.addresses = user.addresses.filter((a) => a._id.toString() !== req.params.addrId);
+    await user.save();
+    res.json({ success: true, addresses: user.addresses });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
