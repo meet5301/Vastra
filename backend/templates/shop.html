@@ -69,11 +69,23 @@
             <i class="fa-solid fa-chevron-down" id="price-icon"></i>
           </div>
           <div class="filter-block-body" id="price-body">
-            <label class="filter-radio"><input type="radio" name="price" value="" checked /> <span>All Prices</span></label>
-            <label class="filter-radio"><input type="radio" name="price" value="0-4000" /> <span>Under Rs. 4,000</span></label>
-            <label class="filter-radio"><input type="radio" name="price" value="4000-8000" /> <span>Rs. 4,000 – Rs. 8,000</span></label>
-            <label class="filter-radio"><input type="radio" name="price" value="8000-16000" /> <span>Rs. 8,000 – Rs. 16,000</span></label>
-            <label class="filter-radio"><input type="radio" name="price" value="16000-999999" /> <span>Above Rs. 16,000</span></label>
+            <div class="range-pair">
+              <label>Min: <span id="price-min-value">0</span></label>
+              <input type="range" id="price-min" min="0" max="50000" step="100" value="0" />
+              <label>Max: <span id="price-max-value">50000</span></label>
+              <input type="range" id="price-max" min="0" max="50000" step="100" value="50000" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Brand Chips -->
+        <div class="filter-block">
+          <div class="filter-block-header" onclick="toggleFilter('brand')">
+            <h4>BRAND</h4>
+            <i class="fa-solid fa-chevron-down" id="brand-icon"></i>
+          </div>
+          <div class="filter-block-body" id="brand-body">
+            <div class="chip-list" id="brand-chip-list"></div>
           </div>
         </div>
 
@@ -84,14 +96,47 @@
             <i class="fa-solid fa-chevron-down" id="sub-icon"></i>
           </div>
           <div class="filter-block-body" id="sub-body">
-            <label class="filter-check"><input type="checkbox" value="Blazers" /> <span>Blazers</span></label>
-            <label class="filter-check"><input type="checkbox" value="Shirts" /> <span>Shirts</span></label>
-            <label class="filter-check"><input type="checkbox" value="Dresses" /> <span>Dresses</span></label>
-            <label class="filter-check"><input type="checkbox" value="Jackets" /> <span>Jackets</span></label>
-            <label class="filter-check"><input type="checkbox" value="Trousers" /> <span>Trousers</span></label>
-            <label class="filter-check"><input type="checkbox" value="Coats" /> <span>Coats</span></label>
-            <label class="filter-check"><input type="checkbox" value="Bags" /> <span>Bags</span></label>
-            <label class="filter-check"><input type="checkbox" value="Scarves" /> <span>Scarves</span></label>
+            <div id="sub-category-list"></div>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <div class="filter-block-header" onclick="toggleFilter('size')">
+            <h4>SIZE</h4>
+            <i class="fa-solid fa-chevron-down" id="size-icon"></i>
+          </div>
+          <div class="filter-block-body" id="size-body">
+            <div id="size-list"></div>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <div class="filter-block-header" onclick="toggleFilter('color')">
+            <h4>COLOR</h4>
+            <i class="fa-solid fa-chevron-down" id="color-icon"></i>
+          </div>
+          <div class="filter-block-body" id="color-body">
+            <div id="color-list"></div>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <div class="filter-block-header" onclick="toggleFilter('material')">
+            <h4>MATERIAL</h4>
+            <i class="fa-solid fa-chevron-down" id="material-icon"></i>
+          </div>
+          <div class="filter-block-body" id="material-body">
+            <div id="material-list"></div>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <div class="filter-block-header" onclick="toggleFilter('fit')">
+            <h4>FIT</h4>
+            <i class="fa-solid fa-chevron-down" id="fit-icon"></i>
+          </div>
+          <div class="filter-block-body" id="fit-body">
+            <div id="fit-list"></div>
           </div>
         </div>
 
@@ -130,6 +175,9 @@
               <label>SORT BY</label>
               <select id="sort-select">
                 <option value="">Recommended</option>
+                <option value="newest">Newest First</option>
+                <option value="popular">Most Popular</option>
+                <option value="discount">Best Discount</option>
                 <option value="price_asc">Price: Low to High</option>
                 <option value="price_desc">Price: High to Low</option>
                 <option value="rating">Top Rated</option>

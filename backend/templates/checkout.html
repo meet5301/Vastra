@@ -58,11 +58,34 @@
           <label>Phone</label>
           <input type="text" id="checkout-phone" />
 
-          <div class="options">
-            <label><input type="checkbox" /> Register account</label>
-            <label><input type="checkbox" checked /> Pay on delivery</label>
+          <div class="options" id="payment-options">
+            <p class="payment-title">PAYMENT METHOD</p>
+            <div class="payment-methods" role="radiogroup" aria-label="Payment Method">
+              <label class="payment-option">
+                <input type="radio" name="payment-method" value="COD" checked />
+                <span class="payment-option-text">Cash on Delivery</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment-method" value="UPI" />
+                <span class="payment-option-text">UPI</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment-method" value="PAYTM" />
+                <span class="payment-option-text">Paytm</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment-method" value="GPAY" />
+                <span class="payment-option-text">Google Pay (GPay)</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment-method" value="PHONEPE" />
+                <span class="payment-option-text">PhonePe</span>
+              </label>
+            </div>
+            <small id="cod-rule-note" class="cod-rule-note">COD available only up to configured amount.</small>
           </div>
 
+          <div id="checkout-status" style="font-size:13px;color:#555;margin-top:8px;"></div>
           <button class="checkout-btn">CHECKOUT</button>
         </div>
 
@@ -70,12 +93,13 @@
         <div class="summary-section">
           <h2>ORDER SUMMARY</h2>
 
-          <p>Subtotal <span>Rs. 7,450</span></p>
-          <p>Shipping <span>Rs. 299</span></p>
-          <p>Promo Discount <span>- Rs. 150</span></p>
-          <p>Tax <span>Rs. 599</span></p>
+          <p>Subtotal <span id="sum-subtotal">Rs. 0</span></p>
+          <p>Shipping <span id="sum-shipping">Rs. 0</span></p>
+          <p id="cod-charge-row" style="display:none;">COD Charge <span id="sum-cod-charge">Rs. 0</span></p>
+          <p>Promo Discount <span id="sum-discount">Rs. 0</span></p>
+          <p>Tax <span id="sum-tax">Rs. 0</span></p>
 
-          <h3>Total <span>Rs. 8,198</span></h3>
+          <h3>Total <span id="sum-total">Rs. 0</span></h3>
 
           <h2>PAYMENTS</h2>
 

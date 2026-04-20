@@ -13,7 +13,7 @@ function renderCart() {
   if (!container) return;
 
   if (cart.length === 0) {
-    container.innerHTML = '<div class="empty-state"><h2>Your bag is empty</h2><a href="/shop" class="empty-state-link">Continue Shopping</a></div>';
+    container.innerHTML = '<div class="empty-state"><h2>Your bag is empty</h2><a href="/men" class="empty-state-link">Continue Shopping</a></div>';
     return;
   }
 
@@ -61,7 +61,7 @@ function renderCart() {
         <button onclick="window.location.href='/checkout'" style="width:100%;padding:14px;background:#000;color:#fff;border:none;letter-spacing:2px;cursor:pointer;margin-top:1rem;font-size:14px;">
           PROCEED TO CHECKOUT
         </button>
-        <a href="/shop" style="display:block;text-align:center;margin-top:12px;font-size:13px;color:#666;text-decoration:underline;">Continue Shopping</a>
+        <a href="/men" style="display:block;text-align:center;margin-top:12px;font-size:13px;color:#666;text-decoration:underline;">Continue Shopping</a>
       </div>
     </div>`;
 }

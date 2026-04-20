@@ -142,7 +142,7 @@
         const container = document.getElementById("wishlist-container");
         container.classList.toggle("is-empty", wishlist.length === 0);
         if (wishlist.length === 0) {
-          container.innerHTML = '<div class="empty-state"><h2>Your wishlist is empty</h2><a href="/shop" class="empty-state-link">Continue Shopping</a></div>';
+          container.innerHTML = '<div class="empty-state"><h2>Your wishlist is empty</h2><a href="/men" class="empty-state-link">Continue Shopping</a></div>';
           return;
         }
         container.innerHTML = wishlist.map((item) => `

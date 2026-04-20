@@ -5,6 +5,8 @@ const path = require("path");
 const fs = require("fs");
 const Product = require("../models/Product");
 const User = require("../models/User");
+const { resolveMediaUrl, normalizeImageArray, normalizeColorImages } = require("../utils/media");
+const { parsePagination, buildPaginationMeta } = require("../utils/pagination");
 const { protect, adminOnly } = require("../middleware/auth");
 
 function parseJSONOrDefault(value, fallback) {
@@ -41,6 +43,29 @@ function normalizeExternalOffers(rawOffers) {
     .filter(Boolean);
 }
 
+function parseCsvParam(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.map((item) => String(item).trim()).filter(Boolean);
+  return String(value)
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parseColorImagesInput(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return normalizeColorImages(value);
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) return normalizeColorImages(parsed);
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
 async function withApprovedBrandVisibility(baseQuery = {}) {
   const approvedBrandUsers = await User.find({
     role: "brand",
@@ -53,13 +78,17 @@ async function withApprovedBrandVisibility(baseQuery = {}) {
     $or: [
       { sellerUser: { $exists: false } },
       { sellerUser: null },
-      { sellerUser: { $in: approvedIds } },
+      { sellerUser: { $in: approvedIds }, adminApproved: true },
     ],
   };
 }
 
-async function isSellerApproved(sellerUserId) {
-  if (!sellerUserId) return true;
+async function isProductVisibleForPublic(product) {
+  if (!product?.sellerUser) return true;
+
+  if (product.adminApproved !== true) return false;
+
+  const sellerUserId = product.sellerUser;
   const seller = await User.findById(sellerUserId).select("role brandProfile.approved");
   if (!seller) return false;
   if (seller.role !== "brand") return true;
@@ -83,23 +112,129 @@ const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 // GET /api/products - get all active products (user side)
 router.get("/", async (req, res) => {
   try {
-    const { category, search, sort, page = 1, limit = 12 } = req.query;
+    const {
+      category,
+      search,
+      sort,
+      minPrice,
+      maxPrice,
+      subCategories,
+      minRating,
+      sizes,
+      colors,
+      material,
+      fit,
+      brand,
+    } = req.query;
     let baseQuery = { isActive: true };
 
     if (category && category !== "All") baseQuery.category = category;
     if (search) baseQuery.name = { $regex: search, $options: "i" };
 
+    const parsedMinPrice = Number(minPrice);
+    const parsedMaxPrice = Number(maxPrice);
+    if (Number.isFinite(parsedMinPrice) || Number.isFinite(parsedMaxPrice)) {
+      baseQuery.price = {};
+      if (Number.isFinite(parsedMinPrice)) baseQuery.price.$gte = parsedMinPrice;
+      if (Number.isFinite(parsedMaxPrice)) baseQuery.price.$lte = parsedMaxPrice;
+    }
+
+    const subCategoryList = parseCsvParam(subCategories);
+    if (subCategoryList.length) baseQuery.subCategory = { $in: subCategoryList };
+
+    const parsedMinRating = Number(minRating);
+    if (Number.isFinite(parsedMinRating) && parsedMinRating > 0) {
+      baseQuery.avgRating = { $gte: parsedMinRating };
+    }
+
+    const sizeList = parseCsvParam(sizes);
+    if (sizeList.length) baseQuery.sizes = { $in: sizeList };
+
+    const colorList = parseCsvParam(colors);
+    if (colorList.length) baseQuery.colors = { $in: colorList };
+
+    if (typeof material === "string" && material.trim()) {
+      baseQuery.material = { $regex: material.trim(), $options: "i" };
+    }
+
+    const fitList = parseCsvParam(fit);
+    if (fitList.length) baseQuery.fit = { $in: fitList };
+
+    const brandList = parseCsvParam(brand);
+    if (brandList.length) baseQuery.brandName = { $in: brandList };
+
     let sortObj = { createdAt: -1 };
+    if (sort === "newest") sortObj = { createdAt: -1 };
     if (sort === "price_asc") sortObj = { price: 1 };
     if (sort === "price_desc") sortObj = { price: -1 };
     if (sort === "rating") sortObj = { avgRating: -1 };
+    if (sort === "popular") sortObj = { numReviews: -1, avgRating: -1, createdAt: -1 };
 
+    const { page, limit, skip } = parsePagination(req.query, { defaultLimit: 12, maxLimit: 60 });
     const query = await withApprovedBrandVisibility(baseQuery);
-    const skip = (page - 1) * limit;
     const total = await Product.countDocuments(query);
-    const products = await Product.find(query).sort(sortObj).skip(skip).limit(Number(limit));
+    const pagination = buildPaginationMeta(total, page, limit);
 
-    res.json({ success: true, products, total, page: Number(page), pages: Math.ceil(total / limit) });
+    let products = [];
+    if (sort === "discount") {
+      products = await Product.aggregate([
+        { $match: query },
+        {
+          $addFields: {
+            discountPercent: {
+              $cond: [
+                { $and: [{ $gt: ["$price", 0] }, { $gt: ["$discountPrice", 0] }, { $lt: ["$discountPrice", "$price"] }] },
+                {
+                  $multiply: [
+                    {
+                      $divide: [
+                        { $subtract: ["$price", "$discountPrice"] },
+                        "$price",
+                      ],
+                    },
+                    100,
+                  ],
+                },
+                0,
+              ],
+            },
+          },
+        },
+        { $sort: { discountPercent: -1, createdAt: -1 } },
+        { $skip: skip },
+        { $limit: limit },
+      ]);
+    } else {
+      products = await Product.find(query).sort(sortObj).skip(skip).limit(limit);
+    }
+
+    const facetDocs = await Product.find(query)
+      .select("brandName sizes colors fit material subCategory price")
+      .lean();
+
+    const uniqueSorted = (arr) => [...new Set(arr.filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b)));
+    const facets = {
+      brands: uniqueSorted(facetDocs.map((d) => d.brandName).filter(Boolean)),
+      sizes: uniqueSorted(facetDocs.flatMap((d) => d.sizes || [])),
+      colors: uniqueSorted(facetDocs.flatMap((d) => d.colors || [])),
+      fits: uniqueSorted(facetDocs.map((d) => d.fit).filter(Boolean)),
+      materials: uniqueSorted(facetDocs.map((d) => d.material).filter(Boolean)),
+      subCategories: uniqueSorted(facetDocs.map((d) => d.subCategory).filter(Boolean)),
+      priceRange: {
+        min: facetDocs.length ? Math.min(...facetDocs.map((d) => Number(d.price) || 0)) : 0,
+        max: facetDocs.length ? Math.max(...facetDocs.map((d) => Number(d.price) || 0)) : 0,
+      },
+    };
+
+    res.json({
+      success: true,
+      products,
+      total,
+      page: pagination.page,
+      pages: pagination.totalPages,
+      pagination,
+      facets,
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -119,12 +254,12 @@ router.get("/featured", async (req, res) => {
 // GET /api/products/:id/compare-prices
 router.get("/:id/compare-prices", async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).select("name brandName category price externalOffers sellerUser");
+    const product = await Product.findById(req.params.id).select("name brandName category price externalOffers sellerUser adminApproved");
     if (!product) {
       return res.status(404).json({ success: false, message: "Product not found" });
     }
 
-    const visible = await isSellerApproved(product.sellerUser);
+    const visible = await isProductVisibleForPublic(product);
     if (!visible) {
       return res.status(404).json({ success: false, message: "Product not found" });
     }
@@ -153,7 +288,7 @@ router.get("/:id", async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ success: false, message: "Product not found" });
 
-    const visible = await isSellerApproved(product.sellerUser);
+    const visible = await isProductVisibleForPublic(product);
     if (!visible) return res.status(404).json({ success: false, message: "Product not found" });
 
     res.json({ success: true, product });
@@ -187,8 +322,21 @@ router.post("/:id/reviews", protect, async (req, res) => {
 // GET /api/products/admin/all - admin: all products including inactive
 router.get("/admin/all", protect, adminOnly, async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
-    res.json({ success: true, products });
+    const hasPaginationRequest = req.query.page !== undefined || req.query.limit !== undefined;
+    const query = Product.find().sort({ createdAt: -1 });
+
+    if (!hasPaginationRequest) {
+      const products = await query;
+      const pagination = buildPaginationMeta(products.length, 1, products.length || 1);
+      return res.json({ success: true, products, pagination });
+    }
+
+    const { page, limit, skip } = parsePagination(req.query, { defaultLimit: 30, maxLimit: 100 });
+    const total = await Product.countDocuments();
+    const products = await query.skip(skip).limit(limit);
+    const pagination = buildPaginationMeta(total, page, limit);
+
+    return res.json({ success: true, products, total, pagination });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -213,8 +361,10 @@ router.post("/admin/create", protect, adminOnly, upload.single("image"), async (
       tags,
       variants,
       externalOffers,
+      galleryImages,
+      colorImages,
     } = req.body;
-    const image = req.file ? `images/products/${req.file.filename}` : req.body.image;
+    const image = resolveMediaUrl(req.file ? `images/products/${req.file.filename}` : req.body.image);
 
     const product = await Product.create({
       name,
@@ -226,6 +376,8 @@ router.post("/admin/create", protect, adminOnly, upload.single("image"), async (
       colors: colors ? colors.split(",").map((c) => c.trim()) : [],
       stock,
       image,
+      galleryImages: normalizeImageArray(galleryImages),
+      colorImages: parseColorImagesInput(colorImages),
       isFeatured: isFeatured === "true",
       brand,
       brandName,
@@ -245,6 +397,7 @@ router.put("/admin/:id", protect, adminOnly, upload.single("image"), async (req,
   try {
     const update = { ...req.body };
     if (req.file) update.image = `images/products/${req.file.filename}`;
+    if (update.image !== undefined) update.image = resolveMediaUrl(update.image);
     if (update.sizes && typeof update.sizes === "string") update.sizes = update.sizes.split(",").map((s) => s.trim());
     if (update.colors && typeof update.colors === "string") update.colors = update.colors.split(",").map((c) => c.trim());
     if (update.placementKeys && typeof update.placementKeys === "string") {
@@ -257,6 +410,12 @@ router.put("/admin/:id", protect, adminOnly, upload.single("image"), async (req,
     }
     if (Array.isArray(update.externalOffers)) {
       update.externalOffers = normalizeExternalOffers(update.externalOffers);
+    }
+    if (update.galleryImages !== undefined) {
+      update.galleryImages = normalizeImageArray(update.galleryImages);
+    }
+    if (update.colorImages !== undefined) {
+      update.colorImages = parseColorImagesInput(update.colorImages);
     }
 
     const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });

@@ -151,6 +151,52 @@ h1,h2,h3,h4 { font-family: 'Playfair Display', Georgia, serif; }
 .filter-radio:hover, .filter-check:hover { color: #111; }
 .filter-radio input, .filter-check input { accent-color: #c9a84c; width: 15px; height: 15px; cursor: pointer; flex-shrink: 0; }
 
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.chip-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #444;
+  padding: 6px 10px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chip-btn:hover {
+  border-color: #c9a84c;
+}
+
+.chip-btn.active {
+  border-color: #111;
+  background: #111;
+  color: #c9a84c;
+}
+
+.range-pair {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.range-pair label {
+  font-size: 11px;
+  color: #666;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.range-pair input[type="range"] {
+  width: 100%;
+  accent-color: #c9a84c;
+}
+
 .shop-search-wrap {
   display: flex;
   align-items: center;

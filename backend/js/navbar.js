@@ -133,6 +133,17 @@ function initNavbarSearch() {
     });
 }
 
+function ensurePerfScript() {
+    if (document.querySelector('script[data-vastra-perf="1"]')) return;
+    const perfScript = document.createElement("script");
+    perfScript.src = "/js/perf.js";
+    perfScript.defer = true;
+    perfScript.setAttribute("data-vastra-perf", "1");
+    document.head.appendChild(perfScript);
+}
+
+ensurePerfScript();
+
 fetch("/navbar")
     .then((res) => res.text())
     .then((data) => {

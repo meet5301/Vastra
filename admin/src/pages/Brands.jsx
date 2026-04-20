@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "../components/AdminLayout";
 
@@ -26,6 +26,9 @@ export default function Brands() {
   const navigate = useNavigate();
   const [brands, setBrands] = useState([]);
   const [brandUsers, setBrandUsers] = useState([]);
+  const [brandProductsByUser, setBrandProductsByUser] = useState({});
+  const [loadingProductsByUser, setLoadingProductsByUser] = useState({});
+  const [expandedBrandUserId, setExpandedBrandUserId] = useState("");
   const [formValues, setFormValues] = useState(emptyForm);
   const [modalOpen, setModalOpen] = useState(false);
   const [userModalOpen, setUserModalOpen] = useState(false);
@@ -161,6 +164,64 @@ export default function Brands() {
     }
   }
 
+  async function loadBrandProducts(brandUserId) {
+    try {
+      setLoadingProductsByUser((prev) => ({ ...prev, [brandUserId]: true }));
+      const token = localStorage.getItem("vastra_admin_token");
+      const res = await fetch(`/api/admin/users/${brandUserId}/products`, {
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || "Failed to load products");
+        return;
+      }
+      setBrandProductsByUser((prev) => ({ ...prev, [brandUserId]: data.products || [] }));
+    } catch {
+      alert("Error loading brand products");
+    } finally {
+      setLoadingProductsByUser((prev) => ({ ...prev, [brandUserId]: false }));
+    }
+  }
+
+  async function toggleProductApproval(productId, approved, brandUserId) {
+    try {
+      const token = localStorage.getItem("vastra_admin_token");
+      const res = await fetch(`/api/admin/products/${productId}/approval`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ approved }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        alert(data.message || "Failed to update product approval");
+        return;
+      }
+
+      setBrandProductsByUser((prev) => ({
+        ...prev,
+        [brandUserId]: (prev[brandUserId] || []).map((p) =>
+          p._id === productId ? { ...p, adminApproved: approved } : p
+        ),
+      }));
+      toast(approved ? "Product approved" : "Product unapproved");
+    } catch {
+      alert("Error updating product approval");
+    }
+  }
+
+  async function toggleBrandProducts(userId) {
+    if (expandedBrandUserId === userId) {
+      setExpandedBrandUserId("");
+      return;
+    }
+
+    setExpandedBrandUserId(userId);
+    if (!brandProductsByUser[userId]) {
+      await loadBrandProducts(userId);
+    }
+  }
+
   function openUserEditModal(user) {
     setEditingBrandUser({
       _id: user._id,
@@ -286,23 +347,80 @@ export default function Brands() {
               </tr>
             ) : (
               brandUsers.map((u) => (
-                <tr key={u._id}>
-                  <td><strong>{u.brandProfile?.brandName || u.username}</strong></td>
-                  <td>{u.email}</td>
-                  <td>{u.brandProfile?.approved ? "APPROVED" : "PENDING"}</td>
-                  <td>{u.brandProductCount || 0}</td>
-                  <td style={{ display: "flex", gap: 6, paddingTop: 14, flexWrap: "wrap" }}>
-                    <button
-                      className="btn btn-sm"
-                      style={{ background: u.brandProfile?.approved ? "#f59e0b" : "#10b981", color: "#fff" }}
-                      onClick={() => toggleBrandApproval(u._id, !u.brandProfile?.approved)}
-                    >
-                      {u.brandProfile?.approved ? "UNAPPROVE" : "APPROVE"}
-                    </button>
-                    <button className="btn btn-outline btn-sm" onClick={() => openUserEditModal(u)}>EDIT</button>
-                    <button className="btn btn-danger btn-sm" onClick={() => deleteBrandUser(u._id)}>DELETE</button>
-                  </td>
-                </tr>
+                <Fragment key={u._id}>
+                  <tr>
+                    <td><strong>{u.brandProfile?.brandName || u.username}</strong></td>
+                    <td>{u.email}</td>
+                    <td>{u.brandProfile?.approved ? "APPROVED" : "PENDING"}</td>
+                    <td>{u.brandProductCount || 0}</td>
+                    <td style={{ display: "flex", gap: 6, paddingTop: 14, flexWrap: "wrap" }}>
+                      <button
+                        className="btn btn-sm"
+                        style={{ background: u.brandProfile?.approved ? "#f59e0b" : "#10b981", color: "#fff" }}
+                        onClick={() => toggleBrandApproval(u._id, !u.brandProfile?.approved)}
+                      >
+                        {u.brandProfile?.approved ? "UNAPPROVE" : "APPROVE"}
+                      </button>
+                      <button
+                        className="btn btn-outline btn-sm"
+                        onClick={() => toggleBrandProducts(u._id)}
+                      >
+                        {expandedBrandUserId === u._id ? "HIDE PRODUCTS" : "VIEW PRODUCTS"}
+                      </button>
+                      <button className="btn btn-outline btn-sm" onClick={() => openUserEditModal(u)}>EDIT</button>
+                      <button className="btn btn-danger btn-sm" onClick={() => deleteBrandUser(u._id)}>DELETE</button>
+                    </td>
+                  </tr>
+                  {expandedBrandUserId === u._id && (
+                    <tr>
+                      <td colSpan="5" style={{ background: "#fafafa" }}>
+                        {loadingProductsByUser[u._id] ? (
+                          <div style={{ padding: "12px 8px", color: "#777" }}>Loading products...</div>
+                        ) : !(brandProductsByUser[u._id] || []).length ? (
+                          <div style={{ padding: "12px 8px", color: "#777" }}>No products for this brand.</div>
+                        ) : (
+                          <div style={{ padding: "8px 0" }}>
+                            <table style={{ width: "100%" }}>
+                              <thead>
+                                <tr>
+                                  <th>PRODUCT</th>
+                                  <th>PRICE</th>
+                                  <th>STATUS</th>
+                                  <th>APPROVAL</th>
+                                  <th>ACTION</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {(brandProductsByUser[u._id] || []).map((p) => (
+                                  <tr key={p._id}>
+                                    <td>{p.name}</td>
+                                    <td>Rs. {Math.round(Number(p.price || 0)).toLocaleString("en-IN")}</td>
+                                    <td>{p.isActive ? "ACTIVE" : "INACTIVE"}</td>
+                                    <td>{p.adminApproved ? "APPROVED" : "PENDING"}</td>
+                                    <td>
+                                      <button
+                                        className="btn btn-sm"
+                                        style={{
+                                          background: p.adminApproved ? "#f59e0b" : "#10b981",
+                                          color: "#fff",
+                                        }}
+                                        onClick={() =>
+                                          toggleProductApproval(p._id, !p.adminApproved, u._id)
+                                        }
+                                      >
+                                        {p.adminApproved ? "UNAPPROVE" : "APPROVE"}
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
               ))
             )}
           </tbody>
@@ -310,126 +428,227 @@ export default function Brands() {
       </div>
 
       <div className={`modal-overlay ${modalOpen ? "open" : ""}`}>
-        <div className="modal">
-          <button className="modal-close" onClick={() => setModalOpen(false)}>X</button>
-          <h2>{formValues._id ? "EDIT BRAND" : "ADD BRAND"}</h2>
+        <div className="modal" style={{ width: "700px" }}>
+          <button className="modal-close" onClick={() => setModalOpen(false)}>✕</button>
+          <h2>{formValues._id ? "EDIT BRAND" : "ADD NEW BRAND"}</h2>
+          
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>NAME</label>
-              <input
-                type="text"
-                value={formValues.name}
-                onChange={(e) => setFormValues({ ...formValues, name: e.target.value })}
-                required
-              />
+            {/* LOGO PREVIEW SECTION */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "2rem", alignItems: "start" }}>
+              <div>
+                <div className="form-group">
+                  <label>BRAND NAME *</label>
+                  <input
+                    type="text"
+                    value={formValues.name}
+                    onChange={(e) => setFormValues({ ...formValues, name: e.target.value })}
+                    placeholder="e.g., Nike, Adidas, Zara"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>SLUG</label>
+                  <input
+                    type="text"
+                    value={formValues.slug}
+                    onChange={(e) => setFormValues({ ...formValues, slug: e.target.value })}
+                    placeholder="auto-generated from name"
+                  />
+                </div>
+              </div>
+
+              {/* LOGO PREVIEW */}
+              <div style={{ 
+                background: "#f9f9f9", 
+                border: "1px solid #e0e0e0",
+                borderRadius: "8px",
+                padding: "1.5rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: "140px",
+                textAlign: "center"
+              }}>
+                {formValues.logo ? (
+                  <img 
+                    src={formValues.logo} 
+                    alt="Logo Preview" 
+                    style={{ maxWidth: "100%", maxHeight: "120px", objectFit: "contain" }}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextElementSibling.style.display = "block";
+                    }}
+                  />
+                ) : (
+                  <div style={{ color: "#999", fontSize: "12px" }}>
+                    Logo preview will appear here
+                  </div>
+                )}
+                {formValues.logo && (
+                  <div style={{ display: "none", color: "#999", fontSize: "12px" }}>
+                    Invalid image URL
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="form-group">
-              <label>SLUG</label>
-              <input
-                type="text"
-                value={formValues.slug}
-                onChange={(e) => setFormValues({ ...formValues, slug: e.target.value })}
-                placeholder="auto from name"
-              />
-            </div>
+
+            {/* LOGO URL */}
             <div className="form-group">
               <label>LOGO URL</label>
               <input
                 type="text"
                 value={formValues.logo}
                 onChange={(e) => setFormValues({ ...formValues, logo: e.target.value })}
+                placeholder="https://example.com/logo.png"
               />
+              <small style={{ color: "#999", display: "block", marginTop: "4px", fontSize: "12px" }}>
+                Provide a direct link to the brand logo image
+              </small>
             </div>
+
+            {/* DESCRIPTION */}
             <div className="form-group">
               <label>DESCRIPTION</label>
               <textarea
                 value={formValues.description}
                 onChange={(e) => setFormValues({ ...formValues, description: e.target.value })}
+                placeholder="Brief description about the brand..."
+                style={{ minHeight: "100px" }}
               />
             </div>
+
+            {/* STATUS */}
             <div className="form-group">
               <label>STATUS</label>
               <select
                 value={formValues.isActive ? "true" : "false"}
                 onChange={(e) => setFormValues({ ...formValues, isActive: e.target.value === "true" })}
               >
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
+                <option value="true">✓ Active</option>
+                <option value="false">✗ Inactive</option>
               </select>
             </div>
-            <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" className="btn btn-black" style={{ flex: 1 }}>SAVE BRAND</button>
-              <button type="button" className="btn btn-outline" onClick={() => setModalOpen(false)}>CANCEL</button>
+
+            {/* ACTION BUTTONS */}
+            <div style={{ display: "flex", gap: "1rem", marginTop: "2rem", justifyContent: "flex-end" }}>
+              <button 
+                type="button" 
+                className="btn btn-outline" 
+                onClick={() => setModalOpen(false)}
+              >
+                CANCEL
+              </button>
+              <button type="submit" className="btn btn-black">
+                {formValues._id ? "UPDATE BRAND" : "CREATE BRAND"}
+              </button>
             </div>
           </form>
         </div>
       </div>
 
       <div className={`modal-overlay ${userModalOpen ? "open" : ""}`}>
-        <div className="modal">
-          <button className="modal-close" onClick={() => setUserModalOpen(false)}>X</button>
+        <div className="modal" style={{ width: "700px" }}>
+          <button className="modal-close" onClick={() => setUserModalOpen(false)}>✕</button>
           <h2>EDIT BRAND SELLER</h2>
+          
           <form onSubmit={saveBrandUser}>
-            <div className="form-group">
-              <label>USERNAME</label>
-              <input
-                type="text"
-                value={editingBrandUser.username}
-                onChange={(e) => setEditingBrandUser((p) => ({ ...p, username: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>EMAIL</label>
-              <input
-                type="email"
-                value={editingBrandUser.email}
-                onChange={(e) => setEditingBrandUser((p) => ({ ...p, email: e.target.value }))}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>BRAND NAME</label>
-              <input
-                type="text"
-                value={editingBrandUser.brandName}
-                onChange={(e) => setEditingBrandUser((p) => ({ ...p, brandName: e.target.value }))}
-              />
-            </div>
-            <div className="form-group">
-              <label>CONTACT PHONE</label>
-              <input
-                type="text"
-                value={editingBrandUser.contactPhone}
-                onChange={(e) => setEditingBrandUser((p) => ({ ...p, contactPhone: e.target.value }))}
-              />
-            </div>
-            <div className="form-group">
-              <label>WEBSITE</label>
-              <input
-                type="text"
-                value={editingBrandUser.website}
-                onChange={(e) => setEditingBrandUser((p) => ({ ...p, website: e.target.value }))}
-              />
-            </div>
-            <div className="form-group">
-              <label>COMPANY NAME</label>
-              <input
-                type="text"
-                value={editingBrandUser.companyName}
-                onChange={(e) => setEditingBrandUser((p) => ({ ...p, companyName: e.target.value }))}
-              />
-            </div>
+            {/* ACCOUNT INFO SECTION */}
+            <fieldset style={{ border: "none", padding: 0, marginBottom: "1.5rem" }}>
+              <legend style={{ fontSize: "12px", fontWeight: 600, letterSpacing: "1px", color: "#888", marginBottom: "1rem", textTransform: "uppercase" }}>
+                Account Information
+              </legend>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className="form-group">
+                  <label>USERNAME</label>
+                  <input
+                    type="text"
+                    value={editingBrandUser.username}
+                    onChange={(e) => setEditingBrandUser((p) => ({ ...p, username: e.target.value }))}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>EMAIL</label>
+                  <input
+                    type="email"
+                    value={editingBrandUser.email}
+                    onChange={(e) => setEditingBrandUser((p) => ({ ...p, email: e.target.value }))}
+                    required
+                  />
+                </div>
+              </div>
+            </fieldset>
+
+            {/* BRAND INFO SECTION */}
+            <fieldset style={{ border: "none", padding: 0, marginBottom: "1.5rem" }}>
+              <legend style={{ fontSize: "12px", fontWeight: 600, letterSpacing: "1px", color: "#888", marginBottom: "1rem", textTransform: "uppercase" }}>
+                Brand Details
+              </legend>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className="form-group">
+                  <label>BRAND NAME</label>
+                  <input
+                    type="text"
+                    value={editingBrandUser.brandName}
+                    onChange={(e) => setEditingBrandUser((p) => ({ ...p, brandName: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>COMPANY NAME</label>
+                  <input
+                    type="text"
+                    value={editingBrandUser.companyName}
+                    onChange={(e) => setEditingBrandUser((p) => ({ ...p, companyName: e.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className="form-group">
+                  <label>CONTACT PHONE</label>
+                  <input
+                    type="text"
+                    value={editingBrandUser.contactPhone}
+                    onChange={(e) => setEditingBrandUser((p) => ({ ...p, contactPhone: e.target.value }))}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>WEBSITE</label>
+                  <input
+                    type="text"
+                    value={editingBrandUser.website}
+                    onChange={(e) => setEditingBrandUser((p) => ({ ...p, website: e.target.value }))}
+                    placeholder="https://..."
+                  />
+                </div>
+              </div>
+            </fieldset>
+
+            {/* ABOUT SECTION */}
             <div className="form-group">
               <label>ABOUT</label>
               <textarea
                 value={editingBrandUser.about}
                 onChange={(e) => setEditingBrandUser((p) => ({ ...p, about: e.target.value }))}
+                placeholder="Tell us about your brand..."
+                style={{ minHeight: "100px" }}
               />
             </div>
-            <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
-              <button type="submit" className="btn btn-black" style={{ flex: 1 }}>SAVE</button>
-              <button type="button" className="btn btn-outline" onClick={() => setUserModalOpen(false)}>CANCEL</button>
+
+            {/* ACTION BUTTONS */}
+            <div style={{ display: "flex", gap: "1rem", marginTop: "2rem", justifyContent: "flex-end" }}>
+              <button 
+                type="button" 
+                className="btn btn-outline" 
+                onClick={() => setUserModalOpen(false)}
+              >
+                CANCEL
+              </button>
+              <button type="submit" className="btn btn-black">
+                SAVE BRAND SELLER
+              </button>
             </div>
           </form>
         </div>

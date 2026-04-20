@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kids — VASTRA</title>
+    <meta name="description" content="Discover VASTRA kids collection with playful, comfortable and premium outfits for everyday wear." />
+    <meta name="keywords" content="kids fashion, boys wear, girls wear, children clothing, VASTRA kids" />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="/kids" />
+    <meta property="og:title" content="Kids — VASTRA" />
+    <meta property="og:description" content="Fun and comfortable kids fashion for every season by VASTRA." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="/kids" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kids — VASTRA" />
+    <meta name="twitter:description" content="Fun and comfortable kids fashion for every season by VASTRA." />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -160,44 +171,99 @@
           <div><p class="men-tag">COMPLETE COLLECTION</p><h2>All Kids' Products</h2></div>
           <span class="result-count" id="result-count"></span>
         </div>
-        <div class="men-filter-bar">
-          <div class="mfb-group">
-            <span class="mfb-label">SORT</span>
-            <select id="sort-select" class="mfb-select">
-              <option value="">Recommended</option>
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
-              <option value="rating">Top Rated</option>
-            </select>
-          </div>
-          <div class="mfb-divider"></div>
-          <div class="mfb-group">
-            <span class="mfb-label">PRICE</span>
-            <div class="mfb-pills" id="price-pills">
-              <button class="mfb-pill active" data-val="">All</button>
-              <button class="mfb-pill" data-val="0-2500">Under Rs. 2,500</button>
-              <button class="mfb-pill" data-val="2500-5000">Rs. 2,500–Rs. 5,000</button>
-              <button class="mfb-pill" data-val="5000-8000">Rs. 5,000–Rs. 8,000</button>
-              <button class="mfb-pill" data-val="8000-999999">Rs. 8,000+</button>
+
+        <div class="category-layout">
+          <aside class="category-sidebar">
+            <div class="active-filters-bar" id="active-filters-bar" style="display:none;">
+              <span class="af-label">FILTERS:</span>
+              <div class="af-tags" id="af-tags"></div>
+              <button class="af-clear" id="af-clear" type="button">CLEAR ALL</button>
             </div>
-          </div>
-          <div class="mfb-divider"></div>
-          <div class="mfb-group">
-            <span class="mfb-label">RATING</span>
-            <div class="mfb-pills" id="rating-pills">
-              <button class="mfb-pill active" data-val="">All</button>
-              <button class="mfb-pill" data-val="4">4★ & above</button>
-              <button class="mfb-pill" data-val="3">3★ & above</button>
+
+            <div class="advanced-filters-wrap">
+              <details class="filter-accordion" open>
+                <summary class="filter-accordion-head"><span>SORT</span><i class="fa-solid fa-chevron-down"></i></summary>
+                <div class="filter-accordion-body">
+                  <select id="sort-select" class="adv-select">
+                    <option value="">Recommended</option>
+                    <option value="discount">Best Discount</option>
+                    <option value="popular">Most Popular</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="rating">Top Rated</option>
+                    <option value="newest">Newest First</option>
+                  </select>
+                </div>
+              </details>
+
+              <details class="filter-accordion">
+                <summary class="filter-accordion-head"><span>PRICE RANGE</span><i class="fa-solid fa-chevron-down"></i></summary>
+                <div class="filter-accordion-body">
+                  <div class="adv-range-grid">
+                    <div class="adv-range-track" id="price-range-track"></div>
+                    <div class="adv-range-values">
+                      <label>Low: <span id="price-min-value">Rs. 0</span></label>
+                      <label>High: <span id="price-max-value">Up to Rs. 50000</span></label>
+                    </div>
+                    <input type="range" id="price-max" min="0" max="50000" step="100" value="50000" />
+                  </div>
+                </div>
+              </details>
+
+              <details class="filter-accordion">
+                <summary class="filter-accordion-head"><span>BRANDS</span><i class="fa-solid fa-chevron-down"></i></summary>
+                <div class="filter-accordion-body"><div class="adv-chip-list" id="brand-chip-list"></div></div>
+              </details>
+
+              <details class="filter-accordion">
+                <summary class="filter-accordion-head"><span>TYPE</span><i class="fa-solid fa-chevron-down"></i></summary>
+                <div class="filter-accordion-body" id="sub-category-list"></div>
+              </details>
+
+              <details class="filter-accordion">
+                <summary class="filter-accordion-head"><span>SIZE</span><i class="fa-solid fa-chevron-down"></i></summary>
+                <div class="filter-accordion-body" id="size-list"></div>
+              </details>
+
+              <details class="filter-accordion">
+                <summary class="filter-accordion-head"><span>COLOR</span><i class="fa-solid fa-chevron-down"></i></summary>
+                <div class="filter-accordion-body" id="color-list"></div>
+              </details>
+
+              <details class="filter-accordion">
+                <summary class="filter-accordion-head"><span>MATERIAL</span><i class="fa-solid fa-chevron-down"></i></summary>
+                <div class="filter-accordion-body" id="material-list"></div>
+              </details>
+
+              <details class="filter-accordion">
+                <summary class="filter-accordion-head"><span>FIT</span><i class="fa-solid fa-chevron-down"></i></summary>
+                <div class="filter-accordion-body" id="fit-list"></div>
+              </details>
+
+              <details class="filter-accordion">
+                <summary class="filter-accordion-head"><span>RATING</span><i class="fa-solid fa-chevron-down"></i></summary>
+                <div class="filter-accordion-body">
+                  <select id="rating-select" class="adv-select">
+                    <option value="">All Ratings</option>
+                    <option value="4">4★ & above</option>
+                    <option value="3">3★ & above</option>
+                  </select>
+                </div>
+              </details>
             </div>
-          </div>
+          </aside>
+
+          <main class="category-results">
+            <div class="men-product-grid" id="product-grid"></div>
+            <div class="pagination-wrap" id="pagination-wrap"></div>
+          </main>
         </div>
-        <div class="men-product-grid" id="product-grid"></div>
-        <div class="pagination-wrap" id="pagination-wrap"></div>
       </section>
 
     </div>
 
     <script src="/js/toast.js"></script>
+    <script src="/js/category-advanced-filters.js"></script>
     <script src="/js/kids-page.js"></script>
     <script src="/js/footer.js"></script>
     <script>
@@ -210,15 +276,6 @@
       document.getElementById('mh-next').addEventListener('click',()=>{clearInterval(mhTimer);mhGoTo(mhCur+1);mhStart();});
       mhDots.forEach((d,i)=>d.addEventListener('click',()=>{clearInterval(mhTimer);mhGoTo(i);mhStart();}));
       mhStart();
-      document.querySelectorAll('.mfb-pills').forEach(group=>{
-        group.querySelectorAll('.mfb-pill').forEach(pill=>{
-          pill.addEventListener('click',()=>{
-            group.querySelectorAll('.mfb-pill').forEach(p=>p.classList.remove('active'));
-            pill.classList.add('active');
-            if(typeof loadKidsProducts==='function'){currentPage=1;loadKidsProducts();}
-          });
-        });
-      });
     </script>
   </body>
 </html>

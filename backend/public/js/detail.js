@@ -85,12 +85,22 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ── BUILD SLIDES ───────────────────────────────────────────
-    // slides = [{ img, color }]  — first slide = main image, rest = colorImages
+    // slides = [{ img, color }]  — first slide = main image, then galleryImages, then colorImages
     const slides = [{ img: mainImg, color: null }];
+
+    if (product.galleryImages && product.galleryImages.length) {
+      product.galleryImages.forEach((img) => {
+        if (!img) return;
+        const normalized = img.startsWith("http") || img.startsWith("data:") ? img : `/${img}`;
+        slides.push({ img: normalized, color: null });
+      });
+    }
 
     if (product.colorImages && product.colorImages.length) {
       product.colorImages.forEach((ci) => {
-        if (ci.image) slides.push({ img: ci.image, color: ci.color });
+        if (!ci.image) return;
+        const normalized = ci.image.startsWith("http") || ci.image.startsWith("data:") ? ci.image : `/${ci.image}`;
+        slides.push({ img: normalized, color: ci.color });
       });
     }
 
@@ -148,9 +158,10 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     // Build color → slide index map
     const colorSlideMap = {};
+    const galleryCount = Array.isArray(product.galleryImages) ? product.galleryImages.length : 0;
     if (product.colorImages && product.colorImages.length) {
       product.colorImages.forEach((ci, i) => {
-        colorSlideMap[ci.color] = i + 1; // +1 because slide 0 = main image
+        colorSlideMap[ci.color] = i + 1 + galleryCount; // +1 main image + gallery count
       });
     }
 

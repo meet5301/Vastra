@@ -16,6 +16,8 @@ export default function Dashboard() {
     delivered: "—",
     totalUsers: "—",
     activeUsers: "—",
+    pendingBrandApprovals: "—",
+    pendingProductApprovals: "—",
   });
   const [orders, setOrders] = useState([]);
 
@@ -41,6 +43,8 @@ export default function Dashboard() {
           delivered: s.delivered,
           totalUsers: s.totalUsers,
           activeUsers: s.activeUsers,
+          pendingBrandApprovals: s.pendingBrandApprovals,
+          pendingProductApprovals: s.pendingProductApprovals,
         });
       } catch (err) {
         // keep placeholders
@@ -113,6 +117,16 @@ export default function Dashboard() {
           <h3>ACTIVE USERS</h3>
           <div className="value">{stats.activeUsers}</div>
           <div className="change">Last 24h</div>
+        </div>
+        <div className="stat-card">
+          <h3>PENDING BRAND APPROVALS</h3>
+          <div className="value">{stats.pendingBrandApprovals}</div>
+          <div className="change">Need admin review</div>
+        </div>
+        <div className="stat-card">
+          <h3>PENDING PRODUCT APPROVALS</h3>
+          <div className="value">{stats.pendingProductApprovals}</div>
+          <div className="change">Need admin review</div>
         </div>
       </div>
 

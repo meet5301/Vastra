@@ -34,12 +34,37 @@ const orderSchema = new mongoose.Schema(
       discountAmount: { type: Number, default: 0 },
     },
     tax: { type: Number, default: 0 },
+    codCharge: { type: Number, default: 0 },
     totalAmount: { type: Number, required: true },
     paymentMethod: {
       type: String,
-      enum: ["COD", "Card", "UPI"],
+      enum: ["COD", "RAZORPAY", "STRIPE", "UPI", "PAYTM", "GPAY", "PHONEPE"],
       default: "COD",
     },
+    paymentGateway: {
+      type: String,
+      enum: ["COD", "RAZORPAY", "STRIPE", "PAYTM", "GPAY", "PHONEPE", "INTERNAL"],
+      default: "COD",
+    },
+    paymentIntentId: { type: String, default: "" },
+    paymentReference: { type: String, default: "" },
+    paymentAttempts: { type: Number, default: 0 },
+    paidAt: { type: Date },
+    trackingEvents: [
+      {
+        status: { type: String, default: "Placed" },
+        note: { type: String, default: "Order placed" },
+        byRole: { type: String, default: "system" },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
+    refundStatus: {
+      type: String,
+      enum: ["", "Requested", "Approved", "Rejected"],
+      default: "",
+    },
+    refundRequestedAt: { type: Date },
+    refundResolvedAt: { type: Date },
     paymentStatus: {
       type: String,
       enum: ["Pending", "Paid", "Failed"],

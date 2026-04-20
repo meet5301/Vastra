@@ -1,5 +1,5 @@
 // ── VASTRA ACCESSORIES PAGE JS ────────────────────────────
-let currentPage = 1, currentSort = "";
+const ACCESSORIES_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=500&fit=crop";
 
 // ── CART ──────────────────────────────────────────────────
 function getCart() { return JSON.parse(localStorage.getItem("vastra_cart") || "[]"); }
@@ -117,7 +117,7 @@ function closeQuickView() {
 
 // ── RENDER CARD ───────────────────────────────────────────
 function renderCard(p) {
-  const fb = "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=500&fit=crop";
+  const fb = ACCESSORIES_FALLBACK_IMAGE;
   const stars = p.avgRating ? "★".repeat(Math.round(p.avgRating)) + "☆".repeat(5 - Math.round(p.avgRating)) : "";
   const wl = getWishlist();
   const inWl = wl.find(i => i.id === p._id);
@@ -138,55 +138,21 @@ function renderCard(p) {
         <p class="men-prod-sub">${p.subCategory || p.category}</p>
         <p class="men-prod-name">${p.name}</p>
         ${stars ? `<div class="men-prod-stars">${stars} <span>(${p.numReviews})</span></div>` : ""}
-        <p class="men-prod-price">${formatINR(p.price)}</p>
+        <p class="men-prod-price">Rs. ${Math.round(Number(p.price || 0)).toLocaleString("en-IN")}</p>
         <button class="men-prod-btn" onclick="event.stopPropagation(); addToCartShared('${p._id}','${p.name.replace(/'/g, "\\'")}',${p.price},'${p.image}')">ADD TO BAG</button>
       </div>
     </div>`;
 }
 
-// ── LOAD PRODUCTS ─────────────────────────────────────────
+const accessoriesPageController = window.createAdvancedCategoryPage({
+  category: "Accessories",
+  fallbackImage: ACCESSORIES_FALLBACK_IMAGE,
+  renderCard,
+});
+
 async function loadAccProducts() {
-  const grid = document.getElementById("product-grid");
-  if (!grid) return;
-  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:#888;letter-spacing:2px;font-size:13px;">LOADING...</div>`;
-
-  const sortEl = document.getElementById("sort-select");
-  if (sortEl) currentSort = sortEl.value;
-
-  const priceVal  = document.querySelector("#price-pills .mfb-pill.active")?.dataset.val || "";
-  const typeVal   = document.querySelector("#type-pills .mfb-pill.active")?.dataset.val || "";
-  const ratingVal = document.querySelector("#rating-pills .mfb-pill.active")?.dataset.val || "";
-
-  const params = new URLSearchParams({
-    page: currentPage, limit: 16, category: "Accessories",
-    ...(currentSort && { sort: currentSort }),
-    ...(typeVal && { subCategory: typeVal })
-  });
-
-  try {
-    const res = await fetch(`/api/products?${params}`);
-    const data = await res.json();
-    let products = data.products || [];
-
-    if (priceVal) {
-      const [min, max] = priceVal.split("-").map(Number);
-      products = products.filter(p => p.price >= min && p.price <= max);
-    }
-    if (ratingVal) products = products.filter(p => p.avgRating >= Number(ratingVal));
-
-    const countEl = document.getElementById("result-count");
-    if (countEl) countEl.innerHTML = `<strong>${products.length}</strong> Products`;
-
-    if (!data.success || !products.length) {
-      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:#888;">No products found.</div>`;
-      return;
-    }
-    grid.innerHTML = products.map(renderCard).join("");
-    syncWishlistHearts();
-    renderPagination(data.pages, data.page);
-  } catch {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:#e63946;">Failed to load.</div>`;
-  }
+  await accessoriesPageController.loadProducts();
+  syncWishlistHearts();
 }
 
 // ── TRENDING ──────────────────────────────────────────────
@@ -201,29 +167,16 @@ async function loadTrendingAcc(containerId, subCategory = "") {
   } catch {}
 }
 
-// ── PAGINATION ────────────────────────────────────────────
-function renderPagination(totalPages, current) {
-  const wrap = document.getElementById("pagination-wrap");
-  if (!wrap || totalPages <= 1) { if (wrap) wrap.innerHTML = ""; return; }
-  let html = "";
-  if (current > 1) html += `<button class="page-btn" onclick="goPage(${current - 1})"><i class="fa-solid fa-chevron-left"></i></button>`;
-  for (let i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === totalPages || (i >= current - 1 && i <= current + 1))
-      html += `<button class="page-btn${i === current ? " active" : ""}" onclick="goPage(${i})">${i}</button>`;
-    else if (i === current - 2 || i === current + 2)
-      html += `<button class="page-btn dots">...</button>`;
-  }
-  if (current < totalPages) html += `<button class="page-btn" onclick="goPage(${current + 1})"><i class="fa-solid fa-chevron-right"></i></button>`;
-  wrap.innerHTML = html;
+function setTypeFilter(type) {
+  accessoriesPageController.setSubCategory(type);
+  document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
 }
-function goPage(p) { currentPage = p; loadAccProducts(); document.getElementById("products")?.scrollIntoView({ behavior: "smooth" }); }
 
 // ── INIT ──────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
-  loadAccProducts();
+  accessoriesPageController.init();
   loadTrendingAcc("trending-bags", "Bags");
   loadTrendingAcc("trending-jewellery", "Jewellery");
   updateCartBadgeAcc();
-  const sortEl = document.getElementById("sort-select");
-  if (sortEl) sortEl.addEventListener("change", () => { currentPage = 1; loadAccProducts(); });
+  window.setTypeFilter = setTypeFilter;
 });
