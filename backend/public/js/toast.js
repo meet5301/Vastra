@@ -14,6 +14,12 @@ function showToast(msg) {
 }
 
 function addToCartShared(id, name, price, image, size = "M") {
+  const token = localStorage.getItem("vastra_token");
+  if (!token) {
+    showToast("Please login to add items to bag.");
+    return;
+  }
+
   const cart = JSON.parse(localStorage.getItem("vastra_cart") || "[]");
   const existing = cart.find((i) => i.id === id && i.size === size);
   if (existing) { existing.quantity += 1; }

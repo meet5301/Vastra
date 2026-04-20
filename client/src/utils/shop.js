@@ -9,6 +9,12 @@ export function saveCart(cart) {
 }
 
 export function addToCartShared(id, name, price, image, size = "M") {
+  const token = localStorage.getItem("vastra_token");
+  if (!token) {
+    showToast("Please login to add items to bag.");
+    return;
+  }
+
   const cart = getCart();
   const existing = cart.find((i) => i.id === id && i.size === size);
   if (existing) {

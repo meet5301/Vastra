@@ -9,6 +9,12 @@ function updateCartBadgeAcc() {
   document.querySelectorAll(".cart-badge, #cart-count").forEach(el => el.textContent = total);
 }
 function addToCartShared(id, name, price, image, size = "Free") {
+  const token = localStorage.getItem("vastra_token");
+  if (!token) {
+    showToast("Please login to add items to bag.");
+    return;
+  }
+
   const cart = getCart();
   const ex = cart.find(i => i.id === id && i.size === size);
   if (ex) ex.quantity += 1; else cart.push({ id, name, price, image, size, quantity: 1 });
@@ -44,77 +50,6 @@ function syncWishlistHearts() {
   });
 }
 
-// ── QUICK VIEW MODAL ──────────────────────────────────────
-function openQuickView(p) {
-  let modal = document.getElementById("qv-modal");
-  if (!modal) {
-    modal = document.createElement("div");
-    modal.id = "qv-modal";
-    modal.innerHTML = `
-      <div class="qv-backdrop"></div>
-      <div class="qv-box">
-        <button class="qv-close">&times;</button>
-        <div class="qv-img-wrap"><img id="qv-img" /></div>
-        <div class="qv-info">
-          <p class="qv-cat" id="qv-cat"></p>
-          <h2 id="qv-name"></h2>
-          <div class="qv-stars" id="qv-stars"></div>
-          <p class="qv-price" id="qv-price"></p>
-          <div class="qv-sizes" id="qv-sizes"></div>
-          <div class="qv-actions">
-            <button class="qv-cart-btn" id="qv-cart-btn">ADD TO BAG</button>
-            <button class="qv-wish-btn" id="qv-wish-btn"><i class="far fa-heart"></i></button>
-          </div>
-          <a class="qv-detail-link" id="qv-detail-link">VIEW FULL DETAILS →</a>
-        </div>
-      </div>`;
-    document.body.appendChild(modal);
-    modal.querySelector(".qv-backdrop").addEventListener("click", closeQuickView);
-    modal.querySelector(".qv-close").addEventListener("click", closeQuickView);
-    document.addEventListener("keydown", e => { if (e.key === "Escape") closeQuickView(); });
-  }
-
-  const fb = "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=700&fit=crop";
-  const stars = p.avgRating ? "★".repeat(Math.round(p.avgRating)) + "☆".repeat(5 - Math.round(p.avgRating)) : "";
-  const sizes = ["XS", "S", "M", "L", "XL", "Free"];
-  let selectedSize = "Free";
-
-  modal.querySelector("#qv-img").src = p.image || fb;
-  modal.querySelector("#qv-img").onerror = function () { this.src = fb; };
-  modal.querySelector("#qv-cat").textContent = p.subCategory || p.category || "";
-  modal.querySelector("#qv-name").textContent = p.name;
-  modal.querySelector("#qv-stars").innerHTML = stars ? `${stars} <span>(${p.numReviews || 0})</span>` : "";
-  modal.querySelector("#qv-price").textContent = `Rs. ${Math.round(Number(p.price || 0)).toLocaleString("en-IN")}`;
-  modal.querySelector("#qv-detail-link").href = `/detail?id=${p._id}`;
-
-  const sizesEl = modal.querySelector("#qv-sizes");
-  sizesEl.innerHTML = sizes.map(s =>
-    `<button class="qv-size${s === selectedSize ? " active" : ""}" data-size="${s}">${s}</button>`
-  ).join("");
-  sizesEl.querySelectorAll(".qv-size").forEach(btn => {
-    btn.addEventListener("click", () => {
-      sizesEl.querySelectorAll(".qv-size").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      selectedSize = btn.dataset.size;
-    });
-  });
-
-  modal.querySelector("#qv-cart-btn").onclick = () => { addToCartShared(p._id, p.name, p.price, p.image, selectedSize); closeQuickView(); };
-
-  const wishBtn = modal.querySelector("#qv-wish-btn");
-  const inWl = getWishlist().find(i => i.id === p._id);
-  wishBtn.querySelector("i").className = inWl ? "fas fa-heart" : "far fa-heart";
-  wishBtn.style.color = inWl ? "#e63946" : "";
-  wishBtn.onclick = () => toggleWishlistShared(p._id, p.name, p.price, p.image);
-
-  modal.classList.add("open");
-  document.body.style.overflow = "hidden";
-}
-function closeQuickView() {
-  const modal = document.getElementById("qv-modal");
-  if (modal) { modal.classList.remove("open"); document.body.style.overflow = ""; }
-}
-
 // ── RENDER CARD ───────────────────────────────────────────
 function renderCard(p) {
   const fb = ACCESSORIES_FALLBACK_IMAGE;
@@ -129,9 +64,6 @@ function renderCard(p) {
         <button class="men-wish ${inWl ? "wishlisted" : ""}" data-id="${p._id}"
           onclick="event.stopPropagation(); toggleWishlistShared('${p._id}','${p.name.replace(/'/g, "\\'")}',${p.price},'${p.image}')">
           <i class="${inWl ? "fas" : "far"} fa-heart"></i>
-        </button>
-        <button class="men-quick-view" onclick="event.stopPropagation(); openQuickView(${JSON.stringify(p).replace(/"/g, '&quot;')})">
-          QUICK VIEW
         </button>
       </div>
       <div class="men-prod-info">

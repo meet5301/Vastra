@@ -123,7 +123,17 @@ export default function ShoppingBag() {
       });
 
       const checkoutBtn = document.getElementById("bag-checkout-btn");
-      if (checkoutBtn) checkoutBtn.addEventListener("click", () => { window.location.href = "/checkout"; });
+      if (checkoutBtn) {
+        checkoutBtn.addEventListener("click", () => {
+          const token = localStorage.getItem("vastra_token");
+          if (!token) {
+            alert("Please login to continue checkout.");
+            window.location.href = "/login";
+            return;
+          }
+          window.location.href = "/checkout";
+        });
+      }
 
       const applyBtn = document.getElementById("bag-coupon-apply");
       if (applyBtn) {

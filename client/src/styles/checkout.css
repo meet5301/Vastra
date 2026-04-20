@@ -1,62 +1,78 @@
 body {
-  font-family: Arial, Helvetica, sans-serif;
   margin: 0;
-  background: #f8f8f8;
+  background: #f2f2f2;
+  color: #111;
+  font-family: "Inter", Arial, sans-serif;
 }
 
 .container {
-  width: 65%;
-  margin: 40px auto;
-  background: white;
-  padding: 30px;
+  width: min(1200px, 92%);
+  margin: 44px auto 72px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  padding: 34px;
 }
 
 h1 {
+  margin: 0 0 30px;
   text-align: center;
-  margin-bottom: 30px;
-  font-weight: 900;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(30px, 5vw, 42px);
+  font-weight: 700;
+  letter-spacing: 2px;
 }
 
-/* LAYOUT */
 .checkout-wrapper {
-  display: flex;
-  gap: 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+  gap: 28px;
 }
 
-/* LEFT FORM */
-.form-section {
-  flex: 2;
-}
-
-.form-section h2 {
-  margin-bottom: 20px;
+.form-section h2,
+.summary-section h2 {
+  margin: 0 0 18px;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .form-section label {
   display: block;
-  margin-top: 10px;
-  font-size: 14px;
+  margin-top: 12px;
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
 }
 
 .form-section input,
 .form-section select {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
+  padding: 11px 12px;
+  margin-top: 6px;
+  border: 1px solid #d6d6d6;
+  background: #fff;
+  font: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* ROW */
+.form-section input:focus,
+.form-section select:focus {
+  outline: none;
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.14);
+}
+
 .row {
   display: flex;
-  gap: 50px;
+  gap: 18px;
 }
 
 .row div {
   flex: 1;
 }
 
-/* OPTIONS */
 .options {
   margin-top: 10px;
 }
@@ -66,27 +82,29 @@ h1 {
   margin-top: 5px;
 }
 
-/* BUTTON */
 .checkout-btn {
-  margin-top: 20px;
-  padding: 12px;
-  width: 200px;
-  background: black;
-  color: white;
-  border: none;
+  margin-top: 22px;
+  padding: 12px 20px;
+  width: 220px;
+  background: #111;
+  color: #fff;
+  border: 1px solid #111;
   cursor: pointer;
-  font-weight: bold;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-/* RIGHT SIDE */
+.checkout-btn:hover {
+  background: #c9a84c;
+  color: #111;
+}
+
 .summary-section {
-  flex: 1;
   background: #fafafa;
+  border: 1px solid #e8e8e8;
   padding: 20px;
-}
-
-.summary-section h2 {
-  margin-bottom: 15px;
 }
 
 .summary-section p,
@@ -105,6 +123,7 @@ h1 {
   border-top: 1px dashed #ddd;
   padding-top: 12px;
 }
+
 .coupon-box label {
   display: block;
   font-size: 12px;
@@ -112,15 +131,18 @@ h1 {
   letter-spacing: 2px;
   margin-bottom: 8px;
 }
+
 .coupon-row {
   display: flex;
   gap: 8px;
 }
+
 .coupon-row input {
   flex: 1;
   padding: 10px;
   border: 1px solid #ccc;
 }
+
 .coupon-row button {
   padding: 10px 16px;
   border: none;
@@ -130,17 +152,20 @@ h1 {
   font-weight: 700;
   letter-spacing: 1px;
 }
+
 .coupon-status {
   margin-top: 8px;
   font-size: 12px;
   color: #666;
 }
+
 .coupon-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-top: 12px;
 }
+
 .coupon-chip {
   display: flex;
   flex-direction: column;
@@ -151,67 +176,61 @@ h1 {
   cursor: pointer;
   text-align: left;
 }
+
 .coupon-chip strong {
   font-size: 12px;
   letter-spacing: 2px;
 }
+
 .coupon-chip span {
   font-size: 12px;
   color: #666;
 }
+
 .coupon-chip:hover {
   border-color: #111;
 }
+
 .coupon-empty {
   font-size: 12px;
   color: #999;
 }
 
-/* PAYMENT */
 .payments {
   margin-top: 10px;
 }
 
 .payments i {
-  font-size: 30px;
-  margin-right: 10px;
-  background: black;
-  color: white;
+  font-size: 19px;
+  margin-right: 8px;
+  background: #111;
+  color: #fff;
   padding: 8px;
 }
 
 @media (max-width: 1024px) {
   .container {
-    width: 85%;
+    padding: 26px;
   }
 
-  .row {
-    gap: 20px;
+  .checkout-wrapper {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 768px) {
   .container {
-    width: 92%;
+    width: 94%;
     padding: 20px;
-  }
-
-  .checkout-wrapper {
-    flex-direction: column;
+    margin-top: 28px;
   }
 
   .row {
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
   .checkout-btn {
     width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 26px;
   }
 }

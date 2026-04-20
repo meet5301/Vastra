@@ -7,6 +7,18 @@ function saveCart(cart) {
   localStorage.setItem("vastra_cart", JSON.stringify(cart));
 }
 
+function proceedToCheckout() {
+  const token = localStorage.getItem("vastra_token");
+  if (!token) {
+    showToast("Please login to continue checkout.");
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 500);
+    return;
+  }
+  window.location.href = "/checkout";
+}
+
 function renderCart() {
   const cart = getCart();
   const container = document.querySelector(".bag-items");
@@ -58,7 +70,7 @@ function renderCart() {
         <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span>Shipping</span><span>${shipping === 0 ? "FREE" : "$" + shipping.toFixed(2)}</span></div>
         <hr style="margin:1rem 0;">
         <div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;"><span>TOTAL</span><span>$${total.toFixed(2)}</span></div>
-        <button onclick="window.location.href='/checkout'" style="width:100%;padding:14px;background:#000;color:#fff;border:none;letter-spacing:2px;cursor:pointer;margin-top:1rem;font-size:14px;">
+        <button onclick="proceedToCheckout()" style="width:100%;padding:14px;background:#000;color:#fff;border:none;letter-spacing:2px;cursor:pointer;margin-top:1rem;font-size:14px;">
           PROCEED TO CHECKOUT
         </button>
         <a href="/men" style="display:block;text-align:center;margin-top:12px;font-size:13px;color:#666;text-decoration:underline;">Continue Shopping</a>

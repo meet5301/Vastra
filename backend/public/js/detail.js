@@ -244,6 +244,12 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     // ── ADD TO CART ────────────────────────────────────────────
     document.querySelector(".add-to-cart").addEventListener("click", () => {
+      const token = localStorage.getItem("vastra_token");
+      if (!token) {
+        showToast("Please login to add items to bag.");
+        return;
+      }
+
       const size = sizeDropdown.value;
       const cart = JSON.parse(localStorage.getItem("vastra_cart") || "[]");
       const existing = cart.find((i) => i.id === product._id && i.size === size);

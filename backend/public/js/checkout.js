@@ -155,6 +155,14 @@ async function retryPayment(orderId) {
 }
 
 async function placeOrder() {
+  if (!getToken()) {
+    setCheckoutStatus("Please login to continue checkout.", "error");
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 500);
+    return;
+  }
+
   const cart = getCart();
   if (cart.length === 0) {
     alert("Your bag is empty!");
@@ -260,6 +268,12 @@ async function placeOrder() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (!getToken()) {
+    alert("Please login to continue checkout.");
+    window.location.href = "/login";
+    return;
+  }
+
   updateSummary();
 
   document.querySelectorAll("input[name='payment-method']").forEach((radio) => {

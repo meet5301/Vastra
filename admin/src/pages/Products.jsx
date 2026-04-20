@@ -24,6 +24,34 @@ const emptyForm = {
   externalOffers: "",
 };
 
+const MAX_EXTERNAL_OFFERS = 4;
+
+function createEmptyOffer() {
+  return {
+    site: "",
+    price: "",
+    productName: "",
+    productUrl: "",
+    notes: "",
+  };
+}
+
+function normalizeOffers(inputOffers = []) {
+  const prepared = (inputOffers || []).slice(0, MAX_EXTERNAL_OFFERS).map((offer) => ({
+    site: String(offer.site || ""),
+    price: offer.price === 0 || offer.price ? String(offer.price) : "",
+    productName: String(offer.productName || ""),
+    productUrl: String(offer.productUrl || ""),
+    notes: String(offer.notes || ""),
+  }));
+
+  while (prepared.length < MAX_EXTERNAL_OFFERS) {
+    prepared.push(createEmptyOffer());
+  }
+
+  return prepared;
+}
+
 export default function Products() {
   const navigate = useNavigate();
   const [allProducts, setAllProducts] = useState([]);
@@ -43,6 +71,7 @@ export default function Products() {
     isActive: true,
   });
   const [variantsError, setVariantsError] = useState("");
+  const [offersList, setOffersList] = useState(normalizeOffers());
 
   useEffect(() => {
     const token = localStorage.getItem("vastra_admin_token");
@@ -94,27 +123,6 @@ export default function Products() {
     setTimeout(() => (t.style.display = "none"), 2500);
   }
 
-  function parseVariantsJson(raw) {
-    if (!raw || !raw.trim()) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) throw new Error("Variants must be an array");
-    return parsed.map((v) => ({
-      color: v.color || "",
-      sku: v.sku || "",
-      stock: Number(v.stock || 0),
-      price: Number(v.price || 0),
-      images: Array.isArray(v.images) ? v.images : v.images ? [v.images] : [],
-      isActive: v.isActive !== false,
-    }));
-  }
-
-  function syncVariantsText(list) {
-    setFormValues((prev) => ({
-      ...prev,
-      variants: list.length ? JSON.stringify(list, null, 2) : "",
-    }));
-  }
-
   function addVariantFromDraft() {
     if (!variantDraft.color && !variantDraft.sku) {
       setVariantsError("Add at least color or SKU");
@@ -132,7 +140,6 @@ export default function Products() {
     };
     const updated = [...variantsList, next];
     setVariantsList(updated);
-    syncVariantsText(updated);
     setVariantDraft({ color: "", sku: "", stock: "", price: "", images: "", isActive: true });
     setVariantsError("");
   }
@@ -140,7 +147,10 @@ export default function Products() {
   function removeVariant(index) {
     const updated = variantsList.filter((_, i) => i !== index);
     setVariantsList(updated);
-    syncVariantsText(updated);
+  }
+
+  function updateOffer(index, key, value) {
+    setOffersList((prev) => prev.map((offer, i) => (i === index ? { ...offer, [key]: value } : offer)));
   }
 
   function openAddModal() {
@@ -149,6 +159,7 @@ export default function Products() {
     setVariantsList([]);
     setVariantDraft({ color: "", sku: "", stock: "", price: "", images: "", isActive: true });
     setVariantsError("");
+    setOffersList(normalizeOffers());
     setModalOpen(true);
   }
 
@@ -187,6 +198,7 @@ export default function Products() {
     setVariantsList(parsedVariants);
     setVariantDraft({ color: "", sku: "", stock: "", price: "", images: "", isActive: true });
     setVariantsError("");
+    setOffersList(normalizeOffers(p.externalOffers || []));
     setModalOpen(true);
   }
 
@@ -198,19 +210,16 @@ export default function Products() {
     e.preventDefault();
     const id = formValues._id;
 
-    let finalVariants = [];
-    if (formValues.variants && formValues.variants.trim()) {
-      try {
-        finalVariants = parseVariantsJson(formValues.variants);
-        setVariantsError("");
-      } catch (err) {
-        setVariantsError("Invalid variants JSON. Use an array of objects.");
-        alert("Invalid variants JSON. Please fix before saving.");
-        return;
-      }
-    } else if (variantsList.length) {
-      finalVariants = variantsList;
-    }
+    const finalVariants = variantsList;
+    const finalExternalOffers = offersList
+      .map((offer) => ({
+        site: String(offer.site || "").trim(),
+        price: Number(offer.price || 0),
+        productName: String(offer.productName || "").trim(),
+        productUrl: String(offer.productUrl || "").trim(),
+        notes: String(offer.notes || "").trim(),
+      }))
+      .filter((offer) => offer.site && Number.isFinite(offer.price) && offer.price > 0);
 
     const formData = new FormData();
     formData.append("name", formValues.name);
@@ -229,7 +238,7 @@ export default function Products() {
     formData.append("placementKeys", formValues.placementKeys);
     formData.append("tags", formValues.tags);
     formData.append("variants", finalVariants.length ? JSON.stringify(finalVariants) : "");
-    formData.append("externalOffers", formValues.externalOffers || "");
+    formData.append("externalOffers", finalExternalOffers.length ? JSON.stringify(finalExternalOffers) : "");
     if (imageFile) formData.append("image", imageFile);
 
     const url = id ? `/api/products/admin/${id}` : "/api/products/admin/create";
@@ -422,6 +431,18 @@ export default function Products() {
                 </select>
               </div>
               <div className="form-group">
+                <label>BRAND NAME (manual)</label>
+                <input
+                  type="text"
+                  name="brandName"
+                  placeholder="e.g. Nike, Puma"
+                  value={formValues.brandName}
+                  onChange={(e) => setFormValues({ ...formValues, brandName: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group">
                 <label>CATEGORY</label>
                 <select
                   name="category"
@@ -574,25 +595,6 @@ export default function Products() {
               </div>
               <div style={{ display: "flex", gap: 10, marginBottom: 12 }}>
                 <button type="button" className="btn btn-outline btn-sm" onClick={addVariantFromDraft}>ADD VARIANT</button>
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm"
-                  onClick={() => {
-                    try {
-                      const parsed = parseVariantsJson(formValues.variants || "");
-                      setVariantsList(parsed);
-                      syncVariantsText(parsed);
-                      setVariantsError("");
-                    } catch (err) {
-                      setVariantsError("Invalid variants JSON. Use an array of objects.");
-                    }
-                  }}
-                >
-                  LOAD FROM JSON
-                </button>
-                <button type="button" className="btn btn-outline btn-sm" onClick={() => syncVariantsText(variantsList)}>
-                  COPY TO JSON
-                </button>
               </div>
               {variantsError ? (
                 <p style={{ color: "#e63946", fontSize: 12, marginBottom: 10 }}>{variantsError}</p>
@@ -629,27 +631,68 @@ export default function Products() {
               )}
             </div>
             <div className="form-group">
-              <label>VARIANTS JSON (optional)</label>
-              <textarea
-                name="variants"
-                placeholder='[{"color":"Black","stock":10,"price":2499}]'
-                value={formValues.variants}
-                onChange={(e) => {
-                  setFormValues({ ...formValues, variants: e.target.value });
-                  setVariantsError("");
-                }}
-              />
-            </div>
-            <div className="form-group">
-              <label>OTHER WEBSITE PRICES JSON</label>
-              <textarea
-                name="externalOffers"
-                placeholder='[{"site":"Myntra","price":2999,"productName":"Same Product","productUrl":"https://..."}]'
-                value={formValues.externalOffers}
-                onChange={(e) => setFormValues({ ...formValues, externalOffers: e.target.value })}
-              />
+              <label>OTHER WEBSITE PRICES (4 SITES)</label>
+              {offersList.map((offer, idx) => (
+                <div
+                  key={`offer-row-${idx}`}
+                  style={{ border: "1px solid #ececec", borderRadius: 10, padding: 12, marginBottom: 10 }}
+                >
+                  <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 600, color: "#555" }}>
+                    WEBSITE {idx + 1}
+                  </p>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>SITE NAME</label>
+                      <input
+                        type="text"
+                        placeholder="Myntra / Ajio / Flipkart"
+                        value={offer.site}
+                        onChange={(e) => updateOffer(idx, "site", e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>PRICE (Rs.)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={offer.price}
+                        onChange={(e) => updateOffer(idx, "price", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>PRODUCT NAME</label>
+                      <input
+                        type="text"
+                        placeholder="Similar product title"
+                        value={offer.productName}
+                        onChange={(e) => updateOffer(idx, "productName", e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>PRODUCT URL</label>
+                      <input
+                        type="url"
+                        placeholder="https://..."
+                        value={offer.productUrl}
+                        onChange={(e) => updateOffer(idx, "productUrl", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label>NOTES</label>
+                    <input
+                      type="text"
+                      placeholder="Any note"
+                      value={offer.notes}
+                      onChange={(e) => updateOffer(idx, "notes", e.target.value)}
+                    />
+                  </div>
+                </div>
+              ))}
               <p style={{ fontSize: 12, color: "#777", marginTop: 6 }}>
-                Add only real competitor listings here. Leave blank if you do not have verified prices yet.
+                4 websites ke liye fields fixed hain. Jitni available ho utni bharo, baki blank chhod sakte ho.
               </p>
             </div>
             <div className="form-row">

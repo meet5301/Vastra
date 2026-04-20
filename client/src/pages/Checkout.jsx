@@ -9,6 +9,12 @@ export default function Checkout() {
     function getToken() {
       return localStorage.getItem("vastra_token");
     }
+
+    if (!getToken()) {
+      alert("Please login to continue checkout.");
+      window.location.href = "/login";
+      return;
+    }
     function getStoredCoupon() {
       try {
         return JSON.parse(localStorage.getItem("vastra_coupon") || "null");
@@ -174,6 +180,12 @@ export default function Checkout() {
     loadAvailableCoupons();
 
     async function placeOrder() {
+      if (!getToken()) {
+        alert("Please login to continue checkout.");
+        window.location.href = "/login";
+        return;
+      }
+
       const cart = getCart();
       if (cart.length === 0) {
         alert("Your bag is empty!");

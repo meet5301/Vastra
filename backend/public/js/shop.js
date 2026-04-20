@@ -333,6 +333,12 @@ function saveCart(cart) {
 }
 
 function addToCart(id, name, price, image, size = "M") {
+  const token = localStorage.getItem("vastra_token");
+  if (!token) {
+    showToast("Please login to add items to bag.");
+    return;
+  }
+
   const cart = getCart();
   const existing = cart.find((i) => i.id === id && i.size === size);
   if (existing) existing.quantity += 1;
