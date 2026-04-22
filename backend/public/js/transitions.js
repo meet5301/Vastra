@@ -37,32 +37,14 @@
     setTimeout(() => { window.location.href = href; }, 300);
   }
 
-  // 4. Override window.location.href setter globally
-  // Patch all onclick="window.location.href=..." by overriding navigation
-  const origHref = window.location.href;
-
-  // Intercept via Navigation API if available (modern browsers)
-  if (window.navigation) {
-    window.navigation.addEventListener("navigate", (e) => {
-      if (!e.canIntercept || e.hashChange || e.downloadRequest) return;
-      const url = new URL(e.destination.url);
-      if (url.origin !== location.origin) return;
-      e.intercept({
-        handler: async () => {
-          overlay.style.transition = "opacity 0.28s ease";
-          overlay.style.opacity = "1";
-          await new Promise(r => setTimeout(r, 300));
-          window.location.href = e.destination.url;
-        }
-      });
-    });
-    return; // Navigation API handles everything
-  }
-
-  // 5. Fallback: intercept <a> clicks
+  // 4. Intercept local <a> clicks for transition
   document.addEventListener("click", (e) => {
     const link = e.target.closest("a[href]");
     if (link) {
+      if (document.body.classList.contains("nav-open") && link.closest(".menu")) {
+        return;
+      }
+
       const href = link.getAttribute("href");
       if (!href || href.startsWith("#") || href.startsWith("javascript") ||
           href.startsWith("mailto") || href.startsWith("tel") ||

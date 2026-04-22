@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="/css/index.css" />
     <link rel="stylesheet" href="/css/navbar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+      <link rel="stylesheet" href="/css/responsive.css" />
   </head>
   <body>
     <div id="navbar"></div>
@@ -53,7 +54,7 @@
             <p class="hero-sub">Premium fashion for the modern wardrobe</p>
             <div class="hero-btns">
               <button onclick="window.location.href='/men'" class="btn-hero-primary">SHOP NOW</button>
-              <button onclick="window.location.href='/categories'" class="btn-hero-outline">EXPLORE</button>
+              <button onclick="window.location.href='/shop'" class="btn-hero-outline">EXPLORE</button>
             </div>
           </div>
         </div>
@@ -67,7 +68,7 @@
             <p class="hero-sub">Curated menswear for every occasion</p>
             <div class="hero-btns">
               <button onclick="window.location.href='/men'" class="btn-hero-primary">SHOP MEN</button>
-              <button onclick="window.location.href='/categories'" class="btn-hero-outline">VIEW ALL</button>
+              <button onclick="window.location.href='/shop'" class="btn-hero-outline">VIEW ALL</button>
             </div>
           </div>
         </div>
@@ -81,7 +82,7 @@
             <p class="hero-sub">Discover the latest women's trends</p>
             <div class="hero-btns">
               <button onclick="window.location.href='/women'" class="btn-hero-primary">SHOP WOMEN</button>
-              <button onclick="window.location.href='/categories'" class="btn-hero-outline">VIEW ALL</button>
+              <button onclick="window.location.href='/shop'" class="btn-hero-outline">VIEW ALL</button>
             </div>
           </div>
         </div>
@@ -95,7 +96,7 @@
             <p class="hero-sub">Bags, scarves, jewelry &amp; more</p>
             <div class="hero-btns">
               <button onclick="window.location.href='/accessories'" class="btn-hero-primary">SHOP NOW</button>
-              <button onclick="window.location.href='/categories'" class="btn-hero-outline">EXPLORE</button>
+              <button onclick="window.location.href='/shop'" class="btn-hero-outline">EXPLORE</button>
             </div>
           </div>
         </div>
@@ -368,7 +369,7 @@
           grid.innerHTML = data.products.map(p => `
             <div class="prod-card" onclick="window.location.href='/detail?id=${p._id}'">
               <div class="prod-img-wrap">
-                <img src="${p.image}" onerror="this.src='https://via.placeholder.com/300x400/cccccc/666?text=No+Image'" loading="lazy" />
+                <img src="${p.image}" onerror="this.src='/images/no-image.svg'" loading="lazy" />
                 <button class="prod-wish" onclick="event.stopPropagation(); toggleWishlistShared('${p._id}','${p.name}',${p.price},'${p.image}')">
                   <i class="far fa-heart"></i>
                 </button>

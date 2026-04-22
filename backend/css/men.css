@@ -9,7 +9,7 @@ body {
 h1,h2,h3,h4 { font-family:'Playfair Display',Georgia,serif; }
 
 /* HERO */
-.men-hero { position:relative; overflow:hidden; height:520px; background:#0a0a0a; border-bottom:1px solid rgba(0,0,0,0.08); }
+.men-hero { position:relative; overflow:hidden; height:100vh; min-height:600px; max-height:960px; background:#0a0a0a; border-bottom:1px solid rgba(0,0,0,0.08); }
 .men-hero-track { display:flex; height:100%; transition:transform 0.9s cubic-bezier(0.77,0,0.175,1); }
 .men-hero-slide { min-width:100%; height:100%; position:relative; background-size:cover; background-position:center 30%; display:flex; align-items:center; }
 .men-hero-overlay { position:absolute; inset:0; background:linear-gradient(105deg,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.4) 55%,transparent 100%); }
@@ -202,8 +202,8 @@ h1,h2,h3,h4 { font-family:'Playfair Display',Georgia,serif; }
 
 /* RESPONSIVE */
 @media (max-width:1200px) { .deals-grid { grid-template-columns:repeat(2,1fr); } .men-product-grid { grid-template-columns:repeat(3,1fr); } }
-@media (max-width:768px) { .men-hero { height:380px; } .deals-grid { grid-template-columns:repeat(2,1fr); } .men-product-grid { grid-template-columns:repeat(2,1fr); } .brands-grid { flex-wrap:wrap; } .brand-card { min-width:140px; } }
-@media (max-width:480px) { .men-hero { height:300px; } .deals-grid { grid-template-columns:1fr 1fr; } .deal-card { height:240px; } .men-product-grid { grid-template-columns:repeat(2,1fr); gap:10px; } .men-prod-img-wrap { height:240px; } }
+@media (max-width:768px) { .men-hero { height:75vh; min-height:460px; max-height:none; } .deals-grid { grid-template-columns:repeat(2,1fr); } .men-product-grid { grid-template-columns:repeat(2,1fr); } .brands-grid { flex-wrap:wrap; } .brand-card { min-width:140px; } }
+@media (max-width:480px) { .men-hero { height:65vh; } .deals-grid { grid-template-columns:1fr 1fr; } .deal-card { height:240px; } .men-product-grid { grid-template-columns:repeat(2,1fr); gap:10px; } .men-prod-img-wrap { height:240px; } }
 
 /* ── HORIZONTAL FILTER BAR ───────────────────────────────── */
 .men-filter-bar {
@@ -280,6 +280,24 @@ h1,h2,h3,h4 { font-family:'Playfair Display',Georgia,serif; }
   .men-filter-bar { flex-direction: column; }
   .mfb-divider { width: 100%; height: 1px; }
   .mfb-group { padding: 10px 16px; }
+
+  .brands-grid {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 8px;
+  }
+
+  .brands-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .brand-card {
+    flex: 0 0 auto;
+    min-width: 180px;
+  }
 }
 
 /* ── ADVANCED FILTERS (CATEGORY PAGES) ──────────────────── */

@@ -57,7 +57,6 @@ app.get("/sitemap.xml", (req, res) => {
     "/women",
     "/kids",
     "/accessories",
-    "/categories",
     "/about",
     "/journal",
     "/story",
@@ -151,9 +150,7 @@ app.get("/review", (req, res) =>
   res.sendFile(path.join(__dirname, "templates", "review.html"))
 );
 
-app.get("/categories", (req, res) =>
-  res.sendFile(path.join(__dirname, "templates", "categories.html"))
-);
+app.get("/categories", (req, res) => res.redirect("/men"));
 
 app.get("/men", (req, res) =>
   res.sendFile(path.join(__dirname, "templates", "men.html"))

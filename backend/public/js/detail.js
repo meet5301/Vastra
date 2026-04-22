@@ -115,7 +115,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     sliderTrack.innerHTML = slides.map((s) => `
       <div class="slide">
         <img src="${s.img}" alt="${product.name}"
-          onerror="this.src='https://via.placeholder.com/400x533/cccccc/666?text=No+Image'" />
+          onerror="this.src='/images/no-image.svg'" />
       </div>`).join("");
 
     // Build dots

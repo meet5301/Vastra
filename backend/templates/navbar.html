@@ -1,7 +1,16 @@
 <header class="navbar">
+    <button id="nav-menu-toggle" class="hamburger-btn" type="button" aria-label="Menu kholo" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
     <div class="logo" onclick="window.location.href='/'">VASTRA.</div>
 
     <ul class="menu">
+        <li class="mobile-menu-close-item">
+            <!-- <button id="nav-menu-close" class="mobile-menu-close" type="button" aria-label="Menu band karo">&times;</button> -->
+        </li>
         <li><a href="/">HOME</a></li>
         <li><a href="/men">MEN</a></li>
         <li><a href="/women">WOMEN</a></li>
@@ -26,6 +35,8 @@
         <a id="nav-login-btn" href="/login">L</a>
     </div>
 </header>
+
+<div id="nav-menu-backdrop" class="nav-menu-backdrop" aria-hidden="true"></div>
 
 <div id="search-panel" class="search-panel" aria-hidden="true">
     <div class="search-panel-header">

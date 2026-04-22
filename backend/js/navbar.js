@@ -1,6 +1,11 @@
 function initNavbarAuth() {
     const raw = localStorage.getItem("vastra_user");
-    const user = raw ? JSON.parse(raw) : null;
+    let user = null;
+    try {
+        user = raw ? JSON.parse(raw) : null;
+    } catch (err) {
+        localStorage.removeItem("vastra_user");
+    }
 
     const loginBtn  = document.getElementById("nav-login-btn");
     const adminLink = document.getElementById("nav-admin-link");
@@ -45,6 +50,7 @@ function initNavbarSearch() {
     let searchTimer;
 
     function openPanel() {
+        document.dispatchEvent(new CustomEvent("vastra:close-menu"));
         panel.classList.add("open");
         overlay.classList.add("show");
         panel.setAttribute("aria-hidden", "false");
@@ -72,7 +78,7 @@ function initNavbarSearch() {
                 results.innerHTML = data.products
                     .map((p) => `
                         <div class="search-item" data-id="${p._id}">
-                            <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/64'" />
+                            <img src="${p.image}" alt="${p.name}" onerror="this.src='/images/no-image.svg'" />
                             <div class="search-item-info">
                                 <div class="search-item-name">${p.name}</div>
                                 <div class="search-item-price">Rs. ${Math.round(Number(p.price || 0)).toLocaleString("en-IN")}</div>
@@ -90,10 +96,14 @@ function initNavbarSearch() {
         }
     }
 
-    searchBtn.addEventListener("click", (e) => {
+    function openFromAction(e) {
         e.preventDefault();
         openPanel();
-    });
+    }
+
+    if (searchBtn) {
+        searchBtn.addEventListener("click", openFromAction);
+    }
 
     closeBtn.addEventListener("click", closePanel);
     overlay.addEventListener("click", closePanel);
@@ -133,6 +143,74 @@ function initNavbarSearch() {
     });
 }
 
+function initNavbarMenu() {
+    const toggleBtn = document.getElementById("nav-menu-toggle");
+    const closeBtn = document.getElementById("nav-menu-close");
+    const menu = document.querySelector(".menu");
+    const backdrop = document.getElementById("nav-menu-backdrop");
+
+    if (!toggleBtn || !menu || !backdrop) return;
+
+    function closeMenu() {
+        menu.classList.remove("open");
+        backdrop.classList.remove("show");
+        backdrop.setAttribute("aria-hidden", "true");
+        toggleBtn.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("nav-open");
+        document.body.style.overflow = "";
+    }
+
+    function openMenu() {
+        menu.classList.add("open");
+        backdrop.classList.add("show");
+        backdrop.setAttribute("aria-hidden", "false");
+        toggleBtn.setAttribute("aria-expanded", "true");
+        document.body.classList.add("nav-open");
+        document.body.style.overflow = "hidden";
+    }
+
+    function handleToggle() {
+        if (menu.classList.contains("open")) {
+            closeMenu();
+            return;
+        }
+        openMenu();
+    }
+
+    toggleBtn.addEventListener("click", handleToggle);
+    if (closeBtn) {
+        closeBtn.addEventListener("click", closeMenu);
+    }
+
+    backdrop.addEventListener("click", closeMenu);
+
+    menu.addEventListener("click", (e) => {
+        if (window.innerWidth > 1024) return;
+
+        const link = e.target.closest("a[href]");
+        if (!link || !menu.contains(link)) return;
+
+        const href = link.getAttribute("href");
+        closeMenu();
+
+        if (!href || href.startsWith("#")) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.assign(href);
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeMenu();
+    });
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 1024) closeMenu();
+    });
+
+    document.addEventListener("vastra:close-menu", closeMenu);
+}
+
 function ensurePerfScript() {
     if (document.querySelector('script[data-vastra-perf="1"]')) return;
     const perfScript = document.createElement("script");
@@ -150,6 +228,9 @@ fetch("/navbar")
         const host = document.getElementById("navbar");
         if (!host) return;
         host.innerHTML = data;
-        initNavbarAuth();
-        initNavbarSearch();
-    });
+
+        try { initNavbarAuth(); } catch (err) {}
+        try { initNavbarSearch(); } catch (err) {}
+        try { initNavbarMenu(); } catch (err) {}
+    })
+    .catch(() => {});

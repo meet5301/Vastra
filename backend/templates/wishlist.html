@@ -101,6 +101,7 @@
       }
       .remove-wishlist:hover { background: #e63946; }
     </style>
+      <link rel="stylesheet" href="/css/responsive.css" />
   </head>
 
   <body>
@@ -148,7 +149,7 @@
         container.innerHTML = wishlist.map((item) => `
           <div class="wishlist-item">
             <button class="remove-wishlist" onclick="removeFromWishlist('${item.id}')">✕</button>
-            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/250'" onclick="window.location.href='/detail?id=${item.id}'">
+            <img src="${item.image}" onerror="this.src='/images/no-image.svg'" onclick="window.location.href='/detail?id=${item.id}'">
             <p style="font-weight:600;">${item.name}</p>
             <p style="color:#999;font-size:14px;">Rs. ${Math.round(Number(item.price || 0)).toLocaleString("en-IN")}</p>
             <button onclick="addToCart('${item.id}','${item.name}',${item.price},'${item.image}')" style="width:100%;padding:10px;background:#000;color:#fff;border:none;cursor:pointer;margin-top:8px;">ADD TO BAG</button>
