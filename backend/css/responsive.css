@@ -8,6 +8,7 @@
   body {
     font-size: 15px;
     line-height: 1.5;
+    padding-top: 56px;
     padding-bottom: 56px;
   }
 
@@ -21,8 +22,11 @@
   }
 
   .navbar {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 1000;
     height: 56px;
     padding: 0 12px;
@@ -789,6 +793,7 @@
   body {
     font-size: 15px;
     line-height: 1.5;
+    padding-top: 64px;
   }
 
   img,
@@ -801,8 +806,11 @@
   }
 
   .navbar {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 1000;
     height: 64px;
     padding: 0 18px;

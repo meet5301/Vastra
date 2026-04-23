@@ -1,5 +1,5 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #f2f2f2; color: #111; font-family: 'Inter', Arial, sans-serif; font-size: 14.5px; }
+body { background: #f2f2f2; color: #111; font-family: 'Inter', Arial, sans-serif; font-size: 14.5px; padding-top: 72px; }
 h1, h2, h3, h4 { font-family: 'Playfair Display', Georgia, serif; }
 
 /* ── OFFER STRIP ─────────────────────────────────────────── */

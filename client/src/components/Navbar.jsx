@@ -18,6 +18,28 @@ export default function Navbar() {
   }, [location.pathname]);
 
   useEffect(() => {
+    if (!open) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+
+    const handleResize = () => {
+      if (window.innerWidth > 1024) {
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [open]);
+
+  useEffect(() => {
     if (!open) return;
     if (!query.trim()) {
       setStatus("Type to search");
@@ -59,9 +81,22 @@ export default function Navbar() {
   return (
     <>
       <header className="navbar">
+        <button
+          id="nav-menu-toggle"
+          className="hamburger-btn"
+          type="button"
+          aria-label="Menu kholo"
+          aria-expanded={open}
+          onClick={() => setOpen((current) => !current)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
         <div className="logo" onClick={() => navigate("/")}>VASTRA.</div>
 
-        <ul className="menu">
+        <ul className={`menu${open ? " open" : ""}`}>
           <li><Link to="/">HOME</Link></li>
           <li><Link to="/men">MEN</Link></li>
           <li><Link to="/women">WOMEN</Link></li>
@@ -99,6 +134,13 @@ export default function Navbar() {
           </Link>
         </div>
       </header>
+
+      <div
+        id="nav-menu-backdrop"
+        className={`nav-menu-backdrop${open ? " show" : ""}`}
+        aria-hidden={!open}
+        onClick={() => setOpen(false)}
+      ></div>
 
       <div id="search-panel" className={`search-panel${open ? " open" : ""}`} aria-hidden={!open}>
         <div className="search-panel-header">

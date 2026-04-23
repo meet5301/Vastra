@@ -32,7 +32,17 @@ body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: 
 .main-content { margin-left: 240px; flex: 1; }
 
 /* TOPBAR */
-.topbar { background: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+.topbar {
+	background: #fff;
+	padding: 1rem 2rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #eee;
+	position: sticky;
+	top: 0;
+	z-index: 90;
+}
 .topbar h2 { letter-spacing: 3px; font-size: 1rem; font-weight: 600; }
 .topbar-right { display: flex; align-items: center; gap: 1rem; font-size: 13px; color: #666; }
 

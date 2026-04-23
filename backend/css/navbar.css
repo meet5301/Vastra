@@ -16,9 +16,12 @@
   -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
+  width: 100%;
   padding: 0 0 0 5%;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   border-bottom: 1px solid rgba(0,0,0,0.07);
   font-family: 'Inter', Arial, sans-serif;
